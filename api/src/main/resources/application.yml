@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: java-lms-api
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/java_lms_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 15000
+      validation-timeout: 5000
+      connection-test-query: SELECT 1
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace

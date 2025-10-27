@@ -1,0 +1,39 @@
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+### Build ###
+**/build/
+**/out/
+**/.gradle/
+target/
+bin/
+
+### IDE ###
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+### Logs / Temp ###
+**/logs/
+**/tmp/
+*.log
+*.tmp
+
+### Environment ###
+.env
+.env.*
+*.keystore
+*.jks
+
+### OS ###
+.DS_Store
+.AppleDouble
+Thumbs.db
+ehthumbs.db

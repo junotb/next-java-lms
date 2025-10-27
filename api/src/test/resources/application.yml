@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: java-lms-api-test
+
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 10000
+      validation-timeout: 3000
+      connection-test-query: SELECT 1
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: warn
+    org.hibernate.type.descriptor.sql.BasicBinder: off
+
