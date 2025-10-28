@@ -8,14 +8,20 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "teachers")
 @Getter
-@Setter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class Teacher {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Transient
+    public TeacherId getTeacherId() {
+        return new TeacherId(this.id);
+    }
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -29,6 +35,18 @@ public class Teacher {
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false, updatable = true)
+    @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
+
+    @PrePersist
+    void prePersist() {
+        var now = OffsetDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.updatedAt = OffsetDateTime.now();
+    }
 }
