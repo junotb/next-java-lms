@@ -20,7 +20,7 @@ public class Teacher {
 
     @Transient
     public TeacherId getTeacherId() {
-        return new TeacherId(this.id);
+        return this.id != null ? new TeacherId(this.id) : null;
     }
 
     @Column(name = "first_name", nullable = false)
