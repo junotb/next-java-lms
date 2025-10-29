@@ -5,7 +5,6 @@ import org.junotb.api.domain.teacher.TeacherRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,10 +15,6 @@ public class TeacherService {
 
     public TeacherService(TeacherRepository teacherRepository) {
         this.teacherRepository = teacherRepository;
-    }
-
-    public List<Teacher> findAll() {
-        return teacherRepository.findAll();
     }
 
     public Optional<Teacher> findById(Long id) {
