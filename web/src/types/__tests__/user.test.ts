@@ -1,6 +1,6 @@
-import { TeacherSchema } from '@/types/teacher';
+import { UserSchema } from '@/types/user';
 
-describe('TeacherSchema', () => {
+describe('UserSchema', () => {
   it('유효한 데이터는 통과시킨다', () => {
     const valid = {
       id: 1,
@@ -9,7 +9,7 @@ describe('TeacherSchema', () => {
       email: 'alice@example.com',
     };
 
-    const parsed = TeacherSchema.parse(valid);
+    const parsed = UserSchema.parse(valid);
     expect(parsed).toEqual(valid);
   });
 
@@ -20,7 +20,7 @@ describe('TeacherSchema', () => {
       email: 'bob@example.com',
     };
 
-    const parsed = TeacherSchema.parse(valid);
+    const parsed = UserSchema.parse(valid);
     expect(parsed).toEqual(valid);
   });
 
@@ -31,7 +31,7 @@ describe('TeacherSchema', () => {
       email: 'bob@example.com',
     };
 
-    expect(() => TeacherSchema.parse(invalid)).toThrow();
+    expect(() => UserSchema.parse(invalid)).toThrow();
   })
 
   it('lastName이 비어 있으면 에러를 던진다', () => {
@@ -41,7 +41,7 @@ describe('TeacherSchema', () => {
       email: 'bob@example.com',
     };
 
-    expect(() => TeacherSchema.parse(invalid)).toThrow();
+    expect(() => UserSchema.parse(invalid)).toThrow();
   });
 
   it('email 형식이 잘못되면 에러를 던진다', () => {
@@ -51,6 +51,6 @@ describe('TeacherSchema', () => {
       email: 'not-an-email',
     };
 
-    expect(() => TeacherSchema.parse(invalid)).toThrow();
+    expect(() => UserSchema.parse(invalid)).toThrow();
   });
 });

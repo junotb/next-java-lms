@@ -1,10 +1,9 @@
-// src/app/api/teachers/route.ts
 import { NextResponse } from "next/server";
-import { getTeachers } from "@/libs/teachers";
+import { getUsers } from "@/libs/user";
 
 export async function GET() {
   try {
-    const data = await getTeachers();
+    const data = await getUsers();
     return NextResponse.json(data, { status: 200 });
   } catch (e) {
     console.error(e);
