@@ -10,7 +10,7 @@ type Props = {
   lastName: string;
 };
 
-export default function TeacherCard({ href, email, firstName, lastName }: Props) {
+export default function UserCard({ href, email, firstName, lastName }: Props) {
   return (
     <Link
       href={href}

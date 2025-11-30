@@ -1,14 +1,14 @@
-import { getTeachers } from '@/libs/teachers';
+import { getUsers } from '@/libs/user';
 import { apiFetch } from '@/libs/client';
 
 jest.mock('@/libs/client', () => ({
   apiFetch: jest.fn(),
 }));
 
-jest.mock('@/types/teacher', () => {
+jest.mock('@/types/user', () => {
   const parseMock = jest.fn();
   return {
-    TeacherSchema: {
+    UserSchema: {
       array: () => ({
         parse: parseMock,
       }),
@@ -17,18 +17,18 @@ jest.mock('@/types/teacher', () => {
   }
 });
 
-const { __parseMock: parseMock } = jest.requireMock('@/types/teacher') as {
+const { __parseMock: parseMock } = jest.requireMock('@/types/user') as {
   __parseMock: jest.Mock;
 }
 
-type Teacher = {
+type User = {
   id?: number;
   firstName: string;
   lastName: string;
   email: string;
 };
 
-describe('getTeachers', () => {
+describe('getUsers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -38,7 +38,7 @@ describe('getTeachers', () => {
       { email: 'a@ex.com', firstName: 'A', lastName: 'B' },
       { email: 'c@ex.com', firstName: 'C', lastName: 'D' },
     ];
-    const parsed: Teacher[] = [
+    const parsed: User[] = [
       { email: 'a@ex.com', firstName: 'A', lastName: 'B' },
       { email: 'c@ex.com', firstName: 'C', lastName: 'D' },
     ];
@@ -46,9 +46,9 @@ describe('getTeachers', () => {
     (apiFetch as jest.Mock).mockResolvedValueOnce(raw);
     (parseMock as jest.Mock).mockReturnValueOnce(parsed);
 
-    const result = await getTeachers();
+    const result = await getUsers();
 
-    expect(apiFetch).toHaveBeenCalledWith('/api/teachers');
+    expect(apiFetch).toHaveBeenCalledWith('/api/user?role=TEACHER');
     expect(parseMock).toHaveBeenCalledWith(raw);
     expect(result).toEqual(parsed);
   })
@@ -57,10 +57,10 @@ describe('getTeachers', () => {
     const raw: unknown = [{ email: 'not-an-email' }];
     (apiFetch as jest.Mock).mockResolvedValueOnce(raw);
     (parseMock as jest.Mock).mockImplementationOnce(() => {
-      throw new Error('Invalid teachers payload');
+      throw new Error('Invalid users payload');
     });
 
-    await expect(getTeachers()).rejects.toThrow('Invalid teachers payload');
+    await expect(getUsers()).rejects.toThrow('Invalid users payload');
     expect(apiFetch).toHaveBeenCalledTimes(1);
     expect(parseMock).toHaveBeenCalledTimes(1);
   })
@@ -68,7 +68,7 @@ describe('getTeachers', () => {
   it('apiFetch가 실패하면 에러를 전파한다', async () => {
     (apiFetch as jest.Mock).mockRejectedValueOnce(new Error('Network down'));
 
-    await expect(getTeachers()).rejects.toThrow('Network down');
+    await expect(getUsers()).rejects.toThrow('Network down');
     expect(parseMock).not.toHaveBeenCalled();
   });
 });

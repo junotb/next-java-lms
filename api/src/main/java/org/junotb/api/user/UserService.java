@@ -7,6 +7,7 @@ import org.junotb.api.user.dtos.UserCreateRequest;
 import org.junotb.api.user.dtos.UserUpdateRequest;
 import org.junotb.api.user.enums.UserRole;
 import org.junotb.api.user.enums.UserStatus;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +25,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public List<User> findByRole(UserRole role) {
-        return userRepository.findByRole(role);
-    }
+    public List<User> findByRole(UserRole role, Pageable pageable) { return userRepository.findByRole(role, pageable); }
 
     public List<Schedule> findSchedulesById(Long userId) {
         return scheduleRepository.findByUserId(userId);
