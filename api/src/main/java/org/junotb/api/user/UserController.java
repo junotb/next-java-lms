@@ -7,6 +7,7 @@ import org.junotb.api.user.dtos.UserCreateRequest;
 import org.junotb.api.user.dtos.UserDto;
 import org.junotb.api.user.dtos.UserUpdateRequest;
 import org.junotb.api.user.enums.UserRole;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,13 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping
-    public List<UserDto> list(@PathVariable UserRole role) {
-        return userService.findByRole(role).stream().map(UserDto::from).toList();
+    @GetMapping("")
+    public List<UserDto> list(
+        @RequestParam(required = true)
+        UserRole role,
+        Pageable pageable
+    ) {
+        return userService.findByRole(role, pageable).stream().map(UserDto::from).toList();
     }
 
     @GetMapping("/{id}")

@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class UserRepositoryTest {
@@ -34,7 +35,8 @@ class UserRepositoryTest {
 
             userRepository.save(newUser);
 
-            List<User> founds = userRepository.findByRole(TEACHER);
+            Pageable pageable = Pageable.ofSize(10).withPage(0);
+            List<User> founds = userRepository.findByRole(TEACHER, pageable);
 
             assertThat(founds).isNotEmpty();
             assertThat(founds.get(0).getId()).isEqualTo(newUser.getId());

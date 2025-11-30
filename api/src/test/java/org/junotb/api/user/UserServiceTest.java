@@ -11,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -93,9 +94,10 @@ class UserServiceTest {
             TEACHER,
             ACTIVE
         );
-        when(userRepository.findByRole(TEACHER)).thenReturn(List.of(user));
+        Pageable pageable = Pageable.ofSize(10).withPage(0);
+        when(userRepository.findByRole(TEACHER, pageable)).thenReturn(List.of(user));
 
-        List<User> result = userService.findByRole(TEACHER);
+        List<User> result = userService.findByRole(TEACHER, pageable);
 
         assertThat(result).hasSize(1);
     }
