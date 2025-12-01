@@ -1,7 +1,7 @@
 "use client";
 
 import UserCard from "@/components/users/UserCard";
-import { User } from "@/types/user";
+import { User } from "@/schemas/user-schema";
 
 type Props = {
   users: User[];
