@@ -13,8 +13,9 @@ import java.time.OffsetDateTime;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

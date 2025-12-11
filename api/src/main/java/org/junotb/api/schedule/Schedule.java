@@ -14,8 +14,9 @@ import java.util.Optional;
 @Table(name = "schedules")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
