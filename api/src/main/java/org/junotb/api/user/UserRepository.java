@@ -1,11 +1,9 @@
 package org.junotb.api.user;
 
-import org.junotb.api.user.enums.UserRole;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.List;
-
-public interface UserRepository extends JpaRepository<User, Long> {
-    List<User> findByRole(UserRole role, Pageable pageable);
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }

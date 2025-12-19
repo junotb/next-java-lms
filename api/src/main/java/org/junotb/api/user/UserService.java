@@ -1,13 +1,16 @@
 package org.junotb.api.user;
 
 import lombok.RequiredArgsConstructor;
+import org.junotb.api.common.exception.DuplicateResourceException;
 import org.junotb.api.schedule.Schedule;
 import org.junotb.api.schedule.ScheduleRepository;
 import org.junotb.api.user.dtos.UserCreateRequest;
+import org.junotb.api.user.dtos.UserListRequest;
 import org.junotb.api.user.dtos.UserUpdateRequest;
-import org.junotb.api.user.enums.UserRole;
 import org.junotb.api.user.enums.UserStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,14 +28,57 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public List<User> findByRole(UserRole role, Pageable pageable) { return userRepository.findByRole(role, pageable); }
+    public Page<User> findList(UserListRequest request, Pageable pageable) {
+        Specification<User> spec = (root, query, cb) -> {
+            var predicates = cb.conjunction();
 
-    public List<Schedule> findSchedulesById(Long userId) {
+            if (request.firstName() != null && !request.firstName().isBlank()) {
+                predicates = cb.and(
+                    predicates,
+                    cb.like(root.get("firstName"), "%" + request.firstName() + "%")
+                );
+            }
+
+            if (request.lastName() != null && !request.lastName().isBlank()) {
+                predicates = cb.and(
+                    predicates,
+                    cb.like(root.get("lastName"), "%" + request.lastName() + "%")
+                );
+            }
+
+            if (request.role() != null) {
+                predicates = cb.and(
+                    predicates,
+                    cb.equal(root.get("role"), request.role())
+                );
+            }
+
+            if (request.status() != null) {
+                predicates = cb.and(
+                    predicates,
+                    cb.equal(root.get("status"), request.status())
+                );
+            }
+
+            return predicates;
+        };
+
+        return userRepository.findAll(spec, pageable);
+    }
+
+    public List<Schedule> findScheduleById(Long userId) {
         return scheduleRepository.findByUserId(userId);
     }
 
     @Transactional
     public User create(UserCreateRequest request) {
+        if (userRepository.existsByUsername(request.username())) {
+            throw new DuplicateResourceException("Username", request.username());
+        }
+        if (userRepository.existsByEmail(request.email())) {
+            throw new DuplicateResourceException("Email", request.email());
+        }
+
         User user = User.create(
             request.username(),
             request.password(),
@@ -49,23 +95,14 @@ public class UserService {
 
     @Transactional
     public Optional<User> update(Long id, UserUpdateRequest request) {
-        return userRepository.findById(id).map(existingUser -> {
-            if (
-                request.firstName() != null &&
-                request.lastName() != null &&
-                request.email() != null &&
-                request.description() != null
-            ) {
-                existingUser.setFirstName(request.firstName());
-                existingUser.setLastName(request.lastName());
-                existingUser.setEmail(request.email());
-                existingUser.setDescription(request.description());
-            }
-
-            if (request.role() != null) existingUser.setRole(request.role());
-            if (request.status() != null) existingUser.setStatus(request.status());
-
-            return existingUser;
+        return userRepository.findById(id).map(user -> {
+            if (request.firstName() != null) user.setFirstName(request.firstName());
+            if (request.lastName() != null) user.setLastName(request.lastName());
+            if (request.email() != null) user.setEmail(request.email());
+            if (request.description() != null) user.setDescription(request.description());
+            if (request.role() != null) user.setRole(request.role());
+            if (request.status() != null) user.setStatus(request.status());
+            return user;
         });
     }
 

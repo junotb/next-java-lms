@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.junotb.api.schedule.dtos.ScheduleDto;
 import org.junotb.api.user.dtos.UserCreateRequest;
 import org.junotb.api.user.dtos.UserDto;
+import org.junotb.api.user.dtos.UserListRequest;
 import org.junotb.api.user.dtos.UserUpdateRequest;
-import org.junotb.api.user.enums.UserRole;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +22,10 @@ public class UserController {
 
     @GetMapping("")
     public List<UserDto> list(
-        @RequestParam(required = true)
-        UserRole role,
+        @ModelAttribute UserListRequest request,
         Pageable pageable
     ) {
-        return userService.findByRole(role, pageable).stream().map(UserDto::from).toList();
+        return userService.findList(request, pageable).stream().map(UserDto::from).toList();
     }
 
     @GetMapping("/{id}")
@@ -34,9 +33,9 @@ public class UserController {
         return ResponseEntity.of(userService.findById(id).map(UserDto::from));
     }
 
-    @GetMapping("/{id}/schedules")
-    public List<ScheduleDto> listSchedules(@PathVariable Long id) {
-        return userService.findSchedulesById(id).stream().map(ScheduleDto::from).toList();
+    @GetMapping("/{id}/schedule")
+    public List<ScheduleDto> listSchedule(@PathVariable Long id) {
+        return userService.findScheduleById(id).stream().map(ScheduleDto::from).toList();
     }
 
     @PostMapping
@@ -46,7 +45,7 @@ public class UserController {
         return ResponseEntity.created(URI.create("/api/user/" + body.id())).body(body);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UserUpdateRequest request) {
         return ResponseEntity.of(userService.update(id, request).map(UserDto::from));
     }

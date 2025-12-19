@@ -9,6 +9,7 @@ import java.time.OffsetDateTime;
 public record UserDto(
     Long id,
     String username,
+    String password,
     String firstName,
     String lastName,
     String email,
@@ -22,6 +23,7 @@ public record UserDto(
         return new UserDto(
             user.getId(),
             user.getUsername(),
+            user.getPassword(),
             user.getFirstName(),
             user.getLastName(),
             user.getEmail(),
