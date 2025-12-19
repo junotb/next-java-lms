@@ -1,0 +1,64 @@
+"use client";
+
+import { useState } from "react";
+import PlusIcon from "@/assets/icons/plus.svg";
+import ScheduleFilterForm from "@/components/admin/schedule/ScheduleFilterForm";
+import ScheduleInfoCard from "@/components/admin/schedule/ScheduleInfoCard";
+import ScheduleListTable from "@/components/admin/schedule/ScheduleListTable";
+import Loader from "@/components/Loader";
+import Modal from "@/components/Modal";
+import { useSchedulesList } from "@/hooks/admin/schedules/useSchedulesList";
+import { ScheduleFilter } from "@/schemas/schedule-filter";
+
+export default function AdminSchedulesPage() {
+  const [filter, setFilter] = useState<ScheduleFilter>({ role: "", status: "ACTIVE" });
+
+  const [scheduleId, setScheduleId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { data: schedules, isLoading, error } = useSchedulesList(filter);
+
+  const updateFilter = (newFilter: ScheduleFilter) => setFilter(newFilter);
+
+  const openRegisterModal = () => { setScheduleId(null); setIsModalOpen(true); };
+  const openModifyModal = (id: number) => { setScheduleId(id); setIsModalOpen(true); };
+  const closeModal = () => { setScheduleId(null); setIsModalOpen(false); };
+
+  return (
+    <div className="flex-1 flex flex-col gap-8 mx-auto py-12 lg:py-24 w-full max-w-lg lg:max-w-4xl text-center bg-background">
+      <h1 className="text-3xl lg:text-4xl font-bold">
+        사용자 목록
+      </h1>
+      
+      <div className="w-full">
+        <ScheduleFilterForm onSubmit={updateFilter} />
+      </div>
+    
+      <div className="flex-1 flex flex-col gap-4 items-center">
+        {isLoading
+          ? <Loader />
+          : error
+            ? <p className="text-center text-red-500">사용자 목록을 불러오는 중 오류가 발생했습니다.</p>
+            : schedules?.length
+              ? <ScheduleListTable schedules={schedules ?? []} onModify={openModifyModal} />
+              : <p className="text-center">사용자가 없습니다.</p>
+        }
+      </div>
+
+      <div className="w-full h-16 text-right">
+        <button
+          className="border border-blue-600 bg-blue-600 text-white p-4 hover:bg-blue-700 rounded-md"
+          onClick={openRegisterModal}
+        >
+          <PlusIcon className="w-4 h-4" />
+        </button>
+      </div>
+
+      {isModalOpen &&
+        <Modal onClose={closeModal}>
+          <ScheduleInfoCard scheduleId={scheduleId} onSuccess={closeModal} />
+        </Modal>
+      }
+    </div>
+  );
+}

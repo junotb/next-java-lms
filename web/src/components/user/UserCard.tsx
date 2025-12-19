@@ -3,14 +3,14 @@
 import Link from "next/link";
 import UserIcon from "@/assets/icons/user.svg";
 
-type Props = {
+interface UserCardProps {
   href: string;
   email: string;
   firstName: string;
   lastName: string;
 };
 
-export default function UserCard({ href, email, firstName, lastName }: Props) {
+export default function UserCard({ href, email, firstName, lastName }: UserCardProps) {
   return (
     <Link
       href={href}

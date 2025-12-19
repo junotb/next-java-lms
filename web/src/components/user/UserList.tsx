@@ -1,14 +1,14 @@
 "use client";
 
-import UserCard from "@/components/users/UserCard";
-import { User } from "@/schemas/user-schema";
+import UserCard from "@/components/user/UserCard";
+import { User } from "@/schemas/user";
 
-type Props = {
+interface UserListProps {
   users: User[];
   basePath: string;
 };
 
-export default function UserList({ users, basePath }: Props) {
+export default function UserList({ users, basePath }: UserListProps) {
   return (
     <section>
       {users.length === 0 && (
