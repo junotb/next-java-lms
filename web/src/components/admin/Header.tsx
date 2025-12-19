@@ -15,10 +15,10 @@ export default function AdminHeader() {
           <Link href="/admin" className="flex items-center">
             <span>대시보드</span>
           </Link>
-          <Link href="/admin/users" className="flex items-center">
+          <Link href="/admin/user" className="flex items-center">
             <span>사용자</span>
           </Link>
-          <Link href="/admin/schedules" className="flex items-center">
+          <Link href="/admin/schedule" className="flex items-center">
             <span>스케줄</span>
           </Link>
         </nav>

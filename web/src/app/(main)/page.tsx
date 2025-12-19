@@ -1,8 +1,8 @@
-import UserList from "@/components/users/UserList";
-import { getUsers } from "@/libs/user";
+import UserList from "@/components/user/UserList";
+import { userList } from "@/libs/user";
 
 export default async function HomePage() {
-  const users = await getUsers();
+  const users = await userList();
 
   return (
     <div>
@@ -19,7 +19,7 @@ export default async function HomePage() {
       <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
         <div className="max-w-5xl w-full mx-auto px-4 text-center">
           <h1 className="text-2xl font-semibold">강사 목록</h1>
-          <UserList users={users} basePath="/users" />
+          <UserList users={users} basePath="/user" />
         </div>
       </section>
     </div>

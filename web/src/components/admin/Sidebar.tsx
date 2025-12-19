@@ -8,12 +8,12 @@ export default function AdminSidebar() {
           </a>
         </li>
         <li>
-          <a href="/admin/users" className="text-lg font-semibold text-foreground hover:text-primary">
+          <a href="/admin/user" className="text-lg font-semibold text-foreground hover:text-primary">
             사용자 관리
           </a>
         </li>
         <li>
-          <a href="/admin/courses" className="text-lg font-semibold text-foreground hover:text-primary">
+          <a href="/admin/course" className="text-lg font-semibold text-foreground hover:text-primary">
             강의 관리
           </a>
         </li>
