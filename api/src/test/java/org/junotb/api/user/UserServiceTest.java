@@ -11,7 +11,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -82,27 +81,6 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("역할(role)로 사용자 조회")
-    void findByRole() {
-        User user = User.create(
-            "alice.anderson@example.com",
-            "password",
-            "Anderson",
-            "Alice",
-            "alice.anderson@example.com",
-            "Ace teacher",
-            TEACHER,
-            ACTIVE
-        );
-        Pageable pageable = Pageable.ofSize(10).withPage(0);
-        when(userRepository.findByRole(TEACHER, pageable)).thenReturn(List.of(user));
-
-        List<User> result = userService.findByRole(TEACHER, pageable);
-
-        assertThat(result).hasSize(1);
-    }
-
-    @Test
     @DisplayName("should update an existing user's information")
     void updateUser() {
         User user = User.create(
@@ -122,8 +100,6 @@ class UserServiceTest {
             "password",
             "Beta",
             "Bartender",
-            "beta.bartender@example.com",
-            "Beta teacher",
             TEACHER,
             INACTIVE
         );
@@ -159,11 +135,11 @@ class UserServiceTest {
 
     @Test
     @DisplayName("should find schedules by user ID")
-    void findSchedules() {
+    void findSchedule() {
         Schedule schedule = mock(Schedule.class);
         when(scheduleRepository.findByUserId(1L)).thenReturn(List.of(schedule));
 
-        List<Schedule> result = userService.findSchedulesById(1L);
+        List<Schedule> result = userService.findScheduleById(1L);
 
         assertThat(result).hasSize(1);
     }
