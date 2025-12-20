@@ -5,10 +5,10 @@ import { UserStatus } from "@/schemas/user-status";
 // 사용자 스키마
 export const User = z.object({
   id: z.number().int().positive(),
-  username: z.string().min(6),
-  password: z.string().min(6),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  username: z.string(),
+  password: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
   email: z.email(),
   role: UserRole,
   status: UserStatus
@@ -41,19 +41,12 @@ export const UserProfileUpdateRequest = z.object({
 export type UserProfileUpdateRequest = z.infer<typeof UserProfileUpdateRequest>;
 
 // 사용자 비밀번호 수정 요청
-export const UserPasswordModifyRequest = z.object({
+export const UserPasswordUpdateRequest = z.object({
   id: z.number().int().positive(),
   password: z.string()
 });
 
-export type UserPasswordModifyRequest = z.infer<typeof UserPasswordModifyRequest>;
-
-// 사용자 삭제 요청
-export const UserDeleteRequest = z.object({
-  id: z.number().int().positive()
-});
-
-export type UserDeleteRequest = z.infer<typeof UserDeleteRequest>;
+export type UserPasswordUpdateRequest = z.infer<typeof UserPasswordUpdateRequest>;
 
 // 사용자 목록 요청
 export const UserListRequest = z.object({

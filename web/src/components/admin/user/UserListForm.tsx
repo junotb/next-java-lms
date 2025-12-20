@@ -1,29 +1,29 @@
-import { UserListRequest } from "@/schemas/user";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserListRequest } from "@/schemas/user";
 
-const DEFAULT_VALUES: UserListRequest = {
+const DEFAULT_REQUEST: UserListRequest = {
   role: null,
   status: null,
   lastName: null,
   firstName: null,
 };
 
-interface UserFilterFormProps {
+interface UserListFormProps {
   onSubmit: (data: UserListRequest) => void;
 }
 
-export default function UserFilterForm({ onSubmit }: UserFilterFormProps) {
+export default function UserListForm({ onSubmit }: UserListFormProps) {
   const {
     register,
     handleSubmit,
     reset,
   } = useForm<UserListRequest>({
     resolver: zodResolver(UserListRequest),
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: DEFAULT_REQUEST,
   });
 
-  const handleReset = () => reset(DEFAULT_VALUES);
+  const handleReset = () => reset(DEFAULT_REQUEST);
   
   return (
     <form
