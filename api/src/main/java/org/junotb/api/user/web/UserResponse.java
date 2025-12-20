@@ -1,4 +1,4 @@
-package org.junotb.api.user.dtos;
+package org.junotb.api.user.web;
 
 import org.junotb.api.user.User;
 import org.junotb.api.user.enums.UserRole;
@@ -6,7 +6,7 @@ import org.junotb.api.user.enums.UserStatus;
 
 import java.time.OffsetDateTime;
 
-public record UserDto(
+public record UserResponse(
     Long id,
     String username,
     String password,
@@ -19,8 +19,8 @@ public record UserDto(
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt
 ) {
-    public static UserDto from(User user) {
-        return new UserDto(
+    public static UserResponse from(User user) {
+        return new UserResponse(
             user.getId(),
             user.getUsername(),
             user.getPassword(),

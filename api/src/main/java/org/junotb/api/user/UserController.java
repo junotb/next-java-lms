@@ -2,17 +2,15 @@ package org.junotb.api.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.junotb.api.schedule.dtos.ScheduleDto;
-import org.junotb.api.user.dtos.UserCreateRequest;
-import org.junotb.api.user.dtos.UserDto;
-import org.junotb.api.user.dtos.UserListRequest;
-import org.junotb.api.user.dtos.UserUpdateRequest;
+import org.junotb.api.common.web.PageResponse;
+import org.junotb.api.user.web.UserCreateRequest;
+import org.junotb.api.user.web.UserResponse;
+import org.junotb.api.user.web.UserListRequest;
+import org.junotb.api.user.web.UserUpdateRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -21,38 +19,32 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public List<UserDto> list(
-        @ModelAttribute UserListRequest request,
-        Pageable pageable
-    ) {
-        return userService.findList(request, pageable).stream().map(UserDto::from).toList();
+    public PageResponse<UserResponse> list(@ModelAttribute UserListRequest request, Pageable pageable) {
+        return PageResponse.from(
+            userService.findList(request, pageable).map(UserResponse::from)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> get(@PathVariable Long id) {
-        return ResponseEntity.of(userService.findById(id).map(UserDto::from));
-    }
-
-    @GetMapping("/{id}/schedule")
-    public List<ScheduleDto> listSchedule(@PathVariable Long id) {
-        return userService.findScheduleById(id).stream().map(ScheduleDto::from).toList();
+    public ResponseEntity<UserResponse> get(@PathVariable Long id) {
+        return ResponseEntity.of(userService.findById(id).map(UserResponse::from));
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> create(@RequestBody @Valid UserCreateRequest request) {
-        var created = userService.create(request);
-        var body = UserDto.from(created);
-        return ResponseEntity.created(URI.create("/api/user/" + body.id())).body(body);
+    public ResponseEntity<UserResponse> create(@RequestBody @Valid UserCreateRequest request) {
+        User user = userService.create(request);
+        return ResponseEntity.ok(UserResponse.from(user));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UserUpdateRequest request) {
-        return ResponseEntity.of(userService.update(id, request).map(UserDto::from));
+    public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody @Valid UserUpdateRequest request) {
+        User user = userService.update(id, request);
+        return ResponseEntity.ok(UserResponse.from(user));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean deleted = userService.delete(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

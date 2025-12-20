@@ -1,13 +1,11 @@
-package org.junotb.api.user.dtos;
+package org.junotb.api.user.web;
 
 import org.junotb.api.user.enums.UserRole;
 import org.junotb.api.user.enums.UserStatus;
 
-public record UserUpdateRequest(
+public record UserListRequest(
     String firstName,
     String lastName,
-    String email,
-    String description,
     UserRole role,
     UserStatus status
 ) {}

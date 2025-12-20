@@ -1,18 +1,14 @@
 package org.junotb.api.user;
 
-import org.junotb.api.schedule.Schedule;
-import org.junotb.api.schedule.ScheduleRepository;
-import org.junotb.api.user.dtos.UserCreateRequest;
-import org.junotb.api.user.dtos.UserUpdateRequest;
+import org.junotb.api.user.web.UserCreateRequest;
+import org.junotb.api.user.web.UserUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -26,48 +22,18 @@ class UserServiceTest {
     @Mock
     UserRepository userRepository;
 
-    @Mock
-    ScheduleRepository scheduleRepository;
-
     @InjectMocks
     UserService userService;
 
     @Test
-    @DisplayName("should create a new user and save it to the repository")
-    void createUser() {
-        // given
-        UserCreateRequest request = new UserCreateRequest(
-            "alice.anderson@example.com",
-            "password",
-            "Anderson",
-            "Alice",
-            "alice.anderson@example.com",
-            "Ace teacher",
-            TEACHER,
-            ACTIVE
-        );
-
-        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-        when(userRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-
-        User created = userService.create(request);
-        verify(userRepository).save(captor.capture());
-        User savedUser = captor.getValue();
-
-        assertThat(savedUser.getUsername()).isEqualTo("alice.anderson@example.com");
-        assertThat(created.getStatus()).isEqualTo(ACTIVE);
-    }
-
-    @Test
-    @DisplayName("특정 사용자 ID로 조회하면 Optional 반환")
+    @DisplayName("사용자 고유번호로 조회하면 Optional 반환")
     void findById() {
-        // given
         User user = User.create(
-            "alice.anderson@example.com",
+            "alice",
             "password",
-            "Anderson",
             "Alice",
-            "alice.anderson@example.com",
+            "Anderson",
+            "alice@example.com",
             "Ace teacher",
             TEACHER,
             ACTIVE
@@ -78,69 +44,95 @@ class UserServiceTest {
         Optional<User> result = userService.findById(1L);
 
         assertThat(result).isPresent();
+        assertThat(result.get().getUsername()).isEqualTo("alice");
     }
 
     @Test
-    @DisplayName("should update an existing user's information")
-    void updateUser() {
-        User user = User.create(
-            "alice.anderson@example.com",
+    @DisplayName("사용자 정보를 생성하고 저장")
+    void create() {
+        UserCreateRequest request = new UserCreateRequest(
+            "alice",
             "password",
-            "Anderson",
             "Alice",
-            "alice.anderson@example.com",
+            "Anderson",
+            "alice@example.com",
             "Ace teacher",
             TEACHER,
             ACTIVE
         );
+
+        // 중복 체크
+        when(userRepository.existsByUsername("alice")).thenReturn(false);
+        when(userRepository.existsByEmail("alice@example.com")).thenReturn(false);
+
+        User saved = User.create(
+            "alice",
+            "password",
+            "Alice",
+            "Anderson",
+            "alice@example.com",
+            "Ace teacher",
+            TEACHER,
+            ACTIVE
+        );
+        when(userRepository.save(any(User.class))).thenReturn(saved);
+
+        User created = userService.create(request);
+
+        assertThat(created.getUsername()).isEqualTo("alice");
+        assertThat(created.getStatus()).isEqualTo(ACTIVE);
+    }
+
+    @Test
+    @DisplayName("사용자 정보를 수정하고 반환")
+    void update() {
+        User user = User.create(
+            "alice",
+            "password",
+            "Alice",
+            "Anderson",
+            "alice@example.com",
+            "Ace teacher",
+            TEACHER,
+            ACTIVE
+        );
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         UserUpdateRequest request = new UserUpdateRequest(
-            "beta.bartender@example.com",
-            "password",
             "Beta",
             "Bartender",
+            "beta@example.com",
+            "Beta teacher",
             TEACHER,
             INACTIVE
         );
 
-        Optional<User> updated = userService.update(1L, request);
+        User updated = userService.update(1L, request);
 
-        assertThat(updated).isPresent();
-        assertThat(user.getFirstName()).isEqualTo("Beta");
-        assertThat(user.getEmail()).isEqualTo("beta.bartender@example.com");
+        assertThat(updated.getFirstName()).isEqualTo("Beta");
+        assertThat(updated.getLastName()).isEqualTo("Bartender");
+        assertThat(updated.getEmail()).isEqualTo("beta@example.com");
+        assertThat(updated.getStatus()).isEqualTo(INACTIVE);
     }
 
     @Test
-    @DisplayName("should deactivate a user instead of deleting them")
-    void deleteUser() {
-        // given
+    @DisplayName("사용자 정보를 비활성화 상태로 변경")
+    void delete() {
         User user = User.create(
-            "alice.anderson@example.com",
+            "alice",
             "password",
-            "Anderson",
             "Alice",
-            "alice.anderson@example.com",
+            "Anderson",
+            "alice@example.com",
             "Ace teacher",
             TEACHER,
             ACTIVE
         );
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        boolean result = userService.delete(1L);
+        userService.delete(1L);
 
-        assertThat(result).isTrue();
         assertThat(user.getStatus()).isEqualTo(INACTIVE);
-    }
-
-    @Test
-    @DisplayName("should find schedules by user ID")
-    void findSchedule() {
-        Schedule schedule = mock(Schedule.class);
-        when(scheduleRepository.findByUserId(1L)).thenReturn(List.of(schedule));
-
-        List<Schedule> result = userService.findScheduleById(1L);
-
-        assertThat(result).hasSize(1);
     }
 }
