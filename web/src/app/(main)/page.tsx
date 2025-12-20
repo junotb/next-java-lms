@@ -1,9 +1,16 @@
 import UserList from "@/components/user/UserList";
 import { userList } from "@/libs/user";
+import { UserListRequest } from "@/schemas/user";
+
+const DEFAULT_REQUEST: UserListRequest = {
+  firstName: null,
+  lastName: null,
+  role: "STUDENT",
+  status: "ACTIVE",
+};
 
 export default async function HomePage() {
-  const users = await userList();
-
+  const users = await userList(DEFAULT_REQUEST);
   return (
     <div>
       <section className="w-full py-12 md:py-24 lg:py-32 bg-background">

@@ -2,19 +2,23 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserCreateRequest } from "@/schemas/user";
+import { UserProfileUpdateRequest } from "@/schemas/user";
+import { User } from "@/schemas/user";
 
-interface UserRegisterFormProps {
-  onSubmit: (data: UserCreateRequest) => void;
+interface UserUpdateFormProps {
+  user: User;
+  onSubmit: (data: UserProfileUpdateRequest) => void;
+  onDelete: () => void;
 }
 
-export default function UserRegisterForm({ onSubmit }: UserRegisterFormProps) {
+export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<UserCreateRequest>({
-    resolver: zodResolver(UserCreateRequest),
+    formState: { errors, isDirty, isSubmitting },
+  } = useForm<UserProfileUpdateRequest>({
+    resolver: zodResolver(UserProfileUpdateRequest),
+    defaultValues: { ...user },
   });
 
   return (
@@ -34,15 +38,11 @@ export default function UserRegisterForm({ onSubmit }: UserRegisterFormProps) {
             <input
               id="username"
               type="text"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("username")}
+              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 disabled:bg-gray-200 text-sm rounded-md"
+              defaultValue={user.username}
+              disabled={true}
             />
           </div>
-          {errors.username && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.username.message}
-            </p>
-          )}
         </div>
 
         <div className="flex flex-col items-end w-full">
@@ -56,15 +56,10 @@ export default function UserRegisterForm({ onSubmit }: UserRegisterFormProps) {
             <input
               id="password"
               type="password"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("password")}
+              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 disabled:bg-gray-200 text-sm rounded-md"
+              disabled={true}
             />
           </div>
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.password.message}
-            </p>
-          )}
         </div>
       </div>
 
@@ -190,9 +185,18 @@ export default function UserRegisterForm({ onSubmit }: UserRegisterFormProps) {
       <div className="flex gap-4 w-full">
         <button
           type="submit"
-          className="mt-4 mx-auto px-8 py-2 bg-blue-600 text-white rounded"
+          className="mt-4 mx-auto px-8 py-2 bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed rounded"
+          disabled={!isDirty || isSubmitting}
         >
-          등록
+          수정
+        </button>
+
+        <button
+          type="button"
+          onClick={onDelete}
+          className="mt-4 mx-auto px-8 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+        >
+          삭제
         </button>
       </div>
     </form>

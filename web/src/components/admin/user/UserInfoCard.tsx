@@ -1,8 +1,8 @@
 "use client";
 
 import Loader from "@/components/Loader";
-import UserRegisterForm from "@/components/admin/user/UserRegisterForm";
-import UserModifyForm from "@/components/admin/user/UserModifyForm";
+import UserCreateForm from "@/components/admin/user/UserCreateForm";
+import UserUpdateForm from "@/components/admin/user/UserUpdateForm";
 import { useUserProfile, useUserCreate, useUserProfileUpdate, useUserDelete } from "@/hooks/admin/useUser";
 import { UserCreateRequest, UserProfileUpdateRequest } from "@/schemas/user";
 
@@ -12,16 +12,16 @@ interface UserInfoCardProps {
 }
 
 export default function UserInfoCard({ userId, onSuccess }: UserInfoCardProps) {
-  const isRegister = userId === null;
+  const isCreate = userId === null;
 
-  const { data: user, isLoading: isUserLoading } = useUserProfile(userId ?? 0, { enabled: !isRegister });
+  const { data: user, isLoading: isUserLoading } = useUserProfile(userId ?? 0, { enabled: !isCreate });
 
   const registerMutation = useUserCreate();
   const modifyMutation = useUserProfileUpdate();
   const deleteMutation = useUserDelete();
   
   const handleSubmit = async (raw: unknown) => {
-    if (isRegister) {
+    if (isCreate) {
       const payload = UserCreateRequest.parse(raw);
       await registerMutation.mutateAsync(payload);
       onSuccess();
@@ -41,7 +41,7 @@ export default function UserInfoCard({ userId, onSuccess }: UserInfoCardProps) {
     onSuccess();
   }
 
-  const title = isRegister ? "사용자 등록" : "사용자 수정";
+  const title = isCreate ? "사용자 등록" : "사용자 수정";
 
   return (
     <div className="w-116 h-112 lg:w-140 lg:h-136 px-8 py-12 lg:py-24">
@@ -52,9 +52,9 @@ export default function UserInfoCard({ userId, onSuccess }: UserInfoCardProps) {
       <div className="flex-1 flex items-center justify-center mt-8">
         {isUserLoading || registerMutation.isPending || modifyMutation.isPending
           ? <Loader />
-          : isRegister
-            ? <UserRegisterForm onSubmit={handleSubmit} />
-            : user && <UserModifyForm user={user} onSubmit={handleSubmit} onDelete={handleDelete} />
+          : isCreate
+            ? <UserCreateForm onSubmit={handleSubmit} />
+            : user && <UserUpdateForm user={user} onSubmit={handleSubmit} onDelete={handleDelete} />
         }
       </div>
     </div>
