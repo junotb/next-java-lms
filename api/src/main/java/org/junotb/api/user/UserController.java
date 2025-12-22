@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/user")
@@ -46,5 +48,11 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stats/role")
+    public ResponseEntity<Map<UserRole, Long>> countByRole() {
+        Map<UserRole, Long> stats = userService.countByRole();
+        return ResponseEntity.ok(stats);
     }
 }

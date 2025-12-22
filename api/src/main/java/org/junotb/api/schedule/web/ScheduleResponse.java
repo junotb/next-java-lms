@@ -1,6 +1,7 @@
 package org.junotb.api.schedule.web;
 
-import org.junotb.api.schedule.enums.ScheduleStatus;
+import org.junotb.api.schedule.Schedule;
+import org.junotb.api.schedule.ScheduleStatus;
 
 import java.time.OffsetDateTime;
 
@@ -13,7 +14,7 @@ public record ScheduleResponse(
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt
 ) {
-    public static ScheduleResponse from(org.junotb.api.schedule.Schedule schedule) {
+    public static ScheduleResponse from(Schedule schedule) {
         return new ScheduleResponse(
             schedule.getId(),
             schedule.getUserId(),

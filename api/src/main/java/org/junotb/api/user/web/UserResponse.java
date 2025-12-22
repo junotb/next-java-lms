@@ -1,8 +1,8 @@
 package org.junotb.api.user.web;
 
 import org.junotb.api.user.User;
-import org.junotb.api.user.enums.UserRole;
-import org.junotb.api.user.enums.UserStatus;
+import org.junotb.api.user.UserRole;
+import org.junotb.api.user.UserStatus;
 
 import java.time.OffsetDateTime;
 
