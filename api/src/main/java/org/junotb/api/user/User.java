@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.junotb.api.user.enums.UserRole;
-import org.junotb.api.user.enums.UserStatus;
 
 import java.time.OffsetDateTime;
 

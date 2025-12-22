@@ -12,8 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junotb.api.user.enums.UserRole.*;
-import static org.junotb.api.user.enums.UserStatus.*;
+import static org.junotb.api.user.UserRole.*;
+import static org.junotb.api.user.UserStatus.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

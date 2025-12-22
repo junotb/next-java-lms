@@ -6,13 +6,14 @@ import org.junotb.api.common.exception.DuplicateResourceException;
 import org.junotb.api.user.web.UserCreateRequest;
 import org.junotb.api.user.web.UserListRequest;
 import org.junotb.api.user.web.UserUpdateRequest;
-import org.junotb.api.user.enums.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,10 +22,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    // 사용자 조회
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
+    // 사용자 목록 조회
     public Page<User> findList(UserListRequest request, Pageable pageable) {
         Specification<User> spec = (root, query, cb) -> {
             var predicates = cb.conjunction();
@@ -63,6 +66,7 @@ public class UserService {
         return userRepository.findAll(spec, pageable);
     }
 
+    // 사용자 생성
     @Transactional
     public User create(UserCreateRequest request) {
         if (userRepository.existsByUsername(request.username())) {
@@ -86,6 +90,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // 사용자 수정
     @Transactional
     public User update(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(
@@ -102,6 +107,7 @@ public class UserService {
         return user;
     }
 
+    // 사용자 삭제 (비활성화 처리)
     @Transactional
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(
@@ -110,5 +116,19 @@ public class UserService {
 
         if (user.getStatus() == UserStatus.INACTIVE) return;
         user.setStatus(UserStatus.INACTIVE);
+    }
+
+    // 역할별 사용자 수 집계
+    @Transactional(readOnly = true)
+    public Map<UserRole, Long> countByRole() {
+        EnumMap<UserRole, Long> result = new EnumMap<>(UserRole.class);
+
+        for (UserRole status : UserRole.values()) {
+            result.put(status, 0L);
+        }
+
+        userRepository.countByRole().forEach(row -> result.put(row.getRole(), row.getCount()));
+
+        return result;
     }
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.junotb.api.schedule.enums.ScheduleStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;

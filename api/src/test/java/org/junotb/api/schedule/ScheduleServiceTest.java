@@ -14,7 +14,7 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junotb.api.schedule.enums.ScheduleStatus.*;
+import static org.junotb.api.schedule.ScheduleStatus.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
