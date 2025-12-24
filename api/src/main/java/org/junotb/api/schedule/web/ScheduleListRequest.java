@@ -5,4 +5,11 @@ import org.junotb.api.schedule.ScheduleStatus;
 public record ScheduleListRequest(
     Long userId,
     ScheduleStatus status
-) {}
+) {
+    public static ScheduleListRequest empty() {
+        return new ScheduleListRequest(
+            null,
+            null
+        );
+    }
+}

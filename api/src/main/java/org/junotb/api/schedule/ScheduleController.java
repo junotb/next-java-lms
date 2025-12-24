@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/schedule")
@@ -22,8 +23,10 @@ public class ScheduleController {
     // 스케줄 목록 조회
     @GetMapping("")
     public PageResponse<ScheduleResponse> list(@ModelAttribute ScheduleListRequest request, Pageable pageable) {
+        ScheduleListRequest safeRequest = Objects.requireNonNullElse(request, ScheduleListRequest.empty());
+
         return PageResponse.from(
-            scheduleService.findList(request, pageable).map(ScheduleResponse::from)
+            scheduleService.findList(safeRequest, pageable).map(ScheduleResponse::from)
         );
     }
 
@@ -56,7 +59,7 @@ public class ScheduleController {
 
     // 스케줄 상태별 통계 조회
     @GetMapping("/stats/status")
-    public ResponseEntity<Map<ScheduleStatus, Long>> countByStatus(@RequestParam(required = false) Long userId) {
+    public ResponseEntity<Map<ScheduleStatus, Long>> countByStatus(@PathVariable Long userId) {
         Map<ScheduleStatus, Long> stats = scheduleService.countByStatus(userId);
         return ResponseEntity.ok(stats);
     }

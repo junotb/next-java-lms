@@ -3,9 +3,12 @@ package org.junotb.api.schedule;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.junotb.api.common.exception.ResourceNotFoundException;
 import org.junotb.api.schedule.web.ScheduleCreateRequest;
 import org.junotb.api.schedule.web.ScheduleListRequest;
 import org.junotb.api.schedule.web.ScheduleUpdateRequest;
+import org.junotb.api.user.User;
+import org.junotb.api.user.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,6 +22,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     // 스케줄 조회
     public Optional<Schedule> findById(Long id) {
@@ -53,8 +57,13 @@ public class ScheduleService {
     // 스케줄 생성
     @Transactional
     public Schedule create(ScheduleCreateRequest request) {
+        // 사용자 존재 여부 확인
+        User user = userRepository.findById(request.userId()).orElseThrow(() ->
+            new ResourceNotFoundException("id", String.valueOf(request.userId()))
+        );
+
         Schedule schedule = Schedule.create(
-            request.userId(),
+            user.getId(),
             request.startsAt(),
             request.endsAt(),
             request.status()
