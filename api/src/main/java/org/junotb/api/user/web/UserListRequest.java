@@ -8,4 +8,13 @@ public record UserListRequest(
     String lastName,
     UserRole role,
     UserStatus status
-) {}
+) {
+    public static UserListRequest empty() {
+        return new UserListRequest(
+            null,
+            null,
+            null,
+            null
+        );
+    }
+}
