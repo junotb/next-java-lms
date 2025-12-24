@@ -1,13 +1,5 @@
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UserListRequest } from "@/schemas/user";
-
-const DEFAULT_REQUEST: UserListRequest = {
-  role: null,
-  status: null,
-  lastName: null,
-  firstName: null,
-};
+import type { UserListRequest, UserListFormValues } from "@/schemas/user/user";
 
 interface UserListFormProps {
   onSubmit: (data: UserListRequest) => void;
@@ -18,12 +10,22 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
     register,
     handleSubmit,
     reset,
-  } = useForm<UserListRequest>({
-    resolver: zodResolver(UserListRequest),
-    defaultValues: DEFAULT_REQUEST,
+  } = useForm<UserListFormValues>({
+    defaultValues: {
+      role: undefined,
+      status: undefined,
+      lastName: "",
+      firstName: "",
+    },
+    mode: "onSubmit",
   });
 
-  const handleReset = () => reset(DEFAULT_REQUEST);
+  const handleReset = () => reset({
+    role: undefined,
+    status: undefined,
+    lastName: "",
+    firstName: "",
+  });
   
   return (
     <form
@@ -75,7 +77,7 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
           <option value="">전체</option>
           <option value="STUDENT">학생</option>
           <option value="TEACHER">강사</option>
-          <option value="ADMINISTRATOR">관리자</option>
+          <option value="ADMIN">관리자</option>
         </select>
       </div>
 
@@ -98,11 +100,18 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
       </div>
 
       <div className="flex justify-center items-center gap-4">
-        <button type="button" onClick={handleReset} className="border px-2 lg:px-4 py-2 text-sm rounded-md cursor-pointer">
+        <button
+          type="button"
+          onClick={handleReset}
+          className="border px-2 lg:px-4 py-2 text-sm rounded-md cursor-pointer"
+        >
           초기화
         </button>
 
-        <button type="submit" className="border border-blue-600 bg-blue-600 text-white px-2 lg:px-4 py-2 text-sm rounded-md hover:bg-blue-700 cursor-pointer">
+        <button
+          type="submit"
+          className="border border-blue-600 bg-blue-600 text-white px-2 lg:px-4 py-2 text-sm rounded-md hover:bg-blue-700 cursor-pointer"
+        >
           검색
         </button>
       </div>

@@ -8,22 +8,20 @@ import ScheduleListTable from "@/components/admin/schedule/ScheduleListTable";
 import Loader from "@/components/Loader";
 import Modal from "@/components/Modal";
 import { useScheduleList } from "@/hooks/admin/useSchedule";
-import { ScheduleListRequest } from "@/schemas/schedule";
-
-const DEFAULT_REQUEST: ScheduleListRequest = {
-  userId: null,
-  status: null,
-};
+import { ScheduleListRequest } from "@/schemas/schedule/schedule";
 
 export default function AdminSchedulesPage() {
-  const [request, setRequest] = useState<ScheduleListRequest>(DEFAULT_REQUEST);
+  const [request, setRequest] = useState<ScheduleListRequest>({
+    userId: undefined,
+    status: undefined,
+  });
 
   const [scheduleId, setScheduleId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: schedules, isLoading, error } = useScheduleList(request);
 
-  const updateFilter = (newFilter: ScheduleListRequest) => setRequest(newFilter);
+  const updateRequest = (newRequest: ScheduleListRequest) => setRequest(newRequest);
 
   const openCreateModal = () => { setScheduleId(null); setIsModalOpen(true); };
   const openUpdateModal = (id: number) => { setScheduleId(id); setIsModalOpen(true); };
@@ -36,7 +34,7 @@ export default function AdminSchedulesPage() {
       </h1>
       
       <div className="w-full">
-        <ScheduleListForm onSubmit={updateFilter} />
+        <ScheduleListForm onSubmit={updateRequest} />
       </div>
     
       <div className="flex-1 flex flex-col gap-4 items-center">

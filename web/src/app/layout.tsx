@@ -9,7 +9,7 @@ const notoSans = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: "Next Java LMS",
+  title: "NexLang",
   description: "Learn languages through voice and video, with instant AI feedback"
 };
 

@@ -1,8 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ScheduleCreateRequest } from "@/schemas/schedule";
+import type { ScheduleCreateRequest, ScheduleCreateFormValues } from "@/schemas/schedule/schedule";
 
 interface ScheduleCreateFormProps {
   onSubmit: (data: ScheduleCreateRequest) => void;
@@ -12,14 +11,32 @@ export default function ScheduleCreateForm({ onSubmit }: ScheduleCreateFormProps
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<ScheduleCreateRequest>({
-    resolver: zodResolver(ScheduleCreateRequest),
+    formState: {
+      errors,
+      isSubmitting,
+    },
+  } = useForm<ScheduleCreateFormValues>({
+    defaultValues: {
+      userId: undefined,
+      startsAt: undefined,
+      endsAt: undefined,
+      status: "SCHEDULED",
+    },
+    mode: "onSubmit",
   });
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((values) => {
+        // 시간 변환
+        const payload: ScheduleCreateRequest = {
+          ...values,
+          startsAt: new Date(values.startsAt).toISOString(),
+          endsAt: new Date(values.endsAt).toISOString(),
+        };
+
+        onSubmit(payload);
+      })}
       className="flex flex-col gap-4 w-full"
     >
       <div className="flex space-x-4">
@@ -29,13 +46,16 @@ export default function ScheduleCreateForm({ onSubmit }: ScheduleCreateFormProps
               htmlFor="userId"
               className="w-16 text-left text-sm font-medium text-gray-700"
             >
-              사용자 고유번호
+              사용자 번호
             </label>
             <input
               id="userId"
               type="number"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 disabled:bg-gray-200 text-sm rounded-md"
-              {...register("userId", { valueAsNumber: true })}
+              {...register("userId", {
+                required: "사용자 번호를 입력하세요.",
+                valueAsNumber: true
+              })}
             />
           </div>
           {errors.userId && (
@@ -56,12 +76,14 @@ export default function ScheduleCreateForm({ onSubmit }: ScheduleCreateFormProps
             <select
               id="status"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("status")}
+              {...register("status", {
+                required: "상태를 선택하세요.",
+              })}
             >
-              <option value="SCHEDULED">SCHEDULED</option>
-              <option value="ATTENDED">ATTENDED</option>
-              <option value="ABSENT">ABSENT</option>
-              <option value="CANCELLED">CANCELLED</option>
+              <option value="SCHEDULED">예정됨</option>
+              <option value="ATTENDED">출석</option>
+              <option value="ABSENT">결석</option>
+              <option value="CANCELLED">취소됨</option>
             </select>
           </div>
           {errors.status && (
@@ -85,7 +107,10 @@ export default function ScheduleCreateForm({ onSubmit }: ScheduleCreateFormProps
               id="startsAt"
               type="datetime-local"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 disabled:bg-gray-200 text-sm rounded-md"
-              {...register("startsAt")}
+              {...register("startsAt", {
+                required: "시작 시간을 입력하세요.",
+                valueAsDate: true,
+              })}
             />
           </div>
           {errors.startsAt && (
@@ -107,7 +132,10 @@ export default function ScheduleCreateForm({ onSubmit }: ScheduleCreateFormProps
               id="endsAt"
               type="datetime-local"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 disabled:bg-gray-200 text-sm rounded-md"
-              {...register("endsAt")}
+              {...register("endsAt", {
+                required: "종료 시간을 입력하세요.",
+                valueAsDate: true,
+              })}
             />
           </div>
           {errors.endsAt && (
@@ -122,6 +150,7 @@ export default function ScheduleCreateForm({ onSubmit }: ScheduleCreateFormProps
         <button
           type="submit"
           className="mt-4 mx-auto px-8 py-2 bg-blue-600 text-white rounded"
+          disabled={isSubmitting}
         >
           등록
         </button>

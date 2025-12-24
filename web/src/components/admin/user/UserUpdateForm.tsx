@@ -1,9 +1,8 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UserProfileUpdateRequest } from "@/schemas/user";
-import { User } from "@/schemas/user";
+import { User } from "@/schemas/user/user";
+import type { UserProfileUpdateRequest, UserProfileUpdateFormValues } from "@/schemas/user/user";
 
 interface UserUpdateFormProps {
   user: User;
@@ -15,15 +14,33 @@ export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateF
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isSubmitting },
-  } = useForm<UserProfileUpdateRequest>({
-    resolver: zodResolver(UserProfileUpdateRequest),
-    defaultValues: { ...user },
+    formState: {
+      errors,
+      isSubmitting
+    },
+  } = useForm<UserProfileUpdateFormValues>({
+    defaultValues: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+    },
+    mode: "onSubmit",
   });
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((values) => {
+        // 공백 제거
+        const payload: UserProfileUpdateRequest = {
+          ...values,
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
+          email: values.email.trim(),
+        };
+        onSubmit(payload);
+      })}
       className="flex flex-col gap-4 w-full"
     >
       <div className="flex space-x-4">
@@ -76,7 +93,10 @@ export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateF
               id="firstName"
               type="text"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("firstName")}
+              {...register("firstName", {
+                required: "이름을 입력하세요.",
+                validate: (value) => value.trim().length > 0 || "이름을 입력하세요.",
+              })}
             />
           </div>
           {errors.firstName && (
@@ -98,7 +118,10 @@ export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateF
               id="lastName"
               type="text"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("lastName")}
+              {...register("lastName", {
+                required: "성을 입력하세요.",
+                validate: (value) => value.trim().length > 0 || "성을 입력하세요.",
+              })}
             />
           </div>
           {errors.lastName && (
@@ -121,7 +144,14 @@ export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateF
             id="email"
             type="email"
             className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-            {...register("email")}
+            {...register("email", {
+              required: "이메일을 입력하세요.",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "유효한 이메일 주소를 입력하세요.",
+              },
+              validate: (value) => value.trim().length > 0 || "이메일을 입력하세요.",
+            })}
           />
         </div>
         {errors.email && (
@@ -143,11 +173,13 @@ export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateF
             <select
               id="role"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("role")}
+              {...register("role", {
+                required: "역할을 선택하세요.",
+              })}
             >
               <option value="STUDENT">학생</option>
               <option value="TEACHER">강사</option>
-              <option value="ADMINISTRATOR">관리자</option>
+              <option value="ADMIN">관리자</option>
             </select>
           </div>
           {errors.role && (
@@ -168,7 +200,9 @@ export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateF
             <select
               id="status"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("status")}
+              {...register("status", {
+                required: "상태를 선택하세요.",
+              })}
             >
               <option value="ACTIVE">활성</option>
               <option value="INACTIVE">비활성</option>
@@ -182,11 +216,11 @@ export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateF
         </div>
       </div>
 
-      <div className="flex gap-4 w-full">
+      <div className="flex justify-center gap-4 w-full">
         <button
           type="submit"
-          className="mt-4 mx-auto px-8 py-2 bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed rounded"
-          disabled={!isDirty || isSubmitting}
+          className="mt-4 px-8 py-2 bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed rounded"
+          disabled={isSubmitting}
         >
           수정
         </button>
@@ -194,7 +228,7 @@ export default function UserUpdateForm({ user, onSubmit, onDelete }: UserUpdateF
         <button
           type="button"
           onClick={onDelete}
-          className="mt-4 mx-auto px-8 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          className="mt-4 px-8 py-2 bg-red-600 text-white rounded hover:bg-red-700"
         >
           삭제
         </button>

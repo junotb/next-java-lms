@@ -1,13 +1,14 @@
 import api from "@/libs/api";
-import { PageResponse } from "@/schemas/page-response";
-import { User, UserCreateRequest, UserProfileUpdateRequest, UserListRequest, UserPasswordUpdateRequest } from "@/schemas/user";
+import { PageResponseSchema } from "@/schemas/page-response";
+import { User, UserSchema, UserCreateRequest, UserProfileUpdateRequest, UserListRequest, UserPasswordUpdateRequest } from "@/schemas/user/user";
+import { UserRole } from "@/schemas/user/user-role";
+import { UserStatus } from "@/schemas/user/user-status";
 
 // 사용자 목록 조회
 export async function userList(params: UserListRequest): Promise<User[]> {
   try {
     const response = await api.get<User[]>("/api/user", { params });
-    console.log(response.data);
-    return PageResponse(User).parse(response.data).items;
+    return PageResponseSchema(UserSchema).parse(response.data).items;
   } catch (error) {
     console.error("Error get users:", error);
     throw error;
@@ -18,7 +19,7 @@ export async function userList(params: UserListRequest): Promise<User[]> {
 export async function userProfile(userId: number): Promise<User> {
   try {
     const response = await api.get<User>(`/api/user/${userId}`);
-    return User.parse(response.data);
+    return UserSchema.parse(response.data);
   } catch (error) {
     console.error("Error get user profile:", error);
     throw error;
@@ -29,7 +30,7 @@ export async function userProfile(userId: number): Promise<User> {
 export async function userCreate(payload: UserCreateRequest): Promise<User> {
   try {
     const response = await api.post<User>("/api/user", payload);
-    return User.parse(response.data);
+    return UserSchema.parse(response.data);
   } catch (error) {
     console.error("Error create user:", error);
     throw error;
@@ -40,7 +41,7 @@ export async function userCreate(payload: UserCreateRequest): Promise<User> {
 export async function userProfileUpdate(userId: number, payload: UserProfileUpdateRequest): Promise<User> {
   try {
     const response = await api.patch<User>(`/api/user/${userId}`, payload);
-    return User.parse(response.data);
+    return UserSchema.parse(response.data);
   } catch (error) {
     console.error("Error update user:", error);
     throw error;
@@ -66,3 +67,41 @@ export async function userDelete(userId: number): Promise<void> {
     throw error;
   }
 }
+
+// 사용자 역할별 통계
+export async function userRoleStats(params: UserRole | null): Promise<Record<UserRole, number>> {
+  try {
+    const response = await api.get<Record<UserRole, number>>("/api/user/stats/role", { params });
+    return response.data;
+  } catch (error) {
+    console.error("Error get user role stats:", error);
+    throw error;
+  }
+}
+
+// 사용자 역할명 변환
+export function getUserRoleName(role: UserRole): string {
+  switch (role) {
+    case "ADMIN":
+      return "관리자";
+    case "TEACHER":
+      return "강사";
+    case "STUDENT":
+      return "학생";
+    default:
+      return "알 수 없음";
+  }
+}
+
+// 사용자 상태명 변환
+export function getUserStatusName(status: UserStatus): string {
+  switch (status) {
+    case "ACTIVE":
+      return "활성";
+    case "INACTIVE":
+      return "비활성";
+    default:
+      return "알 수 없음";
+  }
+}
+

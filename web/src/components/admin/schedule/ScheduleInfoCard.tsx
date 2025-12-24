@@ -4,7 +4,7 @@ import Loader from "@/components/Loader";
 import ScheduleCreateForm from "@/components/admin/schedule/ScheduleCreateForm";
 import ScheduleUpdateForm from "@/components/admin/schedule/ScheduleUpdateForm";
 import { useScheduleInfo, useScheduleCreate, useScheduleUpdate, useScheduleDelete } from "@/hooks/admin/useSchedule";
-import { ScheduleCreateRequest, ScheduleUpdateRequest } from "@/schemas/schedule";
+import { ScheduleCreateRequest, ScheduleUpdateRequest } from "@/schemas/schedule/schedule";
 
 interface ScheduleInfoCardProps {
   scheduleId: number | null;
@@ -20,10 +20,10 @@ export default function ScheduleInfoCard({ scheduleId, onSuccess }: ScheduleInfo
   const modifyMutation = useScheduleUpdate();
   const deleteMutation = useScheduleDelete();
   
-  const handleSubmit = async (raw: unknown) => {
+  const handleSubmit = async (raw: ScheduleCreateRequest | ScheduleUpdateRequest) => {
     console.log("handleSubmit", raw);
     if (isCreate) {
-      const payload = ScheduleCreateRequest.parse(raw);
+      const payload = raw as ScheduleCreateRequest;
       await registerMutation.mutateAsync(payload);
       onSuccess();
       return;
@@ -31,7 +31,7 @@ export default function ScheduleInfoCard({ scheduleId, onSuccess }: ScheduleInfo
 
     if (scheduleId === null) return;
 
-    const payload = ScheduleUpdateRequest.parse(raw);
+    const payload = raw as ScheduleUpdateRequest;
     await modifyMutation.mutateAsync({ scheduleId, payload });
     onSuccess();
   }

@@ -1,7 +1,7 @@
 "use client";
 
 import UserCard from "@/components/user/UserCard";
-import { User } from "@/schemas/user";
+import { User } from "@/schemas/user/user";
 
 interface UserListProps {
   users: User[];

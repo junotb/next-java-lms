@@ -1,8 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UserCreateRequest } from "@/schemas/user";
+import type { UserCreateRequest, UserCreateFormValues } from "@/schemas/user/user";
 
 interface UserCreateFormProps {
   onSubmit: (data: UserCreateRequest) => void;
@@ -12,14 +11,37 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<UserCreateRequest>({
-    resolver: zodResolver(UserCreateRequest),
+    formState: {
+      errors,
+      isSubmitting,
+    },
+  } = useForm<UserCreateFormValues>({
+    defaultValues: {
+      username: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: undefined,
+      status: undefined,
+    },
+    mode: "onSubmit",
   });
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((values) => {
+        // 공백 제거
+        const payload: UserCreateRequest = {
+          ...values,
+          username: values.username.trim(),
+          password: values.password.trim(),
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
+          email: values.email.trim(),
+        };
+        onSubmit(payload);
+      })}
       className="flex flex-col gap-4 w-full"
     >
       <div className="flex space-x-4">
@@ -35,7 +57,10 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
               id="username"
               type="text"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("username")}
+              {...register("username", {
+                required: "아이디를 입력하세요.",
+                validate: (value) => value.trim().length > 0 || "아이디를 입력하세요.",
+              })}
             />
           </div>
           {errors.username && (
@@ -57,7 +82,10 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
               id="password"
               type="password"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("password")}
+              {...register("password", {
+                required: "비밀번호를 입력하세요.",
+                validate: (value) => value.trim().length > 0 || "비밀번호를 입력하세요.",
+              })}
             />
           </div>
           {errors.password && (
@@ -81,7 +109,10 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
               id="firstName"
               type="text"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("firstName")}
+              {...register("firstName", {
+                required: "이름을 입력하세요.",
+                validate: (value) => value.trim().length > 0 || "이름을 입력하세요.",
+              })}
             />
           </div>
           {errors.firstName && (
@@ -103,7 +134,10 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
               id="lastName"
               type="text"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("lastName")}
+              {...register("lastName", {
+                required: "성을 입력하세요.",
+                validate: (value) => value.trim().length > 0 || "성을 입력하세요.",
+              })}
             />
           </div>
           {errors.lastName && (
@@ -126,7 +160,14 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
             id="email"
             type="email"
             className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-            {...register("email")}
+            {...register("email", {
+              required: "이메일을 입력하세요.",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "유효한 이메일 형식이 아닙니다.",
+              },
+              validate: (value) => value.trim().length > 0 || "이메일을 입력하세요.",
+            })}
           />
         </div>
         {errors.email && (
@@ -148,11 +189,13 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
             <select
               id="role"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("role")}
+              {...register("role", {
+                required: "역할을 선택하세요.",
+              })}
             >
               <option value="STUDENT">학생</option>
               <option value="TEACHER">강사</option>
-              <option value="ADMINISTRATOR">관리자</option>
+              <option value="ADMIN">관리자</option>
             </select>
           </div>
           {errors.role && (
@@ -173,7 +216,9 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
             <select
               id="status"
               className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("status")}
+              {...register("status", {
+                required: "상태를 선택하세요.",
+              })}
             >
               <option value="ACTIVE">활성</option>
               <option value="INACTIVE">비활성</option>
@@ -191,6 +236,7 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
         <button
           type="submit"
           className="mt-4 mx-auto px-8 py-2 bg-blue-600 text-white rounded"
+          disabled={isSubmitting}
         >
           등록
         </button>
