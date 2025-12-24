@@ -1,11 +1,5 @@
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ScheduleListRequest } from "@/schemas/schedule";
-
-const DEFAULT_REQUEST: ScheduleListRequest = {
-  userId: null,
-  status: null,
-};
+import type { ScheduleListRequest, ScheduleListFormValues } from "@/schemas/schedule/schedule";
 
 interface ScheduleListFormProps {
   onSubmit: (data: ScheduleListRequest) => void;
@@ -16,12 +10,18 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
     register,
     handleSubmit,
     reset,
-  } = useForm<ScheduleListRequest>({
-    resolver: zodResolver(ScheduleListRequest),
-    defaultValues: DEFAULT_REQUEST,
+  } = useForm<ScheduleListFormValues>({
+    defaultValues: {
+      userId: undefined,
+      status: undefined,
+    },
+    mode: "onSubmit",
   });
 
-  const handleReset = () => reset(DEFAULT_REQUEST);
+  const handleReset = () => reset({
+    userId: undefined,
+    status: undefined,
+  });
   
   return (
     <form
@@ -30,16 +30,18 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
     >
       <div className="flex flex-col gap-2">
         <label
-          htmlFor="lastName"
+          htmlFor="userId"
           className="text-sm font-medium text-gray-700"
         >
-          사용자 고유번호
+          사용자 번호
         </label>
         <input
-          id="lastName"
+          id="userId"
           type="text"
           className="border px-2 lg:px-4 py-2 w-20 lg:w-32 text-sm rounded-md"
-          {...register("userId")}
+          {...register("userId", {
+            valueAsNumber: true
+          })}
         />
       </div>
 
@@ -62,11 +64,18 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
       </div>
 
       <div className="flex justify-center items-center gap-4">
-        <button type="button" onClick={handleReset} className="border px-2 lg:px-4 py-2 text-sm rounded-md cursor-pointer">
+        <button
+          type="button"
+          className="border px-2 lg:px-4 py-2 text-sm rounded-md cursor-pointer"
+          onClick={handleReset}
+        >
           초기화
         </button>
 
-        <button type="submit" className="border border-blue-600 bg-blue-600 text-white px-2 lg:px-4 py-2 text-sm rounded-md hover:bg-blue-700 cursor-pointer">
+        <button
+          type="submit"
+          className="border border-blue-600 bg-blue-600 text-white px-2 lg:px-4 py-2 text-sm rounded-md hover:bg-blue-700 cursor-pointer"
+        >
           검색
         </button>
       </div>

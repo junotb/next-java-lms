@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import PlusIcon from "@/assets/icons/plus.svg";
-import UserInfoForm from "@/components/admin/user/UserListForm";
+import UserListForm from "@/components/admin/user/UserListForm";
 import UserInfoCard from "@/components/admin/user/UserInfoCard";
 import UserListTable from "@/components/admin/user/UserListTable";
 import Loader from "@/components/Loader";
 import Modal from "@/components/Modal";
 import { useUserList } from "@/hooks/admin/useUser";
-import { UserListRequest } from "@/schemas/user";
-
-const DEFAULT_REQUEST: UserListRequest = {
-  role: null,
-  status: null,
-  lastName: null,
-  firstName: null,
-};
+import { UserListRequest } from "@/schemas/user/user";
 
 export default function AdminUsersPage() {
-  const [request, setRequest] = useState<UserListRequest>(DEFAULT_REQUEST);
+  const [request, setRequest] = useState<UserListRequest>({
+    role: undefined,
+    status: undefined,
+    lastName: undefined,
+    firstName: undefined,
+  });
 
   const [userId, setUserId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +36,7 @@ export default function AdminUsersPage() {
       </h1>
       
       <div className="w-full">
-        <UserInfoForm onSubmit={updateRequest} />
+        <UserListForm onSubmit={updateRequest} />
       </div>
     
       <div className="flex-1 flex flex-col gap-4 items-center">

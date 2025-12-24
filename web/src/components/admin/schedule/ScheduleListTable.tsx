@@ -1,4 +1,4 @@
-import { Schedule } from "@/schemas/schedule";
+import { Schedule } from "@/schemas/schedule/schedule";
 
 interface ScheduleListTableProps {
   schedules: Schedule[];
@@ -6,16 +6,6 @@ interface ScheduleListTableProps {
 }
 
 export default function ScheduleListTable({ schedules, onUpdate }: ScheduleListTableProps) {
-  const getStatusLabel = (status: string) => {
-    const statusMap: Record<string, string> = {
-      SCHEDULED: "예정됨",
-      ATTENDED: "출석",
-      ABSENT: "결석",
-      CANCELLED: "취소됨",
-    };
-    return statusMap[status] || "알 수 없음";
-  }
-
   return (
     <table className="min-w-full divide-y divide-gray-200">
       <thead className="bg-gray-50">
@@ -24,7 +14,7 @@ export default function ScheduleListTable({ schedules, onUpdate }: ScheduleListT
             scope="col"
             className="px-6 py-4 text-center text-sm font-medium text-gray-500 uppercase tracking-wider"
           >
-            사용자 고유번호
+            사용자 번호
           </th>
           <th
             scope="col"
@@ -73,7 +63,7 @@ export default function ScheduleListTable({ schedules, onUpdate }: ScheduleListT
                       : "px-4 py-2 bg-red-100 text-red-800"
                 }`}
               >
-                {getStatusLabel(schedule.status)}
+                {schedule.status}
               </span>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

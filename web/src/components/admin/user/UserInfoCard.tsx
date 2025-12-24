@@ -4,7 +4,7 @@ import Loader from "@/components/Loader";
 import UserCreateForm from "@/components/admin/user/UserCreateForm";
 import UserUpdateForm from "@/components/admin/user/UserUpdateForm";
 import { useUserProfile, useUserCreate, useUserProfileUpdate, useUserDelete } from "@/hooks/admin/useUser";
-import { UserCreateRequest, UserProfileUpdateRequest } from "@/schemas/user";
+import { UserCreateRequest, UserProfileUpdateRequest } from "@/schemas/user/user";
 
 interface UserInfoCardProps {
   userId: number | null;
@@ -20,9 +20,9 @@ export default function UserInfoCard({ userId, onSuccess }: UserInfoCardProps) {
   const modifyMutation = useUserProfileUpdate();
   const deleteMutation = useUserDelete();
   
-  const handleSubmit = async (raw: unknown) => {
+  const handleSubmit = async (raw: UserCreateRequest | UserProfileUpdateRequest) => {
     if (isCreate) {
-      const payload = UserCreateRequest.parse(raw);
+      const payload = raw as UserCreateRequest;
       await registerMutation.mutateAsync(payload);
       onSuccess();
       return;
@@ -30,7 +30,7 @@ export default function UserInfoCard({ userId, onSuccess }: UserInfoCardProps) {
 
     if (userId === null) return;
 
-    const payload = UserProfileUpdateRequest.parse(raw);
+    const payload = raw as UserProfileUpdateRequest;
     await modifyMutation.mutateAsync({ userId, payload });
     onSuccess();
   }

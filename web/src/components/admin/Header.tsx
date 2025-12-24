@@ -9,7 +9,7 @@ export default function AdminHeader() {
       <div className="flex items-center justify-between px-4 h-16 w-full">
         <div className="flex items-center space-x-2">
           <BookOpenIcon />
-          <h1 className="font-bold">Next-Java-Lms</h1>
+          <h1 className="font-bold">NexLang</h1>
         </div>
         <nav className="flex items-center space-x-6">
           <Link href="/admin" className="flex items-center">
