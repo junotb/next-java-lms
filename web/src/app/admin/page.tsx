@@ -1,15 +1,17 @@
 "use client";
 
-import StatsList from "@/components/admin/StatsList";
-import StatsListSkeleton from "@/components/admin/StatsListSkeleton";
-import { useScheduleStatusStats } from "@/hooks/admin/useSchedule";
-import { useUserRoleStats } from "@/hooks/admin/useUser";
-import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
-import { UserRole } from "@/schemas/user/user-role";
+import StatsList from "@/component/admin/StatsList";
+import StatsListSkeleton from "@/component/admin/StatsListSkeleton";
+import { useScheduleStatusStats } from "@/hook/admin/useSchedule";
+import { useUserRoleStats } from "@/hook/admin/useUser";
+import { ScheduleStatus } from "@/schema/schedule/schedule-status";
+import { UserRole } from "@/schema/user/user-role";
 
 export default function AdminPage() {
   const { data: scheduleStatusStats, isLoading: isScheduleStatusLoading } = useScheduleStatusStats(null);
   const { data: userRoleStats, isLoading: isUserRoleLoading } = useUserRoleStats(null);
+
+  console.log('scheduleStatusStats', scheduleStatusStats);
 
   return (
     <div className="mx-auto py-24 lg:py-32 w-md lg:w-xl bg-background">

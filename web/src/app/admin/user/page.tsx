@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import PlusIcon from "@/assets/icons/plus.svg";
-import UserListForm from "@/components/admin/user/UserListForm";
-import UserInfoCard from "@/components/admin/user/UserInfoCard";
-import UserListTable from "@/components/admin/user/UserListTable";
-import Loader from "@/components/Loader";
-import Modal from "@/components/Modal";
-import { useUserList } from "@/hooks/admin/useUser";
-import { UserListRequest } from "@/schemas/user/user";
+import PlusIcon from "@/asset/icon/plus.svg";
+import UserListForm from "@/component/admin/user/UserListForm";
+import UserInfoCard from "@/component/admin/user/UserInfoCard";
+import UserListTable from "@/component/admin/user/UserListTable";
+import Loader from "@/component/Loader";
+import Modal from "@/component/Modal";
+import { useUserList } from "@/hook/admin/useUser";
+import { UserListRequest } from "@/schema/user/user";
 
 export default function AdminUsersPage() {
   const [request, setRequest] = useState<UserListRequest>({

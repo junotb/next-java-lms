@@ -1,0 +1,35 @@
+"use client";
+
+import UserCard from "@/component/user/UserCard";
+import { User } from "@/schema/user/user";
+
+interface UserListProps {
+  users: User[];
+  basePath: string;
+};
+
+export default function UserList({ users, basePath }: UserListProps) {
+  return (
+    <section>
+      {users.length === 0 && (
+        <div
+          role="alert"
+          className="flex justify-center items-center"
+        >
+          <p className="text-sm text-gray-500">등록된 사용자가 없습니다.</p>
+        </div>
+      )}
+  
+      {users.length > 0 && (
+        <div
+          role="list"
+          className="flex flex-wrap gap-4 justify-center items-stretch"
+        >
+          {users.map((user) => (
+            <UserCard key={user.username} href={`${basePath}/${user.username}`} firstName={user.firstName} lastName={user.lastName} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
