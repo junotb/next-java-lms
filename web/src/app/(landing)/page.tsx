@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import AuthModalContainer from "@/component/auth/AuthModalContainer";
+import { useAuthModalStore } from "@/store/useAuthModalStore";
 
-type AuthModalProps = "login" | "join";
+export default function LandingPage() {
+  const { openModal } = useAuthModalStore();
 
-export default async function LandingPage() {
   return (
     <div>
       <section className="relative overflow-hidden bg-white py-24 sm:py-32">
@@ -31,11 +35,14 @@ export default async function LandingPage() {
               </p>
               
               <div className="mt-12 flex flex-col items-center gap-y-4 sm:flex-row sm:gap-x-6 lg:justify-start">
-                <Link href="/join" className="rounded-2xl bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-transform hover:-translate-y-1">
+                <button
+                  onClick={() => openModal("LOGIN")}
+                  aria-label="로그인 페이지로 이동"
+                  className="rounded-2xl bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-transform hover:-translate-y-1"
+                >
                   무료 수업 시작하기
-                </Link>
+                </button>
               </div>
-
               <dl className="mt-16 grid grid-cols-2 gap-8 border-t border-slate-100 pt-8 sm:grid-cols-3">
                 {[
                   ['WebRTC 1:1', '초저지연 대면 수업'],
@@ -83,6 +90,8 @@ export default async function LandingPage() {
           </div>
         </div>
       </section>
+
+      <AuthModalContainer />
     </div>
   );
 }

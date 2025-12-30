@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import PlusIcon from "@/assets/icons/plus.svg";
-import ScheduleListForm from "@/components/admin/schedule/ScheduleListForm";
-import ScheduleInfoCard from "@/components/admin/schedule/ScheduleInfoCard";
-import ScheduleListTable from "@/components/admin/schedule/ScheduleListTable";
-import Loader from "@/components/Loader";
-import Modal from "@/components/Modal";
-import { useScheduleList } from "@/hooks/admin/useSchedule";
-import { ScheduleListRequest } from "@/schemas/schedule/schedule";
+import PlusIcon from "@/asset/icon/plus.svg";
+import ScheduleListForm from "@/component/admin/schedule/ScheduleListForm";
+import ScheduleInfoCard from "@/component/admin/schedule/ScheduleInfoCard";
+import ScheduleListTable from "@/component/admin/schedule/ScheduleListTable";
+import Loader from "@/component/Loader";
+import Modal from "@/component/Modal";
+import { useScheduleList } from "@/hook/admin/useSchedule";
+import { ScheduleListRequest } from "@/schema/schedule/schedule";
 
 export default function AdminSchedulesPage() {
   const [request, setRequest] = useState<ScheduleListRequest>({
