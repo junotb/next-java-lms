@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -32,7 +32,7 @@ public class UserController {
 
     // 사용자 조회
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> get(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> get(@PathVariable String id) {
         return ResponseEntity.of(userService.findById(id).map(UserResponse::from));
     }
 
@@ -45,14 +45,14 @@ public class UserController {
 
     // 사용자 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody @Valid UserUpdateRequest request) {
+    public ResponseEntity<UserResponse> update(@PathVariable String id, @RequestBody @Valid UserUpdateRequest request) {
         User user = userService.update(id, request);
         return ResponseEntity.ok(UserResponse.from(user));
     }
 
     // 사용자 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }

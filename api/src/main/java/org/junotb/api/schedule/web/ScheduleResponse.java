@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 
 public record ScheduleResponse(
     Long id,
-    Long userId,
+    String userId,
     OffsetDateTime startsAt,
     OffsetDateTime endsAt,
     ScheduleStatus status,

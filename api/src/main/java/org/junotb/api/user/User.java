@@ -8,7 +8,7 @@ import org.hibernate.type.SqlTypes;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "\"user\"")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,60 +17,50 @@ import java.time.OffsetDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "\"id\"")
+    private String id;
 
-    @Column(name = "username", nullable = false)
-    private String username;
+    @Column(name = "\"name\"", nullable = false)
+    private String name;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
-
-    @Column(name = "email", nullable = false)
+    @Column(name = "\"email\"", nullable = false)
     private String email;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "\"emailVerified\"", nullable = false)
+    private Boolean emailVerified;
+
+    @Column(name = "\"image\"", nullable = false)
+    private String image;
+
+    @Column(name = "\"createdAt\"", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
+
+    @Column(name = "\"updatedAt\"", nullable = false)
+    private OffsetDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "role", nullable = false)
+    @Column(name = "\"role\"", nullable = false)
     private UserRole role;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "status", nullable = false)
+    @Column(name = "\"status\"", nullable = false)
     private UserStatus status;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
-
     public static User create(
-        String username,
-        String password,
-        String firstName,
-        String lastName,
+        String name,
         String email,
-        String description,
+        Boolean emailVerified,
+        String image,
         UserRole role,
         UserStatus status
     ) {
         return User.builder()
-            .username(username)
-            .password(password)
-            .firstName(firstName)
-            .lastName(lastName)
+            .name(name)
             .email(email)
-            .description(description)
+            .emailVerified(emailVerified)
+            .image(image)
             .role(role)
             .status(status)
             .build();

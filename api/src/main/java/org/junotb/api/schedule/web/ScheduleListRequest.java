@@ -3,7 +3,7 @@ package org.junotb.api.schedule.web;
 import org.junotb.api.schedule.ScheduleStatus;
 
 public record ScheduleListRequest(
-    Long userId,
+    String userId,
     ScheduleStatus status
 ) {
     public static ScheduleListRequest empty() {

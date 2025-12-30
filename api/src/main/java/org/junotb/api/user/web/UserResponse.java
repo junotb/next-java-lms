@@ -7,31 +7,27 @@ import org.junotb.api.user.UserStatus;
 import java.time.OffsetDateTime;
 
 public record UserResponse(
-    Long id,
-    String username,
-    String password,
-    String firstName,
-    String lastName,
+    String id,
+    String name,
     String email,
-    String description,
-    UserRole role,
-    UserStatus status,
+    Boolean emailVerified,
+    String image,
     OffsetDateTime createdAt,
-    OffsetDateTime updatedAt
+    OffsetDateTime updatedAt,
+    UserRole role,
+    UserStatus status
 ) {
     public static UserResponse from(User user) {
         return new UserResponse(
             user.getId(),
-            user.getUsername(),
-            user.getPassword(),
-            user.getFirstName(),
-            user.getLastName(),
+            user.getName(),
             user.getEmail(),
-            user.getDescription(),
-            user.getRole(),
-            user.getStatus(),
+            user.getEmailVerified(),
+            user.getImage(),
             user.getCreatedAt(),
-            user.getUpdatedAt()
+            user.getUpdatedAt(),
+            user.getRole(),
+            user.getStatus()
         );
     }
 }
