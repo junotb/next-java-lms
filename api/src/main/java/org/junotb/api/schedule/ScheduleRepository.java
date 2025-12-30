@@ -19,6 +19,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long>, JpaSp
         )
         group by s.status
     """)
-    List<StatusCountRow> countByStatus(@Param("userId") Long userId);
-
+    List<StatusCountRow> countByStatus(@Param("userId") String userId);
 }

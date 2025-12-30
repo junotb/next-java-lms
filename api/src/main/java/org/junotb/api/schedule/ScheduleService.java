@@ -37,14 +37,14 @@ public class ScheduleService {
             // 사용자 번호로 필터링
             if (request.userId() != null) {
                 predicates.add(
-                    cb.equal(root.get("user").get("id"), request.userId())
+                    cb.equal(root.get("\"userId\""), request.userId())
                 );
             }
 
             // 스케줄 상태로 필터링
             if (request.status() != null) {
                 predicates.add(
-                    cb.equal(root.get("status"), request.status())
+                    cb.equal(root.get("\"status\""), request.status())
                 );
             }
 
@@ -59,7 +59,7 @@ public class ScheduleService {
     public Schedule create(ScheduleCreateRequest request) {
         // 사용자 존재 여부 확인
         User user = userRepository.findById(request.userId()).orElseThrow(() ->
-            new ResourceNotFoundException("id", String.valueOf(request.userId()))
+            new ResourceNotFoundException("id", request.userId())
         );
 
         Schedule schedule = Schedule.create(
@@ -103,7 +103,7 @@ public class ScheduleService {
 
     // 상태별 스케줄 개수 조회
     @Transactional(readOnly = true)
-    public Map<ScheduleStatus, Long> countByStatus(Long userId) {
+    public Map<ScheduleStatus, Long> countByStatus(String userId) {
         EnumMap<ScheduleStatus, Long> result = new EnumMap<>(ScheduleStatus.class);
 
         // 모든 상태를 0으로 초기화

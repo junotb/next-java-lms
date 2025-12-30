@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
-    boolean existsByUsername(String username);
+public interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
     boolean existsByEmail(String email);
 
     @Query("""

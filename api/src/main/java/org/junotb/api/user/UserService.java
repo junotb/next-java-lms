@@ -23,7 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     // 사용자 조회
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(String id) {
         return userRepository.findById(id);
     }
 
@@ -32,31 +32,24 @@ public class UserService {
         Specification<User> spec = (root, query, cb) -> {
             var predicates = cb.conjunction();
 
-            if (request.firstName() != null && !request.firstName().isBlank()) {
+            if (request.name() != null && !request.name().isBlank()) {
                 predicates = cb.and(
                     predicates,
-                    cb.like(root.get("firstName"), "%" + request.firstName() + "%")
-                );
-            }
-
-            if (request.lastName() != null && !request.lastName().isBlank()) {
-                predicates = cb.and(
-                    predicates,
-                    cb.like(root.get("lastName"), "%" + request.lastName() + "%")
+                    cb.like(root.get("\"name\""), "%" + request.name() + "%")
                 );
             }
 
             if (request.role() != null) {
                 predicates = cb.and(
                     predicates,
-                    cb.equal(root.get("role"), request.role())
+                    cb.equal(root.get("\"role\""), request.role())
                 );
             }
 
             if (request.status() != null) {
                 predicates = cb.and(
                     predicates,
-                    cb.equal(root.get("status"), request.status())
+                    cb.equal(root.get("\"status\""), request.status())
                 );
             }
 
@@ -69,20 +62,15 @@ public class UserService {
     // 사용자 생성
     @Transactional
     public User create(UserCreateRequest request) {
-        if (userRepository.existsByUsername(request.username())) {
-            throw new DuplicateResourceException("Username", request.username());
-        }
         if (userRepository.existsByEmail(request.email())) {
             throw new DuplicateResourceException("Email", request.email());
         }
 
         User user = User.create(
-            request.username(),
-            request.password(),
-            request.firstName(),
-            request.lastName(),
+            request.name(),
             request.email(),
-            request.description(),
+            false,
+            "",
             request.role(),
             request.status()
         );
@@ -92,15 +80,13 @@ public class UserService {
 
     // 사용자 수정
     @Transactional
-    public User update(Long id, UserUpdateRequest request) {
+    public User update(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(
             () -> new EntityExistsException("User not found with id: " + id)
         );
 
-        if (request.firstName() != null) user.setFirstName(request.firstName());
-        if (request.lastName() != null) user.setLastName(request.lastName());
+        if (request.name() != null) user.setName(request.name());
         if (request.email() != null) user.setEmail(request.email());
-        if (request.description() != null) user.setDescription(request.description());
         if (request.role() != null) user.setRole(request.role());
         if (request.status() != null) user.setStatus(request.status());
 
@@ -109,7 +95,7 @@ public class UserService {
 
     // 사용자 삭제 (비활성화 처리)
     @Transactional
-    public void delete(Long id) {
+    public void delete(String id) {
         User user = userRepository.findById(id).orElseThrow(
             () -> new EntityExistsException("User not found with id: " + id)
         );

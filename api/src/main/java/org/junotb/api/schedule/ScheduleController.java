@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/schedule")
+@RequestMapping("/api/v1/schedule")
 @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
@@ -59,7 +59,7 @@ public class ScheduleController {
 
     // 스케줄 상태별 통계 조회
     @GetMapping("/stats/status")
-    public ResponseEntity<Map<ScheduleStatus, Long>> countByStatus(@PathVariable Long userId) {
+    public ResponseEntity<Map<ScheduleStatus, Long>> countByStatus(@RequestParam(required = false) String userId) {
         Map<ScheduleStatus, Long> stats = scheduleService.countByStatus(userId);
         return ResponseEntity.ok(stats);
     }

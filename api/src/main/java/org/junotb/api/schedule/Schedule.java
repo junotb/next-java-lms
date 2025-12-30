@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Entity
-@Table(name = "schedules")
+@Table(name = "\"schedule\"")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,32 +19,32 @@ import java.util.Optional;
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "\"id\"")
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "\"userId\"", nullable = false)
+    private String userId;
 
-    @Column(name = "starts_at", nullable = false)
+    @Column(name = "\"startsAt\"", nullable = false)
     private OffsetDateTime startsAt;
 
-    @Column(name = "ends_at", nullable = false)
+    @Column(name = "\"endsAt\"", nullable = false)
     private OffsetDateTime endsAt;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "status", nullable = false)
+    @Column(name = "\"status\"", nullable = false)
     private ScheduleStatus status;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "\"createdAt\"", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "\"updatedAt\"", nullable = false)
     private OffsetDateTime updatedAt;
 
     @Transactional
     public static Schedule create(
-        Long userId,
+        String userId,
         OffsetDateTime startsAt,
         OffsetDateTime endsAt,
         ScheduleStatus status
