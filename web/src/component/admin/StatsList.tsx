@@ -10,14 +10,19 @@ interface StatsListProps<K extends StatKey> {
   unit: string;
 }
 
-export default function StatsList<K extends StatKey>({ title, stats, unit }: StatsListProps<K>) {
+export default function StatsList<K extends StatKey>({
+  title,
+  stats,
+  unit,
+}: StatsListProps<K>) {
   const entries = Object.entries(stats ?? {}) as [K, number][];
 
   return (
-    <section className="flex flex-col gap-4 mx-auto w-sm lg:w-lg">
-      <h1 className="text-2xl font-bold mb-4 col-span-full">{title}</h1>
+    <section className="flex flex-col gap-4">
+      {/* 페이지의 h1과 구분하기 위해 h2를 사용하고, 불필요한 스타일을 제거합니다. */}
+      <h2 className="text-2xl font-bold">{title}</h2>
 
-      <div className="flex gap-4 justify-center">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
         {entries.map(([key, value]) => (
           <StatCard key={key} title={key} value={value} unit={unit} />
         ))}

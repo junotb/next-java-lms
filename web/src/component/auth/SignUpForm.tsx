@@ -1,7 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { BetterError, SignUpEmailFormValues, SignUpEmailRequest } from "@/schema/auth";
+import type {
+  BetterError,
+  SignUpEmailFormValues,
+  SignUpEmailRequest,
+} from "@/schema/auth";
+import InputField from "@/component/common/InputField";
 
 interface SignUpFormProps {
   error: BetterError | null;
@@ -12,10 +17,7 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
   const {
     register,
     handleSubmit,
-    formState: {
-      errors,
-      isSubmitting,
-    },
+    formState: { errors, isSubmitting },
   } = useForm<SignUpEmailFormValues>({
     defaultValues: {
       email: "",
@@ -24,7 +26,7 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
     },
     mode: "onSubmit",
   });
-  
+
   return (
     <form
       onSubmit={handleSubmit((values) => {
@@ -43,68 +45,50 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
     >
       <h2 className="text-2xl font-bold text-center">회원가입</h2>
 
-      <div className="flex flex-col gap-2 w-full">
-        <label
-          htmlFor="email"
-          className="w-16 text-left text-sm font-medium text-gray-500"
-        >
-          이메일
-        </label>
-        <input
-          type="text"
-          className="border px-2 lg:px-4 py-2 w-full text-sm focus:border-blue-500 focus:ring-blue-500 rounded-md"
-          {...register("email", {
-            required: "아이디를 입력하세요.",
-            validate: (value) => value.trim().length > 0 || "아이디를 입력하세요.",
-          })}
-        />
-        {errors.email && (
-          <p className="text-red-500 text-sm">
-            {errors.email.message}
-          </p>
-        )}
-      </div>
+      <InputField
+        id="email"
+        label="이메일"
+        type="email"
+        register={register}
+        errors={errors}
+        validation={{
+          required: "이메일을 입력하세요.",
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: "유효한 이메일 주소를 입력하세요.",
+          },
+        }}
+      />
 
-      <div className="flex flex-col gap-2 w-full">
-        <label
-          htmlFor="password"
-          className="w-16 text-left text-sm font-medium text-gray-500"
-        >
-          비밀번호
-        </label>
-        <input
-          type="password"
-          className="border px-2 lg:px-4 py-2 w-full text-sm focus:border-blue-500 focus:ring-blue-500 rounded-md"
-          {...register("password", {
-            required: "비밀번호를 입력하세요.",
-            minLength: {
-              value: 8,
-              message: "비밀번호는 최소 8자 이상이어야 합니다.",
-            },
-          })}
-        />
-      </div>
+      <InputField
+        id="password"
+        label="비밀번호"
+        type="password"
+        register={register}
+        errors={errors}
+        validation={{
+          required: "비밀번호를 입력하세요.",
+          minLength: {
+            value: 8,
+            message: "비밀번호는 최소 8자 이상이어야 합니다.",
+          },
+        }}
+      />
 
-      <div className="flex flex-col gap-2 w-full">
-        <label
-          htmlFor="name"
-          className="w-16 text-left text-sm font-medium text-gray-500"
-        >
-          이름
-        </label>
-        <input
-          type="text"
-          className="border px-2 lg:px-4 py-2 w-full text-sm focus:border-blue-500 focus:ring-blue-500 rounded-md"
-          {...register("name", {
-            required: "이름을 입력하세요.",
-            validate: (value) => value.trim().length > 0 || "이름을 입력하세요.",
-          })}
-        />
-      </div>
+      <InputField
+        id="name"
+        label="이름"
+        type="text"
+        register={register}
+        errors={errors}
+        validation={{
+          required: "이름을 입력하세요.",
+        }}
+      />
 
       <button
         type="submit"
-        className="mx-auto px-8 py-2 bg-blue-600 text-white rounded"
+        className="mt-4 w-full rounded-xl bg-blue-600 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-blue-300 disabled:shadow-none disabled:transform-none"
         disabled={isSubmitting}
       >
         회원가입

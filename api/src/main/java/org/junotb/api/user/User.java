@@ -16,7 +16,6 @@ import java.time.OffsetDateTime;
 @Builder(toBuilder = true)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"id\"")
     private String id;
 

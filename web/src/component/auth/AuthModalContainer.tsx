@@ -1,72 +1,134 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  BetterError,
+  SignInEmailRequest,
+  SignUpEmailRequest,
+} from "@/schema/auth";
+import { useAuthModalStore } from "@/store/useAuthModalStore";
+import { useToastStore } from "@/store/useToastStore";
 import SignInForm from "@/component/auth/SignInForm";
 import SignUpForm from "@/component/auth/SignUpForm";
-import Loader from "@/component/Loader";
-import { authClient } from "@/lib/auth-client"; 
-import { BetterError, SignInEmailRequest, SignUpEmailRequest } from "@/schema/auth";
-import { useAuthModalStore } from "@/store/useAuthModalStore";
-import { useState } from "react";
+import Loader from "@/component/common/Loader";
+import { authClient } from "@/lib/auth-client";
+
+// 역할(Role)과 리디렉션 경로를 상수로 관리하여 실수를 방지하고 유지보수성을 높입니다.
+const roleRedirectMap: Record<string, string> = {
+  ADMIN: "/admin",
+  TEACHER: "/teach",
+  STUDENT: "/study", // middleware.ts와 경로 일치 (기존 /student -> /study)
+};
+
+const MODAL_TYPES = {
+  SIGN_IN: "signin",
+  SIGN_UP: "signup",
+} as const;
 
 export default function AuthModalContainer() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<BetterError | null>(null);
 
+  const router = useRouter();
+  const { showToast } = useToastStore();
   const { modalType, openModal, closeModal } = useAuthModalStore();
-  
+
+  useEffect(() => {
+    setError(null);
+  }, [modalType]);
+
   if (!modalType) return null;
 
   const handleSignIn = async (payload: SignInEmailRequest) => {
     const { data, error } = await authClient.signIn.email(payload, {
-      onRequest: () => setIsLoading(true),
-      onSuccess: () => setIsLoading(false),
-      onError: () => setIsLoading(false),
-    });
-    
-    console.log(data);
-    if (error) setError(error);
-  }
-
-  const handleSignUp = async (payload: SignUpEmailRequest) => {
-    const { data, error } = await authClient.signUp.email(payload, {
       onRequest: () => {
-        console.log("Signing up with payload:", payload);
         setIsLoading(true);
+        setError(null);
       },
       onSuccess: () => setIsLoading(false),
       onError: () => setIsLoading(false),
     });
-    
-    console.log(data);
-    if (error) setError(error);
+
+    if (error) {
+      setError(error);
+      return;
+    }
+
+    if (!data) {
+      showToast("로그인에 실패했습니다.", "error");
+      return;
+    }
+
+    const { role } = data.user as unknown as { role: string };
+
+    const redirectPath = roleRedirectMap[role] || "/";
+
+    // 로그인 후 뒤로가기 시 모달이 다시 뜨는 것을 방지하기 위해 push 대신 replace를 사용합니다.
+    // 이 방식은 사용자 경험을 향상시킵니다.
+    router.replace(redirectPath);
+    closeModal();
+  };
+
+  const handleSignUp = async (payload: SignUpEmailRequest) => {
+    const { data, error } = await authClient.signUp.email(payload, {
+      onRequest: () => {
+        setIsLoading(true);
+        setError(null);
+      },
+      onSuccess: () => setIsLoading(false),
+      onError: () => setIsLoading(false),
+    });
+
+    if (error) {
+      setError(error);
+    } else if (data) {
+      openModal(MODAL_TYPES.SIGN_IN);
+      showToast("회원가입이 완료되었습니다. 로그인해주세요.", "success");
+    }
   };
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md px-4"
+    <div
+      // 모달 오버레이에 fade-in 애니메이션 추가 (tailwind.config.js에 'fade-in' keyframes 정의 필요)
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4 animate-fade-in"
       onClick={closeModal}
     >
-      <div 
-        className="relative w-full max-w-md overflow-hidden rounded-4xl bg-white shadow-2xl transition-all"
-        onClick={(e) => e.stopPropagation()} 
+      <div
+        // 모달 컨텐츠에 scale-in 애니메이션 추가 및 border-radius 일관성 확보
+        className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl transition-all animate-scale-in"
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="p-8 sm:p-10">
-          <button 
+          <button
             onClick={closeModal}
-            className="absolute right-6 top-6 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+            aria-label="모달 닫기"
+            className="absolute right-5 top-5 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
           >
             ✕
           </button>
 
           {isLoading && <Loader />}
-          {!isLoading && modalType === 'LOGIN' && <SignInForm error={error} onSubmit={handleSignIn} />}
-          {!isLoading && modalType === 'SIGNUP' && <SignUpForm error={error} onSubmit={handleSignUp} />}
+          {!isLoading && modalType === MODAL_TYPES.SIGN_IN && (
+            <SignInForm error={error} onSubmit={handleSignIn} />
+          )}
+          {!isLoading && modalType === MODAL_TYPES.SIGN_UP && (
+            <SignUpForm error={error} onSubmit={handleSignUp} />
+          )}
 
           <button
-            onClick={() => openModal(modalType === 'LOGIN' ? 'SIGNUP' : 'LOGIN')}
+            onClick={() =>
+              openModal(
+                modalType === MODAL_TYPES.SIGN_IN
+                  ? MODAL_TYPES.SIGN_UP
+                  : MODAL_TYPES.SIGN_IN
+              )
+            }
             className="mt-6 w-full text-center text-sm text-gray-500 hover:text-gray-600 underline"
           >
-            {modalType === 'LOGIN' ? '계정이 없으신가요? 회원가입' : '이미 계정이 있으신가요? 로그인'}
+            {modalType === MODAL_TYPES.SIGN_IN
+              ? "계정이 없으신가요? 회원가입"
+              : "이미 계정이 있으신가요? 로그인"}
           </button>
         </div>
       </div>

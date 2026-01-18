@@ -17,11 +17,11 @@ export function useUserList(request: UserListRequest) {
 }
 
 // 사용자 상세 조회
-export function useUserProfile(userId: number, options?: { enabled?: boolean }) {
+export function useUserProfile(userId: string, options?: { enabled?: boolean }) {
   return useQuery<User, Error>({
     queryKey: ["user", userId],
     queryFn: async () => await userProfile(userId),
-    enabled: options?.enabled ?? userId > 0,
+    enabled: options?.enabled ?? userId.length > 0,
   });
 }
 
@@ -41,7 +41,7 @@ export function useUserProfileUpdate() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ userId, payload }: { userId: number; payload: UserProfileUpdateRequest }) => userProfileUpdate(userId, payload),
+    mutationFn: async ({ userId, payload }: { userId: string; payload: UserProfileUpdateRequest }) => userProfileUpdate(userId, payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["user"] }),
     onError: (error: ApiError) => console.error(`Failed to modify user: ${error.status} ${error.message}`)
   });
@@ -52,17 +52,17 @@ export function useUserDelete() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (userId: number) => userDelete(userId),
+    mutationFn: async (userId: string) => userDelete(userId),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["user"] }),
     onError: (error: ApiError) => console.error(`Failed to delete user: ${error.status} ${error.message}`)
   });
 }
 
 // 사용자 역할별 통계
-export function useUserRoleStats(role: UserRole | null) {
+export function useUserRoleStats() {
   return useQuery<Record<UserRole, number>, Error>({
     queryKey: ["user", "role-stats"],
-    queryFn: async () => await userRoleStats(role),
+    queryFn: async () => await userRoleStats(),
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });

@@ -5,8 +5,8 @@ import PlusIcon from "@/asset/icon/plus.svg";
 import ScheduleListForm from "@/component/admin/schedule/ScheduleListForm";
 import ScheduleInfoCard from "@/component/admin/schedule/ScheduleInfoCard";
 import ScheduleListTable from "@/component/admin/schedule/ScheduleListTable";
-import Loader from "@/component/Loader";
-import Modal from "@/component/Modal";
+import Loader from "@/component/common/Loader";
+import Modal from "@/component/common/Modal";
 import { useScheduleList } from "@/hook/admin/useSchedule";
 import { ScheduleListRequest } from "@/schema/schedule/schedule";
 
@@ -21,47 +21,70 @@ export default function AdminSchedulesPage() {
 
   const { data: schedules, isLoading, error } = useScheduleList(request);
 
-  const updateRequest = (newRequest: ScheduleListRequest) => setRequest(newRequest);
+  const updateRequest = (newRequest: ScheduleListRequest) =>
+    setRequest(newRequest);
 
-  const openCreateModal = () => { setScheduleId(null); setIsModalOpen(true); };
-  const openUpdateModal = (id: number) => { setScheduleId(id); setIsModalOpen(true); };
-  const closeModal = () => { setScheduleId(null); setIsModalOpen(false); };
+  const openCreateModal = () => {
+    setScheduleId(null);
+    setIsModalOpen(true);
+  };
+  const openUpdateModal = (id: number) => {
+    setScheduleId(id);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setScheduleId(null);
+    setIsModalOpen(false);
+  };
 
   return (
-    <div className="flex-1 flex flex-col gap-8 mx-auto py-12 lg:py-24 w-full max-w-lg lg:max-w-4xl text-center bg-background">
-      <h1 className="text-3xl lg:text-4xl font-bold">
-        스케줄 목록
-      </h1>
-      
-      <div className="w-full">
-        <ScheduleListForm onSubmit={updateRequest} />
-      </div>
-    
-      <div className="flex-1 flex flex-col gap-4 items-center">
-        {isLoading
-          ? <Loader />
-          : error
-            ? <p className="text-center text-red-500">스케줄 목록을 불러오는 중 오류가 발생했습니다.</p>
-            : schedules?.length
-              ? <ScheduleListTable schedules={schedules ?? []} onUpdate={openUpdateModal} />
-              : <p className="text-center">스케줄이 없습니다.</p>
-        }
+    <div className="mx-auto w-full max-w-7xl px-6 py-12 lg:px-8 lg:py-16">
+      <div className="flex flex-col gap-8">
+        <header className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              스케줄 관리
+            </h1>
+            <p className="mt-2 text-lg text-gray-600">
+              사용자 스케줄을 검색하고 관리합니다.
+            </p>
+          </div>
+          <button
+            className="flex items-center gap-2 rounded-md border border-blue-600 bg-blue-600 px-4 py-2 text-sm text-white shadow-sm hover:bg-blue-700"
+            onClick={openCreateModal}
+          >
+            <PlusIcon className="h-4 w-4" />
+            <span>스케줄 추가</span>
+          </button>
+        </header>
+
+        <div className="w-full">
+          <ScheduleListForm onSubmit={updateRequest} />
+        </div>
+
+        <div className="flex-1 flex flex-col gap-4">
+          {isLoading ? (
+            <Loader />
+          ) : error ? (
+            <p className="text-center text-red-500">
+              스케줄 목록을 불러오는 중 오류가 발생했습니다.
+            </p>
+          ) : schedules?.length ? (
+            <ScheduleListTable
+              schedules={schedules ?? []}
+              onUpdate={openUpdateModal}
+            />
+          ) : (
+            <p className="text-center text-gray-500">스케줄이 없습니다.</p>
+          )}
+        </div>
       </div>
 
-      <div className="w-full h-16 text-right">
-        <button
-          className="border border-blue-600 bg-blue-600 text-white p-4 hover:bg-blue-700 rounded-md"
-          onClick={openCreateModal}
-        >
-          <PlusIcon className="w-4 h-4" />
-        </button>
-      </div>
-
-      {isModalOpen &&
+      {isModalOpen && (
         <Modal onClose={closeModal}>
           <ScheduleInfoCard scheduleId={scheduleId} onSuccess={closeModal} />
         </Modal>
-      }
+      )}
     </div>
   );
 }

@@ -44,13 +44,16 @@ class ScheduleServiceTest {
 
         Schedule created = scheduleService.create(request);
 
-        assertThat(created.getUserId()).isEqualTo("user-1");
+        assertThat(created.getUser().getId()).isEqualTo("user-1");
     }
 
     @Test
     @DisplayName("스케줄 수정")
     void update() {
-        Schedule schedule = Schedule.create("user-1", OffsetDateTime.now(), OffsetDateTime.now().plusHours(1), SCHEDULED);
+        User user = mock(User.class);
+        when(user.getId()).thenReturn("user-1");
+
+        Schedule schedule = Schedule.create(user, OffsetDateTime.now(), OffsetDateTime.now().plusHours(1), SCHEDULED);
         when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
 
         ScheduleUpdateRequest request = new ScheduleUpdateRequest(null, null, ATTENDED);
@@ -63,10 +66,15 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("스케줄 삭제 (취소)")
     void delete() {
-        Schedule schedule = Schedule.create("user-1", OffsetDateTime.now(), OffsetDateTime.now().plusHours(1), SCHEDULED);
-        when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
+        Long id = 1L;
+        User user = mock(User.class);
+        when(user.getId()).thenReturn("user-1");
 
-        scheduleService.delete(1L);
+        Schedule schedule = Schedule.create(user, OffsetDateTime.now(), OffsetDateTime.now().plusHours(1), SCHEDULED);
+        when(schedule.getId()).thenReturn(id);
+        when(scheduleRepository.findById(id)).thenReturn(Optional.of(schedule));
+
+        scheduleService.delete(id);
 
         assertThat(schedule.getStatus()).isEqualTo(CANCELLED);
     }

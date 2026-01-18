@@ -10,7 +10,7 @@ export const UserSchema = z.object({
   emailVerified: z.boolean(),
   image: z.string().nullable(),
   role: UserRoleSchema,
-  status: UserStatusSchema
+  status: UserStatusSchema,
 });
 
 export type User = z.infer<typeof UserSchema>;
@@ -26,6 +26,7 @@ export type UserCreateRequest = {
 
 // 사용자 수정 요청
 export type UserProfileUpdateRequest = {
+  email: string;
   name: string;
   role: UserRole;
   status: UserStatus;

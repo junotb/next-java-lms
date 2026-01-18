@@ -1,0 +1,47 @@
+# Project Metadata
+- Name: 1:1 Course Registration System (High Concurrency)
+- Type: Monorepo
+- Root: ./
+- Backend Path: ./api
+- Frontend Path: ./web
+
+# Tech Stack & Versions
+## Backend (Java/Spring Boot)
+- **Framework**: Spring Boot 3.3.3
+- **Language**: Java 17 (Use Records for DTOs if applicable, strictly typed)
+- **Build Tool**: Gradle (Kotlin DSL)
+- **Database**: PostgreSQL (Production), H2 (Test)
+- **ORM**: JPA / Hibernate
+- **API Docs**: SpringDoc OpenAPI (Swagger)
+- **Utils**: Lombok, Commons Lang3
+
+## Frontend (Next.js)
+- **Framework**: Next.js 15.5.6 (App Router)
+- **Library**: React 19.1.0
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4 (No config file, strictly utility classes)
+- **State Management**: Zustand (Client), TanStack Query v5 (Server)
+- **Forms**: React Hook Form + Zod
+- **Auth**: Better-Auth (Do NOT suggest NextAuth)
+- **HTTP Client**: Axios
+
+# Coding Guidelines
+
+## 1. Backend Rules (./api)
+- **Architecture**: Layered Architecture (Controller -> Service -> Repository).
+- **Lombok**: Mandatory. Use `@Getter`, `@NoArgsConstructor(access = AccessLevel.PROTECTED)`, `@AllArgsConstructor`.
+- **DTO**: Use strict Request/Response DTOs. Never return Entities directly in Controller.
+- **Swagger**: Annotate all Controllers with `@Tag` and `@Operation` for documentation.
+- **Testing**: Use JUnit 5. Use `@DataJpaTest` for repositories.
+- **Concurrency**: When implementing course registration, consider Redis Distributed Lock (Redisson) or DB Pessimistic Lock.
+
+## 2. Frontend Rules (./web)
+- **React 19**: Prioritize Server Components. Use `'use client'` only when state/hooks are needed.
+- **Data Fetching**: Use TanStack Query (`useQuery`, `useMutation`) for API calls.
+- **Styling**: Use Tailwind v4 syntax. Avoid inline styles. Use `clsx` for conditional classes.
+- **Type Safety**: Share types with Backend or define strictly in `types/`. Use Zod for validation.
+- **Auth**: Implement authentication flows using `better-auth`.
+
+## 3. General Workflow
+- **Monorepo Awareness**: When I ask to "create a registration feature", generate the Spring Boot Controller/Service AND the Next.js Page/Form simultaneously.
+- **Error Handling**: Implement global exception handling in Backend and display toast notifications in Frontend.

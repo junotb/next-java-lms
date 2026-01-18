@@ -17,7 +17,7 @@ public record ScheduleResponse(
     public static ScheduleResponse from(Schedule schedule) {
         return new ScheduleResponse(
             schedule.getId(),
-            schedule.getUserId(),
+            schedule.getUser().getId(),
             schedule.getStartsAt(),
             schedule.getEndsAt(),
             schedule.getStatus(),

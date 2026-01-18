@@ -1,8 +1,6 @@
-"use client";
+import { create } from "zustand";
 
-import { create } from 'zustand';
-
-type AuthModalType = 'LOGIN' | 'SIGNUP' | 'FIND_PASSWORD' | null;
+type AuthModalType = "signin" | "signup" | null;
 
 interface AuthModalStore {
   modalType: AuthModalType;

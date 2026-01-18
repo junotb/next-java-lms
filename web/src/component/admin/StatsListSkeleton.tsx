@@ -1,13 +1,19 @@
 export default function StatsListSkeleton() {
   return (
-    <section className="flex flex-col items-center gap-4 mx-auto w-sm lg:w-lg animate-pulse">
-      <div className="h-8 w-48 bg-gray-200 rounded-md mb-4"></div>
+    <section className="flex flex-col gap-4 animate-pulse">
+      {/* Title Skeleton */}
+      <div className="h-8 w-48 rounded-md bg-gray-200" />
 
-      <div className="flex gap-4 justify-center w-full">
+      {/* Cards Container Skeleton */}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="flex flex-col items-center border border-gray-100 p-4 w-full rounded-xl">
-            <div className="h-4 w-12 bg-gray-100 rounded mb-3"></div>
-            <div className="h-6 w-20 bg-gray-200 rounded"></div>
+          // Card Skeleton
+          <div
+            key={i}
+            className="w-full rounded-xl border bg-white p-4 shadow-sm"
+          >
+            <div className="mb-2 h-4 w-16 rounded bg-gray-200" />
+            <div className="h-8 w-24 rounded bg-gray-200" />
           </div>
         ))}
       </div>

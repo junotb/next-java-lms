@@ -1,7 +1,7 @@
 export default function LandingFooter() {
   return (
-    <footer className="sticky flex justify-center bottom-0 z-40 border-t w-full bg-background">
-      <div className="w-full mx-auto p-4 text-center text-sm">
+    <footer className="w-full border-t bg-white">
+      <div className="mx-auto max-w-7xl p-6 text-center text-sm text-slate-500 lg:px-8">
         © 2024 NexLang. All rights reserved.
       </div>
     </footer>
