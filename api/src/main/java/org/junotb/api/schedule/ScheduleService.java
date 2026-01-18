@@ -63,7 +63,7 @@ public class ScheduleService {
         );
 
         Schedule schedule = Schedule.create(
-            user.getId(),
+            user,
             request.startsAt(),
             request.endsAt(),
             request.status()

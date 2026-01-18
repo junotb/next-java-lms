@@ -1,8 +1,24 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import type { UserCreateRequest, UserCreateFormValues } from "@/schema/user/user";
+import type {
+  UserCreateRequest,
+  UserCreateFormValues,
+} from "@/schema/user/user";
+import InputField from "@/component/common/InputField";
+import SelectField from "@/component/common/SelectField";
+import { UserRoleSchema } from "@/schema/user/user-role";
+import { UserStatusSchema } from "@/schema/user/user-status";
 
+const USER_ROLE_NAMES: Record<string, string> = {
+  STUDENT: "학생",
+  TEACHER: "강사",
+  ADMIN: "관리자",
+};
+const USER_STATUS_NAMES: Record<string, string> = {
+  ACTIVE: "활성",
+  INACTIVE: "비활성",
+};
 interface UserCreateFormProps {
   onSubmit: (data: UserCreateRequest) => void;
 }
@@ -11,176 +27,96 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
   const {
     register,
     handleSubmit,
-    formState: {
-      errors,
-      isSubmitting,
-    },
+    formState: { errors, isSubmitting },
   } = useForm<UserCreateFormValues>({
     defaultValues: {
       email: "",
       password: "",
       name: "",
-      role: undefined,
-      status: undefined,
+      role: "STUDENT",
+      status: "ACTIVE",
     },
     mode: "onSubmit",
   });
 
   return (
     <form
-      onSubmit={handleSubmit((values) => {
-        // 공백 제거
-        const payload: UserCreateRequest = {
-          ...values,
-          email: values.email.trim(),
-          password: values.password.trim(),
-          name: values.name.trim(),
-        };
-        onSubmit(payload);
-      })}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-4 w-full"
     >
-      <div className="flex space-x-4">
-        <div className="flex flex-col items-end w-full">
-          <div className="flex items-center gap-4 w-full">
-            <label
-              htmlFor="email"
-              className="w-16 text-left text-sm font-medium text-gray-700"
-            >
-              아이디
-            </label>
-            <input
-              id="email"
-              type="text"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("email", {
-                required: "아이디를 입력하세요.",
-                validate: (value) => value.trim().length > 0 || "아이디를 입력하세요.",
-              })}
-            />
-          </div>
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+      <InputField
+        id="email"
+        label="이메일"
+        type="email"
+        register={register}
+        errors={errors}
+        validation={{
+          required: "이메일을 입력하세요.",
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: "유효한 이메일 주소를 입력하세요.",
+          },
+        }}
+      />
 
-        <div className="flex flex-col items-end w-full">
-          <div className="flex items-center gap-4 w-full">
-            <label
-              htmlFor="password"
-              className="w-16 text-left text-sm font-medium text-gray-700"
-            >
-              비밀번호
-            </label>
-            <input
-              id="password"
-              type="password"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("password", {
-                required: "비밀번호를 입력하세요.",
-                validate: (value) => value.trim().length > 0 || "비밀번호를 입력하세요.",
-              })}
-            />
-          </div>
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-      </div>
+      <InputField
+        id="password"
+        label="비밀번호"
+        type="password"
+        register={register}
+        errors={errors}
+        validation={{
+          required: "비밀번호를 입력하세요.",
+          minLength: {
+            value: 8,
+            message: "비밀번호는 8자 이상이어야 합니다.",
+          },
+        }}
+      />
 
-      <div className="flex flex-col items-end w-full">
-        <div className="flex items-center gap-4 w-full">
-          <label
-            htmlFor="name"
-            className="w-16 text-left text-sm font-medium text-gray-700"
-          >
-            이름
-          </label>
-          <input
-            id="name"
-            type="text"
-            className="border px-2 lg:px-4 py-2 text-sm rounded-md"
-            {...register("name", {
-              required: "이름을 입력하세요.",
-              validate: (value) => value.trim().length > 0 || "이름을 입력하세요.",
-            })}
-          />
-        </div>
-        {errors.name && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.name.message}
-          </p>
-        )}
-      </div>
+      <InputField
+        id="name"
+        label="이름"
+        register={register}
+        errors={errors}
+        validation={{ required: "이름을 입력하세요." }}
+      />
 
-      <div className="flex space-x-4">
-        <div className="flex flex-col items-end w-full">
-          <div className="flex items-center gap-4 w-full">
-            <label
-              htmlFor="role"
-              className="w-16 text-left text-sm font-medium text-gray-700"
-            >
-              역할
-            </label>
-            <select
-              id="role"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("role", {
-                required: "역할을 선택하세요.",
-              })}
-            >
-              <option value="STUDENT">학생</option>
-              <option value="TEACHER">강사</option>
-              <option value="ADMIN">관리자</option>
-            </select>
-          </div>
-          {errors.role && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.role.message}
-            </p>
-          )}
-        </div>
+      <SelectField
+        id="role"
+        label="역할"
+        register={register}
+        errors={errors}
+        validation={{ required: "역할을 선택하세요." }}
+      >
+        {UserRoleSchema.options.map((role) => (
+          <option key={role} value={role}>
+            {USER_ROLE_NAMES[role]}
+          </option>
+        ))}
+      </SelectField>
 
-        <div className="flex flex-col items-end w-full">
-          <div className="flex items-center gap-4 w-full">
-            <label
-              htmlFor="status"
-              className="w-16 text-left text-sm font-medium text-gray-700"
-            >
-              상태
-            </label>
-            <select
-              id="status"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("status", {
-                required: "상태를 선택하세요.",
-              })}
-            >
-              <option value="ACTIVE">활성</option>
-              <option value="INACTIVE">비활성</option>
-            </select>
-          </div>
-          {errors.status && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.status.message}
-            </p>
-          )}
-        </div>
-      </div>
+      <SelectField
+        id="status"
+        label="상태"
+        register={register}
+        errors={errors}
+        validation={{ required: "상태를 선택하세요." }}
+      >
+        {UserStatusSchema.options.map((status) => (
+          <option key={status} value={status}>
+            {USER_STATUS_NAMES[status]}
+          </option>
+        ))}
+      </SelectField>
 
-      <div className="flex gap-4 w-full">
-        <button
-          type="submit"
-          className="mt-4 mx-auto px-8 py-2 bg-blue-600 text-white rounded"
-          disabled={isSubmitting}
-        >
-          등록
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="mt-4 w-full rounded-xl bg-blue-600 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-blue-300 disabled:shadow-none disabled:transform-none"
+        disabled={isSubmitting}
+      >
+        등록
+      </button>
     </form>
   );
 }

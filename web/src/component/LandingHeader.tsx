@@ -1,26 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import ArrowLeftEndOnRectangle from "@/asset/icon/arrow-left-end-on-rectangle.svg";
 import BookOpenIcon from "@/asset/icon/book-open.svg";
 import { useAuthModalStore } from "@/store/useAuthModalStore";
 
 export default function LandingHeader() {
   const { openModal } = useAuthModalStore();
-  
+
   return (
-    <header className="sticky flex justify-center top-0 z-40 border-b w-full bg-background">
-      <div className="flex items-center justify-between px-4 h-16 w-full">
+    <header className="sticky top-0 z-40 w-full border-b bg-white/80 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
         <Link href="/" className="flex items-center space-x-2">
           <BookOpenIcon />
           <h1 className="font-bold">NexLang</h1>
         </Link>
         <div>
           <button
-            onClick={() => openModal("LOGIN")}
-            aria-label="로그인 페이지로 이동"
-            className="px-4 py-2 rounded-md hover:bg-slate-100 transition"
+            onClick={() => openModal("signin")}
+            className="p-2 text-slate-500 transition-colors hover:text-slate-800"
+            aria-label="로그인"
           >
-            로그인
+            <ArrowLeftEndOnRectangle className="h-6 w-6" />
           </button>
         </div>
       </div>

@@ -5,65 +5,83 @@ import PlusIcon from "@/asset/icon/plus.svg";
 import UserListForm from "@/component/admin/user/UserListForm";
 import UserInfoCard from "@/component/admin/user/UserInfoCard";
 import UserListTable from "@/component/admin/user/UserListTable";
-import Loader from "@/component/Loader";
-import Modal from "@/component/Modal";
+import Loader from "@/component/common/Loader";
+import Modal from "@/component/common/Modal";
 import { useUserList } from "@/hook/admin/useUser";
 import { UserListRequest } from "@/schema/user/user";
 
 export default function AdminUsersPage() {
   const [request, setRequest] = useState<UserListRequest>({
+    name: undefined,
     role: undefined,
     status: undefined,
-    lastName: undefined,
-    firstName: undefined,
   });
 
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: users, isLoading, error } = useUserList(request);
 
   const updateRequest = (newRequest: UserListRequest) => setRequest(newRequest);
 
-  const openCreateModal = () => { setUserId(null); setIsModalOpen(true); };
-  const openUpdateModal = (id: number) => { setUserId(id); setIsModalOpen(true); };
-  const closeModal = () => { setUserId(null); setIsModalOpen(false); };
+  const openCreateModal = () => {
+    setUserId(null);
+    setIsModalOpen(true);
+  };
+  const openUpdateModal = (id: string) => {
+    setUserId(id);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setUserId(null);
+    setIsModalOpen(false);
+  };
 
   return (
-    <div className="flex-1 flex flex-col gap-8 mx-auto py-12 lg:py-24 w-full max-w-lg lg:max-w-4xl text-center bg-background">
-      <h1 className="text-3xl lg:text-4xl font-bold">
-        사용자 목록
-      </h1>
-      
-      <div className="w-full">
-        <UserListForm onSubmit={updateRequest} />
-      </div>
-    
-      <div className="flex-1 flex flex-col gap-4 items-center">
-        {isLoading
-          ? <Loader />
-          : error
-            ? <p className="text-center text-red-500">사용자 목록을 불러오는 중 오류가 발생했습니다.</p>
-            : users?.length
-              ? <UserListTable users={users ?? []} onUpdate={openUpdateModal} />
-              : <p className="text-center">사용자가 없습니다.</p>
-        }
+    <div className="mx-auto w-full max-w-7xl px-6 py-12 lg:px-8 lg:py-16">
+      <div className="flex flex-col gap-8">
+        <header className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              사용자 관리
+            </h1>
+            <p className="mt-2 text-lg text-gray-600">
+              서비스 사용자를 검색하고 관리합니다.
+            </p>
+          </div>
+          <button
+            className="flex items-center gap-2 rounded-md border border-blue-600 bg-blue-600 px-4 py-2 text-sm text-white shadow-sm hover:bg-blue-700"
+            onClick={openCreateModal}
+          >
+            <PlusIcon className="h-4 w-4" />
+            <span>사용자 추가</span>
+          </button>
+        </header>
+
+        <div className="w-full">
+          <UserListForm onSubmit={updateRequest} />
+        </div>
+
+        <div className="flex-1 flex flex-col gap-4">
+          {isLoading ? (
+            <Loader />
+          ) : error ? (
+            <p className="text-center text-red-500">
+              사용자 목록을 불러오는 중 오류가 발생했습니다.
+            </p>
+          ) : users?.length ? (
+            <UserListTable users={users ?? []} onUpdate={openUpdateModal} />
+          ) : (
+            <p className="text-center text-gray-500">사용자가 없습니다.</p>
+          )}
+        </div>
       </div>
 
-      <div className="w-full h-16 text-right">
-        <button
-          className="border border-blue-600 bg-blue-600 text-white p-4 hover:bg-blue-700 rounded-md"
-          onClick={openCreateModal}
-        >
-          <PlusIcon className="w-4 h-4" />
-        </button>
-      </div>
-
-      {isModalOpen &&
+      {isModalOpen && (
         <Modal onClose={closeModal}>
           <UserInfoCard userId={userId} onSuccess={closeModal} />
         </Modal>
-      }
+      )}
     </div>
   );
 }

@@ -1,25 +1,36 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import type { ScheduleCreateRequest, ScheduleCreateFormValues } from "@/schema/schedule/schedule";
+import type {
+  ScheduleCreateRequest,
+  ScheduleCreateFormValues,
+} from "@/schema/schedule/schedule";
+import InputField from "@/component/common/InputField";
+import SelectField from "@/component/common/SelectField";
+import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
 
+const SCHEDULE_STATUS_NAMES: Record<string, string> = {
+  SCHEDULED: "예정",
+  ATTENDED: "출석",
+  ABSENT: "결석",
+  CANCELLED: "취소",
+};
 interface ScheduleCreateFormProps {
   onSubmit: (data: ScheduleCreateRequest) => void;
 }
 
-export default function ScheduleCreateForm({ onSubmit }: ScheduleCreateFormProps) {
+export default function ScheduleCreateForm({
+  onSubmit,
+}: ScheduleCreateFormProps) {
   const {
     register,
     handleSubmit,
-    formState: {
-      errors,
-      isSubmitting,
-    },
+    formState: { errors, isSubmitting },
   } = useForm<ScheduleCreateFormValues>({
     defaultValues: {
-      userId: undefined,
-      startsAt: undefined,
-      endsAt: undefined,
+      userId: "",
+      startsAt: "",
+      endsAt: "",
       status: "SCHEDULED",
     },
     mode: "onSubmit",
@@ -27,133 +38,62 @@ export default function ScheduleCreateForm({ onSubmit }: ScheduleCreateFormProps
 
   return (
     <form
-      onSubmit={handleSubmit((values) => {
-        // 시간 변환
-        const payload: ScheduleCreateRequest = {
-          ...values,
-          startsAt: new Date(values.startsAt).toISOString(),
-          endsAt: new Date(values.endsAt).toISOString(),
-        };
-
-        onSubmit(payload);
-      })}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-4 w-full"
     >
-      <div className="flex space-x-4">
-        <div className="flex flex-col items-end w-full">
-          <div className="flex items-center gap-4 w-full">
-            <label
-              htmlFor="userId"
-              className="w-16 text-left text-sm font-medium text-gray-700"
-            >
-              사용자 번호
-            </label>
-            <input
-              id="userId"
-              type="text"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 disabled:bg-gray-200 text-sm rounded-md"
-              {...register("userId", {
-                required: "사용자 번호를 입력하세요.",
-              })}
-            />
-          </div>
-          {errors.userId && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.userId.message}
-            </p>
-          )}
-        </div>
+      <InputField
+        id="userId"
+        label="사용자 ID"
+        register={register}
+        errors={errors}
+        validation={{ required: "사용자 ID를 입력하세요." }}
+      />
 
-        <div className="flex flex-col items-end w-full">
-          <div className="flex items-center gap-4 w-full">
-            <label
-              htmlFor="status"
-              className="w-16 text-left text-sm font-medium text-gray-700"
-            >
-              상태
-            </label>
-            <select
-              id="status"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 text-sm rounded-md"
-              {...register("status", {
-                required: "상태를 선택하세요.",
-              })}
-            >
-              <option value="SCHEDULED">예정됨</option>
-              <option value="ATTENDED">출석</option>
-              <option value="ABSENT">결석</option>
-              <option value="CANCELLED">취소됨</option>
-            </select>
-          </div>
-          {errors.status && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.status.message}
-            </p>
-          )}
-        </div>
-      </div>
+      <SelectField
+        id="status"
+        label="상태"
+        register={register}
+        errors={errors}
+        validation={{ required: "상태를 선택하세요." }}
+      >
+        {ScheduleStatusSchema.options.map((status) => (
+          <option key={status} value={status}>
+            {SCHEDULE_STATUS_NAMES[status]}
+          </option>
+        ))}
+      </SelectField>
 
-      <div className="flex space-x-4">
-        <div className="flex flex-col items-end w-full">
-          <div className="flex items-center gap-4 w-full">
-            <label
-              htmlFor="startsAt"
-              className="w-16 text-left text-sm font-medium text-gray-700"
-            >
-              시작 시간
-            </label>
-            <input
-              id="startsAt"
-              type="datetime-local"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 disabled:bg-gray-200 text-sm rounded-md"
-              {...register("startsAt", {
-                required: "시작 시간을 입력하세요.",
-                valueAsDate: true,
-              })}
-            />
-          </div>
-          {errors.startsAt && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.startsAt.message}
-            </p>
-          )}
-        </div>
+      <InputField
+        id="startsAt"
+        label="시작 시간"
+        type="datetime-local"
+        register={register}
+        errors={errors}
+        validation={{
+          required: "시작 시간을 입력하세요.",
+          valueAsDate: true,
+        }}
+      />
 
-        <div className="flex flex-col items-end w-full">
-          <div className="flex items-center gap-4 w-full">
-            <label
-              htmlFor="endsAt"
-              className="w-16 text-left text-sm font-medium text-gray-700"
-            >
-              종료 시간
-            </label>
-            <input
-              id="endsAt"
-              type="datetime-local"
-              className="border px-2 lg:px-4 py-2 w-28 lg:w-40 disabled:bg-gray-200 text-sm rounded-md"
-              {...register("endsAt", {
-                required: "종료 시간을 입력하세요.",
-                valueAsDate: true,
-              })}
-            />
-          </div>
-          {errors.endsAt && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.endsAt.message}
-            </p>
-          )}
-        </div>
-      </div>
+      <InputField
+        id="endsAt"
+        label="종료 시간"
+        type="datetime-local"
+        register={register}
+        errors={errors}
+        validation={{
+          required: "종료 시간을 입력하세요.",
+          valueAsDate: true,
+        }}
+      />
 
-      <div className="flex gap-4 w-full">
-        <button
-          type="submit"
-          className="mt-4 mx-auto px-8 py-2 bg-blue-600 text-white rounded"
-          disabled={isSubmitting}
-        >
-          등록
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="mt-4 w-full rounded-xl bg-blue-600 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-blue-300 disabled:shadow-none disabled:transform-none"
+        disabled={isSubmitting}
+      >
+        등록
+      </button>
     </form>
   );
 }

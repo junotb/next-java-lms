@@ -21,7 +21,7 @@ export async function login(payload: UserProfileRequest) {
     });
 
     if (user.role === "TEACHER") redirect("/teach");
-    if (user.role === "ADMINISTRATOR") redirect("/admin");
+    if (user.role === "ADMIN") redirect("/admin");
     redirect("/study");
   } catch (error) {
     console.error("로그인에 실패했습니다:", error);
@@ -41,9 +41,9 @@ export async function signup(payload: UserCreateRequest) {
       sameSite: "lax",
       path: "/",
     });
-    
+
     if (user.role === "TEACHER") redirect("/teach");
-    if (user.role === "ADMINISTRATOR") redirect("/admin");
+    if (user.role === "ADMIN") redirect("/admin");
     redirect("/study");
   } catch (error) {
     console.error("회원가입에 실패했습니다:", error);

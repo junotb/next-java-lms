@@ -16,7 +16,7 @@ export async function userList(params: UserListRequest): Promise<User[]> {
 }
 
 // 사용자 정보 조회
-export async function userProfile(userId: number): Promise<User> {
+export async function userProfile(userId: string): Promise<User> {
   try {
     const response = await api.get<User>(`/api/v1/user/${userId}`);
     return UserSchema.parse(response.data);
@@ -38,7 +38,7 @@ export async function userCreate(payload: UserCreateRequest): Promise<User> {
 }
 
 // 사용자 정보 수정
-export async function userProfileUpdate(userId: number, payload: UserProfileUpdateRequest): Promise<User> {
+export async function userProfileUpdate(userId: string, payload: UserProfileUpdateRequest): Promise<User> {
   try {
     const response = await api.patch<User>(`/api/v1/user/${userId}`, payload);
     return UserSchema.parse(response.data);
@@ -49,7 +49,7 @@ export async function userProfileUpdate(userId: number, payload: UserProfileUpda
 }
 
 // 사용자 비밀번호 수정
-export async function userPasswordUpdate(userId: number, payload: UserPasswordUpdateRequest): Promise<void> {
+export async function userPasswordUpdate(userId: string, payload: UserPasswordUpdateRequest): Promise<void> {
   try {
     await api.patch<void>(`/api/v1/user/${userId}/password`, payload);
   } catch (error) {
@@ -59,7 +59,7 @@ export async function userPasswordUpdate(userId: number, payload: UserPasswordUp
 }
 
 // 사용자 삭제
-export async function userDelete(userId: number): Promise<void> {
+export async function userDelete(userId: string): Promise<void> {
   try {
     await api.delete<void>(`/api/v1/user/${userId}`);
   } catch (error) {
