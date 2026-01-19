@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 
 public record ScheduleCreateRequest(
     String userId,
+    Long courseId,
     OffsetDateTime startsAt,
     OffsetDateTime endsAt,
     ScheduleStatus status

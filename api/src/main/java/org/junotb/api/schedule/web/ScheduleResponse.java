@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 public record ScheduleResponse(
     Long id,
     String userId,
+    Long courseId,
     OffsetDateTime startsAt,
     OffsetDateTime endsAt,
     ScheduleStatus status,
@@ -18,6 +19,7 @@ public record ScheduleResponse(
         return new ScheduleResponse(
             schedule.getId(),
             schedule.getUser().getId(),
+            schedule.getCourse().getId(),
             schedule.getStartsAt(),
             schedule.getEndsAt(),
             schedule.getStatus(),

@@ -2,14 +2,10 @@ package org.junotb.api.schedule;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.junotb.api.course.Course;
 import org.junotb.api.user.User;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.Optional;
 
 @Entity
 @Table(name = "\"schedule\"")
@@ -43,7 +39,6 @@ public class Schedule {
   private OffsetDateTime endsAt;
 
   @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
   @Column(name = "\"status\"", nullable = false)
   private ScheduleStatus status;
 
@@ -53,32 +48,20 @@ public class Schedule {
   @Column(name = "\"updatedAt\"", nullable = false)
   private OffsetDateTime updatedAt;
 
-  @Transactional
   public static Schedule create(
       User user,
+      Course course,
       OffsetDateTime startsAt,
       OffsetDateTime endsAt,
       ScheduleStatus status
   ) {
     return Schedule.builder()
         .user(user)
+        .course(course)
         .startsAt(startsAt)
         .endsAt(endsAt)
         .status(status)
         .build();
-  }
-
-  @Transactional
-  public static Optional<Schedule> update(
-      Schedule schedule,
-      OffsetDateTime startsAt,
-      OffsetDateTime endsAt,
-      ScheduleStatus status
-  ) {
-    schedule.setStartsAt(startsAt);
-    schedule.setEndsAt(endsAt);
-    schedule.setStatus(status);
-    return Optional.of(schedule);
   }
 
   @PrePersist

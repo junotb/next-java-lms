@@ -4,6 +4,8 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.junotb.api.common.exception.ResourceNotFoundException;
+import org.junotb.api.course.Course;
+import org.junotb.api.course.CourseRepository;
 import org.junotb.api.schedule.web.ScheduleCreateRequest;
 import org.junotb.api.schedule.web.ScheduleListRequest;
 import org.junotb.api.schedule.web.ScheduleUpdateRequest;
@@ -23,6 +25,7 @@ import java.util.*;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
 
     // 스케줄 조회
     public Optional<Schedule> findById(Long id) {
@@ -37,14 +40,21 @@ public class ScheduleService {
             // 사용자 번호로 필터링
             if (request.userId() != null) {
                 predicates.add(
-                    cb.equal(root.get("\"userId\""), request.userId())
+                    cb.equal(root.get("user").get("id"), request.userId())
+                );
+            }
+
+            // 코스 번호로 필터링
+            if (request.courseId() != null) {
+                predicates.add(
+                    cb.equal(root.get("course").get("id"), request.courseId())
                 );
             }
 
             // 스케줄 상태로 필터링
             if (request.status() != null) {
                 predicates.add(
-                    cb.equal(root.get("\"status\""), request.status())
+                    cb.equal(root.get("status"), request.status())
                 );
             }
 
@@ -57,13 +67,19 @@ public class ScheduleService {
     // 스케줄 생성
     @Transactional
     public Schedule create(ScheduleCreateRequest request) {
-        // 사용자 존재 여부 확인
+        // 강사(사용자) 존재 여부 확인
         User user = userRepository.findById(request.userId()).orElseThrow(() ->
-            new ResourceNotFoundException("id", request.userId())
+            new ResourceNotFoundException("User", request.userId())
+        );
+
+        // 과목(코스) 존재 여부 확인
+        Course course = courseRepository.findById(request.courseId()).orElseThrow(() ->
+            new ResourceNotFoundException("Course", request.courseId().toString())
         );
 
         Schedule schedule = Schedule.create(
             user,
+            course,
             request.startsAt(),
             request.endsAt(),
             request.status()

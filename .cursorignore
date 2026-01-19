@@ -1,0 +1,50 @@
+# --- General ---
+.git/
+.DS_Store
+.idea/
+.vscode/
+
+# --- Security ---
+.env
+.env.*
+**/*.env
+**/*.env.*
+**/secrets.properties
+
+# --- Dependencies (AI가 라이브러리 내부 코드까지 뒤질 필요 없음) ---
+**/node_modules/
+web/node_modules/
+
+# --- Build Outputs & Artifacts (빌드된 파일 무시) ---
+# Backend (Spring Boot/Gradle)
+api/build/
+api/.gradle/
+api/out/
+api/bin/
+**/*.class
+**/*.jar
+**/*.war
+
+# Frontend (Next.js)
+web/.next/
+web/out/
+web/dist/
+web/build/
+web/.turbo/
+web/coverage/
+
+# --- Logs & Temp ---
+*.log
+**/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+tmp/
+temp/
+
+# --- Lock Files ---
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+web/package-lock.json
+web/yarn.lock
