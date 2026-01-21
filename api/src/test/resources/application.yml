@@ -12,6 +12,7 @@ spring:
       validation-timeout: 3000
       connection-test-query: SELECT 1
 
+
   jpa:
     hibernate:
       ddl-auto: create-drop

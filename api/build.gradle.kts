@@ -24,6 +24,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     implementation("org.apache.commons:commons-lang3:3.18.0")
     implementation("me.paulschwarz:spring-dotenv:3.0.0")
+    implementation("org.redisson:redisson-spring-boot-starter:3.37.0")
     runtimeOnly("org.postgresql:postgresql")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
