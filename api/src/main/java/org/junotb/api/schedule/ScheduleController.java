@@ -9,6 +9,7 @@ import org.junotb.api.schedule.web.ScheduleListRequest;
 import org.junotb.api.schedule.web.ScheduleUpdateRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -38,8 +39,11 @@ public class ScheduleController {
 
     // 스케줄 생성
     @PostMapping
-    public ResponseEntity<ScheduleResponse> create(@RequestBody @Valid ScheduleCreateRequest request) {
-        Schedule schedule = scheduleService.create(request);
+    public ResponseEntity<ScheduleResponse> create(
+        @AuthenticationPrincipal String userId,
+        @RequestBody @Valid ScheduleCreateRequest request
+    ) {
+        Schedule schedule = scheduleService.create(userId, request);
         return ResponseEntity.ok(ScheduleResponse.from(schedule));
     }
 
@@ -59,7 +63,7 @@ public class ScheduleController {
 
     // 스케줄 상태별 통계 조회
     @GetMapping("/stats/status")
-    public ResponseEntity<Map<ScheduleStatus, Long>> countByStatus(@RequestParam(required = false) String userId) {
+    public ResponseEntity<Map<ScheduleStatus, Long>> countByStatus(@AuthenticationPrincipal String userId) {
         Map<ScheduleStatus, Long> stats = scheduleService.countByStatus(userId);
         return ResponseEntity.ok(stats);
     }

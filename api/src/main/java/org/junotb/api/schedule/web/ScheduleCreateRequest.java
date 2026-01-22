@@ -5,7 +5,6 @@ import org.junotb.api.schedule.ScheduleStatus;
 import java.time.OffsetDateTime;
 
 public record ScheduleCreateRequest(
-    String userId,
     Long courseId,
     OffsetDateTime startsAt,
     OffsetDateTime endsAt,

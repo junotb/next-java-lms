@@ -66,10 +66,10 @@ public class ScheduleService {
 
     // 스케줄 생성
     @Transactional
-    public Schedule create(ScheduleCreateRequest request) {
+    public Schedule create(String userId, ScheduleCreateRequest request) {
         // 강사(사용자) 존재 여부 확인
-        User user = userRepository.findById(request.userId()).orElseThrow(() ->
-            new ResourceNotFoundException("User", request.userId())
+        User user = userRepository.findById(userId).orElseThrow(() ->
+            new ResourceNotFoundException("User", userId)
         );
 
         // 과목(코스) 존재 여부 확인
