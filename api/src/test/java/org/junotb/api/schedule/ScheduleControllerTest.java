@@ -10,13 +10,18 @@ import org.junotb.api.schedule.web.ScheduleUpdateRequest;
 import org.junotb.api.user.User;
 import org.junotb.api.user.UserRole;
 import org.junotb.api.user.UserStatus;
+import org.junotb.api.common.security.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.OffsetDateTime;
@@ -27,12 +32,14 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ScheduleController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @DisplayName("ScheduleController Slice Test")
 class ScheduleControllerTest {
 
@@ -44,6 +51,9 @@ class ScheduleControllerTest {
 
     @MockBean
     private ScheduleService scheduleService;
+
+    @MockBean
+    private AuthenticationFilter authenticationFilter;
 
     @Test
     @DisplayName("list_whenValidRequest_thenReturn200")
@@ -74,7 +84,8 @@ class ScheduleControllerTest {
         given(scheduleService.findList(any(), any())).willReturn(schedulePage);
 
         // when & then
-        mockMvc.perform(get("/api/v1/schedule"))
+        mockMvc.perform(get("/api/v1/schedule")
+                .header("Authorization", "Bearer test-token"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.items[0].id").value(1))
             .andExpect(jsonPath("$.items[0].status").value("SCHEDULED"));
@@ -107,7 +118,8 @@ class ScheduleControllerTest {
         given(scheduleService.findById(scheduleId)).willReturn(Optional.of(schedule));
 
         // when & then
-        mockMvc.perform(get("/api/v1/schedule/{id}", scheduleId))
+        mockMvc.perform(get("/api/v1/schedule/{id}", scheduleId)
+                .header("Authorization", "Bearer test-token"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(scheduleId))
             .andExpect(jsonPath("$.status").value("SCHEDULED"));
@@ -121,7 +133,8 @@ class ScheduleControllerTest {
         given(scheduleService.findById(scheduleId)).willReturn(Optional.empty());
 
         // when & then
-        mockMvc.perform(get("/api/v1/schedule/{id}", scheduleId))
+        mockMvc.perform(get("/api/v1/schedule/{id}", scheduleId)
+                .header("Authorization", "Bearer test-token"))
             .andExpect(status().isNotFound());
     }
 
@@ -135,7 +148,6 @@ class ScheduleControllerTest {
         OffsetDateTime endsAt = startsAt.plusHours(1);
 
         ScheduleCreateRequest request = new ScheduleCreateRequest(
-            teacherId,
             courseId,
             startsAt,
             endsAt,
@@ -161,15 +173,23 @@ class ScheduleControllerTest {
             .status(ScheduleStatus.SCHEDULED)
             .build();
 
-        given(scheduleService.create(any())).willReturn(schedule);
+        given(scheduleService.create(anyString(), any(ScheduleCreateRequest.class))).willReturn(schedule);
+
+        // SecurityContext 설정
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(teacherId, null, null));
+        SecurityContextHolder.setContext(securityContext);
 
         // when & then
         mockMvc.perform(post("/api/v1/schedule")
+                .header("Authorization", "Bearer test-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.status").value("SCHEDULED"));
+        
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -206,6 +226,7 @@ class ScheduleControllerTest {
 
         // when & then
         mockMvc.perform(patch("/api/v1/schedule/{id}", scheduleId)
+                .header("Authorization", "Bearer test-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -220,7 +241,8 @@ class ScheduleControllerTest {
         willDoNothing().given(scheduleService).delete(scheduleId);
 
         // when & then
-        mockMvc.perform(delete("/api/v1/schedule/{id}", scheduleId))
+        mockMvc.perform(delete("/api/v1/schedule/{id}", scheduleId)
+                .header("Authorization", "Bearer test-token"))
             .andExpect(status().isNoContent());
     }
 
@@ -228,18 +250,27 @@ class ScheduleControllerTest {
     @DisplayName("countByStatus_whenCalled_thenReturnStats")
     void countByStatus_whenCalled_thenReturnStats() throws Exception {
         // given
+        String userId = UUID.randomUUID().toString();
         Map<ScheduleStatus, Long> stats = Map.of(
             ScheduleStatus.SCHEDULED, 10L,
             ScheduleStatus.ATTENDED, 5L,
             ScheduleStatus.CANCELLED, 2L
         );
-        given(scheduleService.countByStatus(null)).willReturn(stats);
+        given(scheduleService.countByStatus(anyString())).willReturn(stats);
+
+        // SecurityContext 설정
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(userId, null, null));
+        SecurityContextHolder.setContext(securityContext);
 
         // when & then
-        mockMvc.perform(get("/api/v1/schedule/stats/status"))
+        mockMvc.perform(get("/api/v1/schedule/stats/status")
+                .header("Authorization", "Bearer test-token"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.SCHEDULED").value(10))
             .andExpect(jsonPath("$.ATTENDED").value(5))
             .andExpect(jsonPath("$.CANCELLED").value(2));
+        
+        SecurityContextHolder.clearContext();
     }
 }

@@ -8,6 +8,7 @@ import org.junotb.api.registration.web.RegistrationRequest;
 import org.junotb.api.registration.web.RegistrationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,14 +22,17 @@ public class RegistrationController {
 
     @PostMapping
     @Operation(summary = "수강 신청", description = "학생이 스케줄에 대해 수강 신청을 합니다.")
-    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest request) {
-        Registration registration = registrationService.register(request.scheduleId(), request.studentId());
+    public ResponseEntity<RegistrationResponse> register(
+        @AuthenticationPrincipal String studentId,
+        @Valid @RequestBody RegistrationRequest request
+    ) {
+        Registration registration = registrationService.register(request.scheduleId(), studentId);
         return ResponseEntity.status(HttpStatus.CREATED).body(RegistrationResponse.from(registration));
     }
 
-    @GetMapping("/student/{studentId}")
-    @Operation(summary = "학생별 신청 내역 조회", description = "특정 학생의 모든 수강 신청 내역을 조회합니다.")
-    public ResponseEntity<List<RegistrationResponse>> getByStudent(@PathVariable String studentId) {
+    @GetMapping("/student/me")
+    @Operation(summary = "내 신청 내역 조회", description = "인증된 사용자의 모든 수강 신청 내역을 조회합니다.")
+    public ResponseEntity<List<RegistrationResponse>> getByStudent(@AuthenticationPrincipal String studentId) {
         List<RegistrationResponse> responses = registrationService.findByStudentId(studentId)
             .stream()
             .map(RegistrationResponse::from)
