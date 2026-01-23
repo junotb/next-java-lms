@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.junotb.api.registration.dto.CourseRegistrationRequest;
 import org.junotb.api.registration.web.RegistrationRequest;
 import org.junotb.api.registration.web.RegistrationResponse;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,25 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    @Operation(summary = "수강 신청", description = "학생이 스케줄에 대해 수강 신청을 합니다.")
+    @Operation(summary = "수강 신청 (기존 스케줄)", description = "학생이 기존 스케줄에 대해 수강 신청을 합니다.")
     public ResponseEntity<RegistrationResponse> register(
         @AuthenticationPrincipal String studentId,
         @Valid @RequestBody RegistrationRequest request
     ) {
         Registration registration = registrationService.register(request.scheduleId(), studentId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(RegistrationResponse.from(registration));
+    }
+
+    @PostMapping("/course")
+    @Operation(
+            summary = "강좌 수강 신청 (자동 매칭)",
+            description = "학생이 강좌를 신청하면 조건에 맞는 강사를 자동으로 매칭하고 스케줄을 생성합니다."
+    )
+    public ResponseEntity<RegistrationResponse> registerCourse(
+            @AuthenticationPrincipal String studentId,
+            @Valid @RequestBody CourseRegistrationRequest request
+    ) {
+        Registration registration = registrationService.registerCourse(studentId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(RegistrationResponse.from(registration));
     }
 
