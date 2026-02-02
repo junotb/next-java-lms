@@ -1,5 +1,7 @@
 import { User } from "@/schema/user/user";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/component/ui/badge";
+import { Button } from "@/component/ui/button";
 
 // 스키마와 UI 표시 이름을 매핑하여 중앙에서 관리합니다.
 const USER_ROLE_NAMES: Record<string, string> = {
@@ -73,32 +75,32 @@ export default function UserListTable({ users, onUpdate }: UserListTableProps) {
               {user.email}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">
-              <span
-                className={clsx(
+              <Badge
+                className={cn(
                   "inline-flex rounded-full px-3 py-1 text-sm font-semibold leading-5",
                   USER_ROLE_COLORS[user.role]
                 )}
               >
                 {USER_ROLE_NAMES[user.role]}
-              </span>
+              </Badge>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">
-              <span
-                className={clsx(
+              <Badge
+                className={cn(
                   "inline-flex rounded-full px-3 py-1 text-sm font-semibold leading-5",
                   USER_STATUS_COLORS[user.status]
                 )}
               >
                 {USER_STATUS_NAMES[user.status]}
-              </span>
+              </Badge>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-              <button
+              <Button
                 onClick={() => onUpdate(user.id)}
-                className="border border-blue-600 bg-blue-600 text-white px-2 lg:px-4 py-2 text-sm rounded-md hover:bg-blue-700 cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-2 lg:px-4 py-2 text-sm"
               >
                 수정
-              </button>
+              </Button>
             </td>
           </tr>
         ))}

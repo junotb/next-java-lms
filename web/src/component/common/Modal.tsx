@@ -1,22 +1,17 @@
+import { Dialog, DialogContent } from "@/component/ui/dialog";
+
 interface ModalProps {
   children: React.ReactNode;
   onClose: () => void;
+  open?: boolean;
 }
 
-export default function Modal({ children, onClose }: ModalProps) {
+export default function Modal({ children, onClose, open = true }: ModalProps) {
   return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="bg-white rounded-2xl shadow-2xl">
         {children}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

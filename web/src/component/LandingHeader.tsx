@@ -4,6 +4,7 @@ import Link from "next/link";
 import ArrowLeftEndOnRectangle from "@/asset/icon/arrow-left-end-on-rectangle.svg";
 import BookOpenIcon from "@/asset/icon/book-open.svg";
 import { useAuthModalStore } from "@/store/useAuthModalStore";
+import { Button } from "@/component/ui/button";
 
 export default function LandingHeader() {
   const { openModal } = useAuthModalStore();
@@ -16,13 +17,15 @@ export default function LandingHeader() {
           <h1 className="font-bold">NexLang</h1>
         </Link>
         <div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => openModal("signin")}
-            className="p-2 text-slate-500 transition-colors hover:text-slate-800"
+            className="text-slate-500 hover:text-slate-800"
             aria-label="로그인"
           >
             <ArrowLeftEndOnRectangle className="h-6 w-6" />
-          </button>
+          </Button>
         </div>
       </div>
     </header>

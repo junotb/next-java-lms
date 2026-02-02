@@ -1,7 +1,8 @@
 "use client";
 
 import { useToastStore } from "@/store/useToastStore";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
+import { Button } from "@/component/ui/button";
 import { useEffect } from "react";
 
 export default function Toast() {
@@ -21,8 +22,6 @@ export default function Toast() {
     return null;
   }
 
-  const baseClasses =
-    "fixed top-4 right-4 z-[100] px-4 py-4 rounded-lg shadow-lg flex items-center transition-opacity duration-300 animate-fade-in-down";
   const typeClasses = {
     success: "bg-green-500 text-white",
     error: "bg-red-500 text-white",
@@ -30,14 +29,21 @@ export default function Toast() {
   };
 
   return (
-    <div className={clsx(baseClasses, typeClasses[type])}>
+    <div
+      className={cn(
+        "fixed top-4 right-4 z-[100] px-4 py-4 rounded-lg shadow-lg flex items-center transition-opacity duration-300 animate-fade-in-down",
+        typeClasses[type]
+      )}
+    >
       <span>{message}</span>
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={hideToast}
-        className="ml-4 font-bold opacity-70 hover:opacity-100"
+        className="ml-4 h-auto w-auto p-0 font-bold opacity-70 hover:opacity-100 hover:bg-transparent"
       >
         ✕
-      </button>
+      </Button>
     </div>
   );
 }

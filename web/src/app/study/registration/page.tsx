@@ -1,8 +1,13 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { useCallback, useMemo } from "react";
+import { Button } from "@/component/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/component/ui/card";
+import { Input } from "@/component/ui/input";
+import { Label } from "@/component/ui/label";
+import { Badge } from "@/component/ui/badge";
 import {
   useFindCandidates,
 } from "@/hook/study/useRegistration";
@@ -102,21 +107,21 @@ export default function StudyRegistrationPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 px-6 py-4">
-          <h1 className="text-xl font-semibold text-gray-900">
+      <Card className="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <CardHeader className="border-b border-gray-200">
+          <CardTitle className="text-xl font-semibold text-gray-900">
             수강 신청 마법사
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          </CardTitle>
+          <CardDescription className="mt-1 text-sm text-gray-500">
             Step {step} / 4 —{" "}
             {step === 1 && "기간 선택"}
             {step === 2 && "요일 선택"}
             {step === 3 && "시간·강사 확인"}
             {step === 4 && "최종 확인"}
-          </p>
-        </div>
+          </CardDescription>
+        </CardHeader>
 
-        <div className="px-6 py-6">
+        <CardContent className="px-6 py-6">
           {step === 1 && (
             <Step1
               formData={formData}
@@ -143,24 +148,22 @@ export default function StudyRegistrationPage() {
               onRetry={handleSubmit}
             />
           )}
-        </div>
+        </CardContent>
 
         <div className="flex justify-between border-t border-gray-200 px-6 py-4">
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={handleBack}
             disabled={step === 1}
-            className={clsx(
-              "rounded-lg px-4 py-2 text-sm font-medium",
-              step === 1
-                ? "cursor-not-allowed text-gray-400"
-                : "text-gray-700 hover:bg-gray-100"
+            className={cn(
+              step === 1 && "cursor-not-allowed text-gray-400"
             )}
           >
             이전
-          </button>
+          </Button>
           {step < 4 ? (
-            <button
+            <Button
               type="button"
               onClick={handleNext}
               disabled={
@@ -168,20 +171,19 @@ export default function StudyRegistrationPage() {
                 (step === 2 && !canProceedStep2) ||
                 (step === 3 && !canProceedStep3)
               }
-              className={clsx(
-                "rounded-lg px-4 py-2 text-sm font-medium text-white",
-                (step === 1 && !canProceedStep1) ||
+              className={cn(
+                "bg-blue-600 hover:bg-blue-700 text-white",
+                ((step === 1 && !canProceedStep1) ||
                   (step === 2 && !canProceedStep2) ||
-                  (step === 3 && !canProceedStep3)
-                  ? "cursor-not-allowed bg-gray-300"
-                  : "bg-blue-600 hover:bg-blue-700"
+                  (step === 3 && !canProceedStep3)) &&
+                  "cursor-not-allowed bg-gray-300 hover:bg-gray-300"
               )}
             >
               다음
-            </button>
+            </Button>
           ) : null}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
@@ -196,17 +198,16 @@ function Step1({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-gray-700">
+        <Label className="text-sm font-medium text-gray-700">
           수강 기간 (개월)
-        </label>
+        </Label>
         <select
           value={formData.months ?? ""}
           onChange={(e) =>
             updateFormData({
               months: e.target.value ? Number(e.target.value) : undefined,
-            })
-          }
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            })}
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <option value="">선택하세요</option>
           {MONTH_OPTIONS.map((m) => (
@@ -244,7 +245,7 @@ function Step2({
         {DAYS_OF_WEEK.map((d) => (
           <label
             key={d}
-            className={clsx(
+            className={cn(
               "flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
               (formData.days ?? []).includes(d)
                 ? "border-blue-500 bg-blue-50 text-blue-700"
@@ -279,20 +280,19 @@ function Step3({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-gray-700">
+        <Label className="text-sm font-medium text-gray-700">
           희망 시작 시간
-        </label>
-        <input
+        </Label>
+        <Input
           type="time"
           value={formData.startTime ?? ""}
           onChange={(e) => updateFormData({ startTime: e.target.value || undefined })}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
         />
       </div>
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-gray-700">
+        <Label className="text-sm font-medium text-gray-700">
           수업 시간 (분)
-        </label>
+        </Label>
         <select
           value={formData.durationMinutes ?? ""}
           onChange={(e) =>
@@ -300,7 +300,7 @@ function Step3({
               durationMinutes: e.target.value ? Number(e.target.value) : undefined,
             })
           }
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <option value="">선택하세요</option>
           {DURATION_OPTIONS.map((m) => (
@@ -317,13 +317,13 @@ function Step3({
             {candidatesLoading ? (
               <span className="text-sm text-gray-500">확인 중…</span>
             ) : candidates.length > 0 ? (
-              <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
+              <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
                 신청 가능
-              </span>
+              </Badge>
             ) : (
-              <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800">
+              <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
                 해당 시간 가용 강사 없음
-              </span>
+              </Badge>
             )}
           </div>
         )}
@@ -373,23 +373,23 @@ function Step4({
         </p>
       )}
       <div className="flex gap-3">
-        <button
+        <Button
           type="button"
           onClick={onSubmit}
           disabled={isSubmitting}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           {isSubmitting ? "처리 중…" : "신청하기"}
-        </button>
+        </Button>
         {is429 && (
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={onRetry}
             disabled={isSubmitting}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             다시 시도
-          </button>
+          </Button>
         )}
       </div>
     </div>

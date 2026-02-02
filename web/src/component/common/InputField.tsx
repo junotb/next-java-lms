@@ -7,6 +7,9 @@ import type {
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
+import { Input } from "@/component/ui/input";
+import { Label } from "@/component/ui/label";
+import { cn } from "@/lib/utils";
 
 interface InputFieldProps<T extends FieldValues> {
   id: Path<T>;
@@ -35,19 +38,19 @@ export default function InputField<T extends FieldValues>({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <label
-        htmlFor={id}
-        className="text-left text-sm font-medium text-gray-500"
-      >
+      <Label htmlFor={id} className="text-left text-sm font-medium text-gray-500">
         {label}
-      </label>
-      <input
+      </Label>
+      <Input
         id={id}
         type={type}
         placeholder={placeholder}
         disabled={disabled}
         defaultValue={defaultValue}
-        className="w-full rounded-lg border px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+        className={cn(
+          "w-full",
+          error && "border-red-500 focus-visible:ring-red-500"
+        )}
         {...register(id, validation)}
       />
       {error && <p className="text-sm text-red-500">{String(error.message)}</p>}

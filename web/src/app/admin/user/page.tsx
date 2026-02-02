@@ -9,6 +9,7 @@ import Loader from "@/component/common/Loader";
 import Modal from "@/component/common/Modal";
 import { useUserList } from "@/hook/admin/useUser";
 import { UserListRequest } from "@/schema/user/user";
+import { Button } from "@/component/ui/button";
 
 export default function AdminUsersPage() {
   const [request, setRequest] = useState<UserListRequest>({
@@ -49,13 +50,13 @@ export default function AdminUsersPage() {
               서비스 사용자를 검색하고 관리합니다.
             </p>
           </div>
-          <button
-            className="flex items-center gap-2 rounded-md border border-blue-600 bg-blue-600 px-4 py-2 text-sm text-white shadow-sm hover:bg-blue-700"
+          <Button
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
             onClick={openCreateModal}
           >
             <PlusIcon className="h-4 w-4" />
             <span>사용자 추가</span>
-          </button>
+          </Button>
         </header>
 
         <div className="w-full">

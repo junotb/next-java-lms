@@ -1,6 +1,8 @@
 import { Schedule } from "@/schema/schedule/schedule";
 import { format } from "date-fns";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/component/ui/badge";
+import { Button } from "@/component/ui/button";
 
 // UI 표시 이름을 중앙에서 관리합니다.
 const SCHEDULE_STATUS_NAMES: Record<string, string> = {
@@ -73,22 +75,22 @@ export default function ScheduleListTable({
               {format(new Date(schedule.endsAt), "yyyy-MM-dd HH:mm")}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">
-              <span
-                className={clsx(
+              <Badge
+                className={cn(
                   "inline-flex rounded-full px-3 py-1 text-sm font-semibold leading-5",
                   SCHEDULE_STATUS_COLORS[schedule.status]
                 )}
               >
                 {SCHEDULE_STATUS_NAMES[schedule.status]}
-              </span>
+              </Badge>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-              <button
+              <Button
                 onClick={() => onUpdate(schedule.id)}
-                className="border border-blue-600 bg-blue-600 text-white px-2 lg:px-4 py-2 text-sm rounded-md hover:bg-blue-700 cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-2 lg:px-4 py-2 text-sm"
               >
                 수정
-              </button>
+              </Button>
             </td>
           </tr>
         ))}
