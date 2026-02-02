@@ -20,6 +20,7 @@ spring:
       timeout: 3000ms
 
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: validate
       naming:
@@ -28,16 +29,25 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        highlight_sql: true
     open-in-view: false
 
 logging:
   level:
     root: info
-    org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE
 
 springdoc:
   swagger-ui:
     enabled: true
   api-docs:
     enabled: true
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}

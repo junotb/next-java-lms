@@ -44,6 +44,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
@@ -478,23 +479,14 @@ class RegistrationServiceTest {
         given(lock.tryLock(anyLong(), anyLong(), any(TimeUnit.class))).willReturn(true);
         given(lock.isHeldByCurrentThread()).willReturn(true);
         
-        // Mock TransactionTemplate to execute the callback
-        given(transactionTemplate.execute(any(TransactionCallback.class))).willAnswer(invocation -> {
-            TransactionCallback<?> callback = invocation.getArgument(0);
-            return callback.doInTransaction(null);
-        });
-        
         given(userRepository.findById(studentId)).willReturn(Optional.of(student));
         given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
         given(teacherAvailabilityRepository.findCandidates(
-                request.days(),
-                request.startTime(),
-                request.startTime().plusMinutes(request.durationMinutes()),
-                (long) request.days().size()
+                any(), any(), any(), anyLong(), any(), any(), any()
         )).willReturn(List.of(teacherId));
         given(scheduleRepository.findAll(any(Specification.class))).willReturn(List.of()); // 기존 스케줄 없음
-        given(teacherTimeOffRepository.findByTeacher_IdAndStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(
-                anyString(), any(), any()
+        given(teacherTimeOffRepository.findOverlappingByTeacherAndRange(
+                anyString(), any(OffsetDateTime.class), any(OffsetDateTime.class)
         )).willReturn(List.of()); // 휴무 없음
         given(userRepository.findById(teacherId)).willReturn(Optional.of(teacher));
         given(scheduleRepository.saveAll(any())).willAnswer(invocation -> {
@@ -572,8 +564,8 @@ class RegistrationServiceTest {
         TeacherTimeOff timeOff = TeacherTimeOff.builder()
                 .id(1L)
                 .teacher(teacher)
-                .startDateTime(firstMondayDateTime.minusHours(1))
-                .endDateTime(firstMondayDateTime.plusHours(2))
+                .startDateTime(firstMondayDateTime.minusHours(1).atOffset(ZoneOffset.UTC))
+                .endDateTime(firstMondayDateTime.plusHours(2).atOffset(ZoneOffset.UTC))
                 .type(TeacherTimeOffType.VACATION)
                 .reason("연차")
                 .build();
@@ -581,13 +573,10 @@ class RegistrationServiceTest {
         given(userRepository.findById(studentId)).willReturn(Optional.of(student));
         given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
         given(teacherAvailabilityRepository.findCandidates(
-                request.days(),
-                request.startTime(),
-                request.startTime().plusMinutes(request.durationMinutes()),
-                (long) request.days().size()
+                any(), any(), any(), anyLong(), any(), any(), any()
         )).willReturn(List.of(teacherId));
         given(scheduleRepository.findAll(any(Specification.class))).willReturn(List.of()); // 기존 스케줄 없음
-        given(teacherTimeOffRepository.findByTeacher_IdAndStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(
+        given(teacherTimeOffRepository.findOverlappingByTeacherAndRange(
                 anyString(), any(), any()
         )).willReturn(List.of(timeOff)); // 휴무 있음
 
@@ -676,19 +665,10 @@ class RegistrationServiceTest {
         given(lock.tryLock(anyLong(), anyLong(), any(TimeUnit.class))).willReturn(true);
         given(lock.isHeldByCurrentThread()).willReturn(true);
         
-        // Mock TransactionTemplate to execute the callback
-        given(transactionTemplate.execute(any(TransactionCallback.class))).willAnswer(invocation -> {
-            TransactionCallback<?> callback = invocation.getArgument(0);
-            return callback.doInTransaction(null);
-        });
-        
         given(userRepository.findById(studentId)).willReturn(Optional.of(student));
         given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
         given(teacherAvailabilityRepository.findCandidates(
-                request.days(),
-                request.startTime(),
-                request.startTime().plusMinutes(request.durationMinutes()),
-                (long) request.days().size()
+                any(), any(), any(), anyLong(), any(), any(), any()
         )).willReturn(List.of(teacherAId, teacherBId)); // 두 강사 모두 후보
         
         // 호출 횟수를 추적하여 강사 A와 B를 구분
@@ -713,8 +693,8 @@ class RegistrationServiceTest {
         });
         
         // 휴무는 모두 없음 (여러 번 호출될 수 있음)
-        given(teacherTimeOffRepository.findByTeacher_IdAndStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(
-                anyString(), any(), any()
+        given(teacherTimeOffRepository.findOverlappingByTeacherAndRange(
+                anyString(), any(OffsetDateTime.class), any(OffsetDateTime.class)
         )).willReturn(List.of()); // 휴무 없음
         
         // 트랜잭션 내부에서 강사 B 조회
@@ -806,14 +786,11 @@ class RegistrationServiceTest {
         given(userRepository.findById(studentId)).willReturn(Optional.of(student));
         given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
         given(teacherAvailabilityRepository.findCandidates(
-                request.days(),
-                request.startTime(),
-                request.startTime().plusMinutes(request.durationMinutes()),
-                (long) request.days().size()
+                any(), any(), any(), anyLong(), any(), any(), any()
         )).willReturn(List.of(teacherId));
         given(scheduleRepository.findAll(any(Specification.class))).willReturn(List.of(conflictingSchedule)); // 기존 스케줄 있음
-        given(teacherTimeOffRepository.findByTeacher_IdAndStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(
-                anyString(), any(), any()
+        given(teacherTimeOffRepository.findOverlappingByTeacherAndRange(
+                anyString(), any(OffsetDateTime.class), any(OffsetDateTime.class)
         )).willReturn(List.of()); // 휴무 없음
 
         // when & then
@@ -862,14 +839,11 @@ class RegistrationServiceTest {
         given(userRepository.findById(studentId)).willReturn(Optional.of(student));
         given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
         given(teacherAvailabilityRepository.findCandidates(
-                request.days(),
-                request.startTime(),
-                request.startTime().plusMinutes(request.durationMinutes()),
-                (long) request.days().size()
+                any(), any(), any(), anyLong(), any(), any(), any()
         )).willReturn(List.of(teacherId));
         given(scheduleRepository.findAll(any(Specification.class))).willReturn(List.of()); // 기존 스케줄 없음
-        given(teacherTimeOffRepository.findByTeacher_IdAndStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(
-                anyString(), any(), any()
+        given(teacherTimeOffRepository.findOverlappingByTeacherAndRange(
+                anyString(), any(OffsetDateTime.class), any(OffsetDateTime.class)
         )).willReturn(List.of()); // 휴무 없음
 
         // when & then

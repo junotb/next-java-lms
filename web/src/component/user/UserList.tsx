@@ -26,7 +26,7 @@ export default function UserList({ users, basePath }: UserListProps) {
           className="flex flex-wrap gap-4 justify-center items-stretch"
         >
           {users.map((user) => (
-            <UserCard key={user.username} href={`${basePath}/${user.username}`} firstName={user.firstName} lastName={user.lastName} />
+            <UserCard key={user.id} href={`${basePath}/${user.id}`} name={user.name} />
           ))}
         </div>
       )}

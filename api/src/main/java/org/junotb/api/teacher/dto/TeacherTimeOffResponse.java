@@ -15,8 +15,8 @@ public record TeacherTimeOffResponse(
     public static TeacherTimeOffResponse from(TeacherTimeOff timeOff) {
         return new TeacherTimeOffResponse(
             timeOff.getId(),
-            timeOff.getStartDateTime(),
-            timeOff.getEndDateTime(),
+            timeOff.getStartDateTime().toLocalDateTime(),
+            timeOff.getEndDateTime().toLocalDateTime(),
             timeOff.getType(),
             timeOff.getReason()
         );

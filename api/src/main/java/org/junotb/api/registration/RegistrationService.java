@@ -36,7 +36,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -212,6 +214,7 @@ public class RegistrationService {
     private static final long LOCK_WAIT_TIME = 5L;
     private static final long LOCK_LEASE_TIME = 3L;
 
+    @Transactional(readOnly = false)
     public Registration registerCourse(String studentId, CourseRegistrationRequest request) {
         // 1. 학생 존재 및 역할 확인
         User student = userRepository.findById(studentId).orElseThrow(
@@ -231,11 +234,26 @@ public class RegistrationService {
         LocalTime endTime = request.startTime().plusMinutes(request.durationMinutes());
 
         // 4. 후보 강사 조회 (모든 요일과 시간 범위를 커버하는 강사)
+        // 휴무/스케줄 체크용 구간: 현재 ~ 수강 기간만큼의 미래
+        OffsetDateTime scheduleStart = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime scheduleEnd = scheduleStart.plusMonths(request.months());
+
+        // Native Query 호환: DayOfWeek → String 변환
+        List<String> dayStrList = request.days().stream()
+                .map(DayOfWeek::name)
+                .toList();
+        Set<String> dayStrings = request.days().stream()
+                .map(DayOfWeek::name)
+                .collect(Collectors.toSet());
+
         List<String> candidateTeacherIds = teacherAvailabilityRepository.findCandidates(
-                request.days(),
+                dayStrList,
                 request.startTime(),
                 endTime,
-                (long) request.days().size()
+                (long) request.days().size(),
+                scheduleStart,
+                scheduleEnd,
+                dayStrings
         );
 
         if (candidateTeacherIds.isEmpty()) {
@@ -273,51 +291,48 @@ public class RegistrationService {
                 throw new LockAcquisitionException("현재 수강 신청이 몰려 처리할 수 없습니다. 잠시 후 다시 시도해주세요.");
             }
 
-            // 트랜잭션 내에서 등록 로직 실행
-            return transactionTemplate.execute(status -> {
-                // 가용성 재검증 (락 획득 후 다시 확인)
-                String verifiedTeacherId = findAvailableTeacher(
-                        List.of(selectedTeacherId),
-                        classDates,
-                        request.durationMinutes()
+            // 가용성 재검증 (락 획득 후 다시 확인)
+            String verifiedTeacherId = findAvailableTeacher(
+                    List.of(selectedTeacherId),
+                    classDates,
+                    request.durationMinutes()
+            );
+
+            if (verifiedTeacherId == null) {
+                throw new IllegalStateException("No available teacher found after availability check");
+            }
+
+            User teacher = userRepository.findById(verifiedTeacherId).orElseThrow(
+                    () -> new EntityNotFoundException("Teacher not found with id: " + verifiedTeacherId)
+            );
+
+            // 스케줄 대량 생성 및 저장
+            List<Schedule> schedules = new ArrayList<>();
+            for (LocalDateTime classDateTime : classDates) {
+                OffsetDateTime startsAt = classDateTime.atOffset(ZoneOffset.UTC);
+                OffsetDateTime endsAt = classDateTime.plusMinutes(request.durationMinutes()).atOffset(ZoneOffset.UTC);
+
+                Schedule schedule = Schedule.create(
+                        teacher,
+                        course,
+                        startsAt,
+                        endsAt,
+                        ScheduleStatus.SCHEDULED
                 );
+                schedules.add(schedule);
+            }
 
-                if (verifiedTeacherId == null) {
-                    throw new IllegalStateException("No available teacher found after availability check");
-                }
+            List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
 
-                User teacher = userRepository.findById(verifiedTeacherId).orElseThrow(
-                        () -> new EntityNotFoundException("Teacher not found with id: " + verifiedTeacherId)
-                );
+            // 첫 번째 스케줄에 대한 Registration 생성
+            Schedule firstSchedule = savedSchedules.get(0);
+            Registration registration = Registration.create(
+                    firstSchedule,
+                    student,
+                    RegistrationStatus.REGISTERED
+            );
 
-                // 스케줄 대량 생성 및 저장
-                List<Schedule> schedules = new ArrayList<>();
-                for (LocalDateTime classDateTime : classDates) {
-                    OffsetDateTime startsAt = classDateTime.atOffset(ZoneOffset.UTC);
-                    OffsetDateTime endsAt = classDateTime.plusMinutes(request.durationMinutes()).atOffset(ZoneOffset.UTC);
-
-                    Schedule schedule = Schedule.create(
-                            teacher,
-                            course,
-                            startsAt,
-                            endsAt,
-                            ScheduleStatus.SCHEDULED
-                    );
-                    schedules.add(schedule);
-                }
-
-                List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
-
-                // 첫 번째 스케줄에 대한 Registration 생성
-                Schedule firstSchedule = savedSchedules.get(0);
-                Registration registration = Registration.create(
-                        firstSchedule,
-                        student,
-                        RegistrationStatus.REGISTERED
-                );
-
-                return registrationRepository.save(registration);
-            });
+            return registrationRepository.save(registration);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -378,13 +393,14 @@ public class RegistrationService {
                 );
             });
 
-            // 해당 강사의 기간 내 전체 휴무 조회
-            List<TeacherTimeOff> timeOffs = teacherTimeOffRepository
-                    .findByTeacher_IdAndStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(
-                            teacherId,
-                            lastDate,
-                            firstDate
-                    );
+            // 해당 강사의 기간 내 전체 휴무 조회 (기간과 겹치는 휴무만)
+            OffsetDateTime rangeStart = firstDate.atOffset(ZoneOffset.UTC);
+            OffsetDateTime rangeEnd = lastDate.atOffset(ZoneOffset.UTC);
+            List<TeacherTimeOff> timeOffs = teacherTimeOffRepository.findOverlappingByTeacherAndRange(
+                    teacherId,
+                    rangeStart,
+                    rangeEnd
+            );
 
             // 충돌 검사
             boolean hasConflict = false;
@@ -404,9 +420,7 @@ public class RegistrationService {
 
                 // TimeOff 충돌 확인
                 for (TeacherTimeOff timeOff : timeOffs) {
-                    OffsetDateTime timeOffStart = timeOff.getStartDateTime().atOffset(ZoneOffset.UTC);
-                    OffsetDateTime timeOffEnd = timeOff.getEndDateTime().atOffset(ZoneOffset.UTC);
-                    if (isOverlapping(classStart, classEnd, timeOffStart, timeOffEnd)) {
+                    if (isOverlapping(classStart, classEnd, timeOff.getStartDateTime(), timeOff.getEndDateTime())) {
                         hasConflict = true;
                         break;
                     }

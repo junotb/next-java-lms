@@ -97,8 +97,8 @@ public class TeacherSettingService {
 
         TeacherTimeOff timeOff = TeacherTimeOff.create(
                 teacher,
-                request.startDateTime(),
-                request.endDateTime(),
+                startDateTime,
+                endDateTime,
                 request.type(),
                 request.reason()
         );

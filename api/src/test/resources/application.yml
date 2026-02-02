@@ -34,3 +34,6 @@ logging:
     org.hibernate.SQL: warn
     org.hibernate.type.descriptor.sql.BasicBinder: off
 
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
