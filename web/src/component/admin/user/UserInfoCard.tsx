@@ -13,6 +13,7 @@ import {
   UserCreateRequest,
   UserProfileUpdateRequest,
 } from "@/schema/user/user";
+import { Card, CardContent, CardHeader, CardTitle } from "@/component/ui/card";
 
 interface UserInfoCardProps {
   userId: string | null;
@@ -58,26 +59,28 @@ export default function UserInfoCard({ userId, onSuccess }: UserInfoCardProps) {
   const isMutating = registerMutation.isPending || modifyMutation.isPending;
 
   return (
-    // 고정된 크기 대신 유연한 레이아웃을 사용합니다.
-    <div className="w-full max-w-lg rounded-lg bg-white p-8 shadow-lg">
-      <h1 className="text-3xl lg:text-4xl font-bold">{title}</h1>
-
-      <div className="flex-1 flex items-center justify-center mt-8">
-        {/* 로딩 및 뮤테이션 상태를 변수로 분리하여 가독성을 높입니다. */}
-        {isUserLoading || isMutating ? (
-          <Loader />
-        ) : isCreate ? (
-          <UserCreateForm onSubmit={handleSubmit} />
-        ) : (
-          user && (
-            <UserUpdateForm
-              user={user}
-              onSubmit={handleSubmit}
-              onDelete={handleDelete}
-            />
-          )
-        )}
-      </div>
-    </div>
+    <Card className="w-full max-w-lg">
+      <CardHeader>
+        <CardTitle className="text-3xl lg:text-4xl font-bold">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex-1 flex items-center justify-center">
+          {/* 로딩 및 뮤테이션 상태를 변수로 분리하여 가독성을 높입니다. */}
+          {isUserLoading || isMutating ? (
+            <Loader />
+          ) : isCreate ? (
+            <UserCreateForm onSubmit={handleSubmit} />
+          ) : (
+            user && (
+              <UserUpdateForm
+                user={user}
+                onSubmit={handleSubmit}
+                onDelete={handleDelete}
+              />
+            )
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

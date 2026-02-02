@@ -10,6 +10,8 @@ import InputField from "@/component/common/InputField";
 import SelectField from "@/component/common/SelectField";
 import { UserRoleSchema } from "@/schema/user/user-role";
 import { UserStatusSchema } from "@/schema/user/user-status";
+import { Button } from "@/component/ui/button";
+import { cn } from "@/lib/utils";
 
 const USER_ROLE_NAMES: Record<string, string> = {
   STUDENT: "학생",
@@ -97,21 +99,27 @@ export default function UserUpdateForm({
       </SelectField>
 
       <div className="flex justify-center gap-4 w-full">
-        <button
+        <Button
           type="submit"
-          className="mt-4 flex-1 rounded-xl bg-blue-600 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-blue-300 disabled:shadow-none disabled:transform-none"
+          className={cn(
+            "mt-4 flex-1 rounded-xl px-8 py-3 font-bold shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 disabled:shadow-none disabled:transform-none",
+            "bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white"
+          )}
           disabled={isSubmitting}
         >
           수정
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
           onClick={onDelete}
-          className="mt-4 flex-1 rounded-xl bg-red-600 px-8 py-3 font-bold text-white shadow-lg shadow-red-500/20 transition-all hover:bg-red-700 hover:-translate-y-0.5"
+          className={cn(
+            "mt-4 flex-1 rounded-xl px-8 py-3 font-bold shadow-lg shadow-red-500/20 transition-all hover:-translate-y-0.5",
+            "bg-red-600 hover:bg-red-700 text-white"
+          )}
         >
           삭제
-        </button>
+        </Button>
       </div>
     </form>
   );

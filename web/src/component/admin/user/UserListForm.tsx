@@ -2,6 +2,10 @@ import { useForm } from "react-hook-form";
 import type { UserListRequest, UserListFormValues } from "@/schema/user/user";
 import { UserRoleSchema } from "@/schema/user/user-role";
 import { UserStatusSchema } from "@/schema/user/user-status";
+import { Input } from "@/component/ui/input";
+import { Label } from "@/component/ui/label";
+import { Button } from "@/component/ui/button";
+import { cn } from "@/lib/utils";
 
 // 스키마와 UI 표시 이름을 매핑하여 중앙에서 관리합니다.
 const USER_ROLE_NAMES: Record<string, string> = {
@@ -41,24 +45,26 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex flex-col gap-2">
-        <label htmlFor="name" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="name" className="text-sm font-medium text-gray-700">
           이름
-        </label>
-        <input
+        </Label>
+        <Input
           id="name"
           type="text"
-          className="border px-2 lg:px-4 py-2 w-20 lg:w-32 text-sm rounded-md"
+          className="px-2 lg:px-4 py-2 w-20 lg:w-32 text-sm h-auto"
           {...register("name")}
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="role" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="role" className="text-sm font-medium text-gray-700">
           역할
-        </label>
+        </Label>
         <select
           id="role"
-          className="border px-2 lg:px-4 py-2 w-20 lg:w-24 text-sm rounded-md"
+          className={cn(
+            "flex h-10 w-20 lg:w-24 rounded-md border border-input bg-background px-2 lg:px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          )}
           {...register("role")}
         >
           <option value="">전체</option>
@@ -71,12 +77,14 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="status" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="status" className="text-sm font-medium text-gray-700">
           상태
-        </label>
+        </Label>
         <select
           id="status"
-          className="border px-2 lg:px-4 py-2 w-20 lg:w-24 text-sm rounded-md"
+          className={cn(
+            "flex h-10 w-20 lg:w-24 rounded-md border border-input bg-background px-2 lg:px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          )}
           {...register("status")}
         >
           <option value="">전체</option>
@@ -89,20 +97,21 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
       </div>
 
       <div className="flex justify-center items-center gap-4">
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={handleReset}
-          className="border px-2 lg:px-4 py-2 text-sm rounded-md cursor-pointer"
+          className="px-2 lg:px-4 py-2 text-sm h-auto"
         >
           초기화
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="submit"
-          className="border border-blue-600 bg-blue-600 text-white px-2 lg:px-4 py-2 text-sm rounded-md hover:bg-blue-700 cursor-pointer"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-2 lg:px-4 py-2 text-sm h-auto"
         >
           검색
-        </button>
+        </Button>
       </div>
     </form>
   );

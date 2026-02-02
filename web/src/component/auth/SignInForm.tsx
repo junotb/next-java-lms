@@ -7,6 +7,8 @@ import type {
   SignInEmailRequest,
 } from "@/schema/auth";
 import InputField from "@/component/common/InputField";
+import { Button } from "@/component/ui/button";
+import { cn } from "@/lib/utils";
 
 interface SignInFormProps {
   error: BetterError | null;
@@ -59,13 +61,16 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
         validation={{ required: "비밀번호를 입력하세요." }}
       />
 
-      <button
+      <Button
         type="submit"
-        className="mt-4 w-full rounded-xl bg-blue-600 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-blue-300 disabled:shadow-none disabled:transform-none"
+        className={cn(
+          "mt-4 w-full rounded-xl px-8 py-3 font-bold shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 disabled:shadow-none disabled:transform-none",
+          "bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300"
+        )}
         disabled={isSubmitting}
       >
         로그인
-      </button>
+      </Button>
       {error && <p className="text-red-500 text-sm">{error.message}</p>}
     </form>
   );

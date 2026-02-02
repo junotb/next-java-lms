@@ -7,6 +7,8 @@ import type {
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
+import { Label } from "@/component/ui/label";
+import { cn } from "@/lib/utils";
 
 interface SelectFieldProps<T extends FieldValues> {
   id: Path<T>;
@@ -29,15 +31,15 @@ export default function SelectField<T extends FieldValues>({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <label
-        htmlFor={id}
-        className="text-left text-sm font-medium text-gray-500"
-      >
+      <Label htmlFor={id} className="text-left text-sm font-medium text-gray-500">
         {label}
-      </label>
+      </Label>
       <select
         id={id}
-        className="w-full rounded-lg border px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          error && "border-red-500 focus-visible:ring-red-500"
+        )}
         {...register(id, validation)}
       >
         {children}

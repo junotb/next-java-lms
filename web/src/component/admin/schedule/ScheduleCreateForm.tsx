@@ -8,6 +8,8 @@ import type {
 import InputField from "@/component/common/InputField";
 import SelectField from "@/component/common/SelectField";
 import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
+import { Button } from "@/component/ui/button";
+import { cn } from "@/lib/utils";
 
 const SCHEDULE_STATUS_NAMES: Record<string, string> = {
   SCHEDULED: "예정",
@@ -87,13 +89,16 @@ export default function ScheduleCreateForm({
         }}
       />
 
-      <button
+      <Button
         type="submit"
-        className="mt-4 w-full rounded-xl bg-blue-600 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-blue-300 disabled:shadow-none disabled:transform-none"
+        className={cn(
+          "mt-4 w-full rounded-xl px-8 py-3 font-bold shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 disabled:shadow-none disabled:transform-none",
+          "bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white"
+        )}
         disabled={isSubmitting}
       >
         등록
-      </button>
+      </Button>
     </form>
   );
 }

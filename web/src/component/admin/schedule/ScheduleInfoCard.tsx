@@ -13,6 +13,7 @@ import {
   ScheduleCreateRequest,
   ScheduleUpdateRequest,
 } from "@/schema/schedule/schedule";
+import { Card, CardContent, CardHeader, CardTitle } from "@/component/ui/card";
 
 interface ScheduleInfoCardProps {
   scheduleId: number | null;
@@ -63,25 +64,27 @@ export default function ScheduleInfoCard({
   const isMutating = registerMutation.isPending || modifyMutation.isPending;
 
   return (
-    // 고정된 크기 대신 유연한 레이아웃을 사용합니다.
-    <div className="w-full max-w-lg rounded-lg bg-white p-8 shadow-lg">
-      <h1 className="text-3xl lg:text-4xl font-bold">{title}</h1>
-
-      <div className="flex-1 flex items-center justify-center mt-8">
-        {isScheduleLoading || isMutating ? (
-          <Loader />
-        ) : isCreate ? (
-          <ScheduleCreateForm onSubmit={handleSubmit} />
-        ) : (
-          schedule && (
-            <ScheduleUpdateForm
-              schedule={schedule}
-              onSubmit={handleSubmit}
-              onDelete={handleDelete}
-            />
-          )
-        )}
-      </div>
-    </div>
+    <Card className="w-full max-w-lg">
+      <CardHeader>
+        <CardTitle className="text-3xl lg:text-4xl font-bold">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex-1 flex items-center justify-center">
+          {isScheduleLoading || isMutating ? (
+            <Loader />
+          ) : isCreate ? (
+            <ScheduleCreateForm onSubmit={handleSubmit} />
+          ) : (
+            schedule && (
+              <ScheduleUpdateForm
+                schedule={schedule}
+                onSubmit={handleSubmit}
+                onDelete={handleDelete}
+              />
+            )
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

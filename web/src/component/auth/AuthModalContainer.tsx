@@ -13,6 +13,9 @@ import SignInForm from "@/component/auth/SignInForm";
 import SignUpForm from "@/component/auth/SignUpForm";
 import Loader from "@/component/common/Loader";
 import { authClient } from "@/lib/auth-client";
+import { Dialog, DialogContent } from "@/component/ui/dialog";
+import { Button } from "@/component/ui/button";
+import { cn } from "@/lib/utils";
 
 // 역할(Role)과 리디렉션 경로를 상수로 관리하여 실수를 방지하고 유지보수성을 높입니다.
 const roleRedirectMap: Record<string, string> = {
@@ -89,49 +92,47 @@ export default function AuthModalContainer() {
   };
 
   return (
-    <div
-      // 모달 오버레이에 fade-in 애니메이션 추가 (tailwind.config.js에 'fade-in' keyframes 정의 필요)
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4 animate-fade-in"
-      onClick={closeModal}
-    >
-      <div
-        // 모달 컨텐츠에 scale-in 애니메이션 추가 및 border-radius 일관성 확보
-        className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl transition-all animate-scale-in"
-        onClick={(e) => e.stopPropagation()}
+    <Dialog open={!!modalType} onOpenChange={(isOpen) => !isOpen && closeModal()}>
+      <DialogContent
+        onClose={closeModal}
+        className={cn(
+          "relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl transition-all animate-scale-in p-8 sm:p-10"
+        )}
       >
-        <div className="p-8 sm:p-10">
-          <button
-            onClick={closeModal}
-            aria-label="모달 닫기"
-            className="absolute right-5 top-5 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
-          >
-            ✕
-          </button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={closeModal}
+          aria-label="모달 닫기"
+          className="absolute right-5 top-5 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+        >
+          ✕
+        </Button>
 
-          {isLoading && <Loader />}
-          {!isLoading && modalType === MODAL_TYPES.SIGN_IN && (
-            <SignInForm error={error} onSubmit={handleSignIn} />
-          )}
-          {!isLoading && modalType === MODAL_TYPES.SIGN_UP && (
-            <SignUpForm error={error} onSubmit={handleSignUp} />
-          )}
+        {isLoading && <Loader />}
+        {!isLoading && modalType === MODAL_TYPES.SIGN_IN && (
+          <SignInForm error={error} onSubmit={handleSignIn} />
+        )}
+        {!isLoading && modalType === MODAL_TYPES.SIGN_UP && (
+          <SignUpForm error={error} onSubmit={handleSignUp} />
+        )}
 
-          <button
-            onClick={() =>
-              openModal(
-                modalType === MODAL_TYPES.SIGN_IN
-                  ? MODAL_TYPES.SIGN_UP
-                  : MODAL_TYPES.SIGN_IN
-              )
-            }
-            className="mt-6 w-full text-center text-sm text-gray-500 hover:text-gray-600 underline"
-          >
-            {modalType === MODAL_TYPES.SIGN_IN
-              ? "계정이 없으신가요? 회원가입"
-              : "이미 계정이 있으신가요? 로그인"}
-          </button>
-        </div>
-      </div>
-    </div>
+        <Button
+          variant="link"
+          onClick={() =>
+            openModal(
+              modalType === MODAL_TYPES.SIGN_IN
+                ? MODAL_TYPES.SIGN_UP
+                : MODAL_TYPES.SIGN_IN
+            )
+          }
+          className="mt-6 w-full text-center text-sm text-gray-500 hover:text-gray-600"
+        >
+          {modalType === MODAL_TYPES.SIGN_IN
+            ? "계정이 없으신가요? 회원가입"
+            : "이미 계정이 있으신가요? 로그인"}
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 }
