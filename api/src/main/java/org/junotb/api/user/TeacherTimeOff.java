@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(
@@ -31,10 +31,10 @@ public class TeacherTimeOff {
     private User teacher;
 
     @Column(name = "\"startDateTime\"", nullable = false)
-    private LocalDateTime startDateTime;
+    private OffsetDateTime startDateTime;
 
     @Column(name = "\"endDateTime\"", nullable = false)
-    private LocalDateTime endDateTime;
+    private OffsetDateTime endDateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "\"type\"", nullable = false)
@@ -45,12 +45,12 @@ public class TeacherTimeOff {
 
     public static TeacherTimeOff create(
             User teacher,
-            LocalDateTime startDateTime,
-            LocalDateTime endDateTime,
+            OffsetDateTime startDateTime,
+            OffsetDateTime endDateTime,
             TeacherTimeOffType type,
             String reason
     ) {
-        if (startDateTime.isAfter(endDateTime) || startDateTime.equals(endDateTime)) {
+        if (startDateTime.isAfter(endDateTime) || startDateTime.isEqual(endDateTime)) {
             throw new IllegalArgumentException("시작 일시는 종료 일시보다 빨라야 합니다.");
         }
 

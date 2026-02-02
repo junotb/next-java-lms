@@ -25,6 +25,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -143,8 +145,8 @@ class TeacherSettingServiceTest {
         TeacherTimeOff saved = TeacherTimeOff.builder()
                 .id(1L)
                 .teacher(teacher)
-                .startDateTime(startDateTime)
-                .endDateTime(endDateTime)
+                .startDateTime(startDateTime.atOffset(ZoneOffset.UTC))
+                .endDateTime(endDateTime.atOffset(ZoneOffset.UTC))
                 .type(TeacherTimeOffType.VACATION)
                 .reason("연차 사용")
                 .build();
@@ -213,8 +215,8 @@ class TeacherSettingServiceTest {
         TeacherTimeOff timeOff = TeacherTimeOff.builder()
                 .id(timeOffId)
                 .teacher(teacher)
-                .startDateTime(LocalDateTime.now().plusDays(1))
-                .endDateTime(LocalDateTime.now().plusDays(1).plusHours(8))
+                .startDateTime(LocalDateTime.now().plusDays(1).atOffset(ZoneOffset.UTC))
+                .endDateTime(LocalDateTime.now().plusDays(1).plusHours(8).atOffset(ZoneOffset.UTC))
                 .type(TeacherTimeOffType.VACATION)
                 .build();
 
@@ -247,8 +249,8 @@ class TeacherSettingServiceTest {
         TeacherTimeOff timeOff = TeacherTimeOff.builder()
                 .id(timeOffId)
                 .teacher(otherTeacher) // 다른 강사
-                .startDateTime(LocalDateTime.now().plusDays(1))
-                .endDateTime(LocalDateTime.now().plusDays(1).plusHours(8))
+                .startDateTime(LocalDateTime.now().plusDays(1).atOffset(ZoneOffset.UTC))
+                .endDateTime(LocalDateTime.now().plusDays(1).plusHours(8).atOffset(ZoneOffset.UTC))
                 .type(TeacherTimeOffType.VACATION)
                 .build();
 
@@ -305,8 +307,8 @@ class TeacherSettingServiceTest {
         TeacherTimeOff timeOff = TeacherTimeOff.builder()
                 .id(1L)
                 .teacher(teacher)
-                .startDateTime(LocalDateTime.now().plusDays(1))
-                .endDateTime(LocalDateTime.now().plusDays(1).plusHours(8))
+                .startDateTime(LocalDateTime.now().plusDays(1).atOffset(ZoneOffset.UTC))
+                .endDateTime(LocalDateTime.now().plusDays(1).plusHours(8).atOffset(ZoneOffset.UTC))
                 .type(TeacherTimeOffType.VACATION)
                 .build();
 

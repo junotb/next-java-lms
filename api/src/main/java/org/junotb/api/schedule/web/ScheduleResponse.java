@@ -19,7 +19,7 @@ public record ScheduleResponse(
         return new ScheduleResponse(
             schedule.getId(),
             schedule.getUser().getId(),
-            schedule.getCourse().getId(),
+            schedule.getCourse() != null ? schedule.getCourse().getId() : null,
             schedule.getStartsAt(),
             schedule.getEndsAt(),
             schedule.getStatus(),
