@@ -1,11 +1,13 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   BetterError,
   SignInEmailFormValues,
   SignInEmailRequest,
-} from "@/schema/auth";
+} from "@/schema/auth/auth";
+import { SignInEmailRequestSchema } from "@/schema/auth/auth";
 import InputField from "@/component/common/InputField";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
@@ -21,6 +23,7 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignInEmailFormValues>({
+    resolver: zodResolver(SignInEmailRequestSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -49,7 +52,6 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
         type="email"
         register={register}
         errors={errors}
-        validation={{ required: "아이디를 입력하세요." }}
       />
 
       <InputField
@@ -58,7 +60,6 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
         type="password"
         register={register}
         errors={errors}
-        validation={{ required: "비밀번호를 입력하세요." }}
       />
 
       <Button

@@ -2,11 +2,13 @@
 
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   Schedule,
   ScheduleUpdateRequest,
   ScheduleUpdateFormValues,
 } from "@/schema/schedule/schedule";
+import { ScheduleUpdateRequestSchema } from "@/schema/schedule/schedule";
 import InputField from "@/component/common/InputField";
 import SelectField from "@/component/common/SelectField";
 import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
@@ -35,9 +37,11 @@ export default function ScheduleUpdateForm({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<ScheduleUpdateFormValues>({
+    resolver: zodResolver(ScheduleUpdateRequestSchema),
     defaultValues: {
-      startsAt: format(schedule.startsAt, "yyyy-MM-dd'T'HH:mm"),
-      endsAt: format(schedule.endsAt, "yyyy-MM-dd'T'HH:mm"),
+      userId: schedule.userId,
+      startsAt: format(new Date(schedule.startsAt), "yyyy-MM-dd'T'HH:mm"),
+      endsAt: format(new Date(schedule.endsAt), "yyyy-MM-dd'T'HH:mm"),
       status: schedule.status,
     },
     mode: "onSubmit",
@@ -72,7 +76,6 @@ export default function ScheduleUpdateForm({
         label="상태"
         register={register}
         errors={errors}
-        validation={{ required: "상태를 선택하세요." }}
       >
         {ScheduleStatusSchema.options.map((status) => (
           <option key={status} value={status}>
@@ -87,10 +90,6 @@ export default function ScheduleUpdateForm({
         type="datetime-local"
         register={register}
         errors={errors}
-        validation={{
-          required: "시작 시간을 입력하세요.",
-          valueAsDate: true,
-        }}
       />
 
       <InputField
@@ -99,10 +98,6 @@ export default function ScheduleUpdateForm({
         type="datetime-local"
         register={register}
         errors={errors}
-        validation={{
-          required: "종료 시간을 입력하세요.",
-          valueAsDate: true,
-        }}
       />
 
       <div className="flex justify-center gap-4 w-full">

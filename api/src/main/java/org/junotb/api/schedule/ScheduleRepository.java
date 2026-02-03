@@ -43,17 +43,18 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long>, JpaSp
     );
 
     /**
-     * 특정 강사에게 특정 기간에 잡힌 수업이 있는지 확인
+     * 특정 강사에게 특정 기간과 겹치는(Overlap) 수업이 있는지 확인
+     * Overlap 조건: s.startsAt < :end AND s.endsAt > :start
      */
     @Query("""
         SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END
         FROM Schedule s
         WHERE s.user.id = :userId
-          AND s.startsAt >= :start
-          AND s.startsAt <= :end
+          AND s.startsAt < :end
+          AND s.endsAt > :start
           AND s.status = :status
         """)
-    boolean existsByUserIdAndStartsAtBetweenAndStatus(
+    boolean existsByUserIdAndScheduleOverlap(
             @Param("userId") String userId,
             @Param("start") OffsetDateTime start,
             @Param("end") OffsetDateTime end,

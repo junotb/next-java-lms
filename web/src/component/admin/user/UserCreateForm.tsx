@@ -1,10 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   UserCreateRequest,
   UserCreateFormValues,
 } from "@/schema/user/user";
+import { UserCreateRequestSchema } from "@/schema/user/user";
 import InputField from "@/component/common/InputField";
 import SelectField from "@/component/common/SelectField";
 import { UserRoleSchema } from "@/schema/user/user-role";
@@ -31,6 +33,7 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<UserCreateFormValues>({
+    resolver: zodResolver(UserCreateRequestSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -52,13 +55,6 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
         type="email"
         register={register}
         errors={errors}
-        validation={{
-          required: "이메일을 입력하세요.",
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: "유효한 이메일 주소를 입력하세요.",
-          },
-        }}
       />
 
       <InputField
@@ -67,13 +63,6 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
         type="password"
         register={register}
         errors={errors}
-        validation={{
-          required: "비밀번호를 입력하세요.",
-          minLength: {
-            value: 8,
-            message: "비밀번호는 8자 이상이어야 합니다.",
-          },
-        }}
       />
 
       <InputField
@@ -81,7 +70,6 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
         label="이름"
         register={register}
         errors={errors}
-        validation={{ required: "이름을 입력하세요." }}
       />
 
       <SelectField
@@ -89,7 +77,6 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
         label="역할"
         register={register}
         errors={errors}
-        validation={{ required: "역할을 선택하세요." }}
       >
         {UserRoleSchema.options.map((role) => (
           <option key={role} value={role}>
@@ -103,7 +90,6 @@ export default function UserCreateForm({ onSubmit }: UserCreateFormProps) {
         label="상태"
         register={register}
         errors={errors}
-        validation={{ required: "상태를 선택하세요." }}
       >
         {UserStatusSchema.options.map((status) => (
           <option key={status} value={status}>

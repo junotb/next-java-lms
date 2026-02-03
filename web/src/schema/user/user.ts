@@ -15,22 +15,26 @@ export const UserSchema = z.object({
 
 export type User = z.infer<typeof UserSchema>;
 
-// 사용자 생성 요청
-export type UserCreateRequest = {
-  email: string;
-  password: string;
-  name: string;
-  role: UserRole;
-  status: UserStatus;
-};
+// 사용자 생성 요청 스키마
+export const UserCreateRequestSchema = z.object({
+  email: z.string().email("유효한 이메일 주소를 입력하세요."),
+  password: z.string().min(8, "비밀번호는 8자 이상이어야 합니다."),
+  name: z.string().min(1, "이름을 입력하세요."),
+  role: UserRoleSchema,
+  status: UserStatusSchema,
+});
 
-// 사용자 수정 요청
-export type UserProfileUpdateRequest = {
-  email: string;
-  name: string;
-  role: UserRole;
-  status: UserStatus;
-};
+export type UserCreateRequest = z.infer<typeof UserCreateRequestSchema>;
+
+// 사용자 수정 요청 스키마
+export const UserProfileUpdateRequestSchema = z.object({
+  email: z.string().email("유효한 이메일 주소를 입력하세요."),
+  name: z.string().min(1, "이름을 입력하세요."),
+  role: UserRoleSchema,
+  status: UserStatusSchema,
+});
+
+export type UserProfileUpdateRequest = z.infer<typeof UserProfileUpdateRequestSchema>;
 
 // 사용자 비밀번호 수정 요청
 export type UserPasswordUpdateRequest = {
@@ -44,13 +48,15 @@ export type UserProfileRequest = {
   password: string;
 };
 
-// 사용자 목록 요청
-export type UserListRequest = {
-  name?: string;
-  email?: string;
-  role?: UserRole;
-  status?: UserStatus;
-};
+// 사용자 목록 요청 스키마
+export const UserListRequestSchema = z.object({
+  name: z.string().optional(),
+  email: z.string().optional(),
+  role: UserRoleSchema.optional(),
+  status: UserStatusSchema.optional(),
+});
+
+export type UserListRequest = z.infer<typeof UserListRequestSchema>;
 
 // 사용자 생성 폼 타입
 export type UserCreateFormValues = UserCreateRequest;

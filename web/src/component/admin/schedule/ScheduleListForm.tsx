@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   ScheduleListRequest,
   ScheduleListFormValues,
 } from "@/schema/schedule/schedule";
+import { ScheduleListRequestSchema } from "@/schema/schedule/schedule";
 import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
 import { Input } from "@/component/ui/input";
 import { Label } from "@/component/ui/label";
@@ -23,6 +25,7 @@ interface ScheduleListFormProps {
 
 export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
   const { register, handleSubmit, reset } = useForm<ScheduleListFormValues>({
+    resolver: zodResolver(ScheduleListRequestSchema),
     defaultValues: {
       userId: undefined,
       status: undefined,

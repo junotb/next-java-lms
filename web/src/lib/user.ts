@@ -1,5 +1,5 @@
 import api from "@/lib/api";
-import { PageResponseSchema } from "@/schema/page-response";
+import { PageResponseSchema } from "@/schema/common/page-response";
 import { User, UserSchema, UserCreateRequest, UserProfileUpdateRequest, UserListRequest, UserPasswordUpdateRequest } from "@/schema/user/user";
 import { UserRole } from "@/schema/user/user-role";
 import { UserStatus } from "@/schema/user/user-status";
