@@ -1,10 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   ScheduleCreateRequest,
   ScheduleCreateFormValues,
 } from "@/schema/schedule/schedule";
+import { ScheduleCreateRequestSchema } from "@/schema/schedule/schedule";
 import InputField from "@/component/common/InputField";
 import SelectField from "@/component/common/SelectField";
 import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
@@ -29,6 +31,7 @@ export default function ScheduleCreateForm({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<ScheduleCreateFormValues>({
+    resolver: zodResolver(ScheduleCreateRequestSchema),
     defaultValues: {
       userId: "",
       startsAt: "",
@@ -48,7 +51,6 @@ export default function ScheduleCreateForm({
         label="사용자 ID"
         register={register}
         errors={errors}
-        validation={{ required: "사용자 ID를 입력하세요." }}
       />
 
       <SelectField
@@ -56,7 +58,6 @@ export default function ScheduleCreateForm({
         label="상태"
         register={register}
         errors={errors}
-        validation={{ required: "상태를 선택하세요." }}
       >
         {ScheduleStatusSchema.options.map((status) => (
           <option key={status} value={status}>
@@ -71,10 +72,6 @@ export default function ScheduleCreateForm({
         type="datetime-local"
         register={register}
         errors={errors}
-        validation={{
-          required: "시작 시간을 입력하세요.",
-          valueAsDate: true,
-        }}
       />
 
       <InputField
@@ -83,10 +80,6 @@ export default function ScheduleCreateForm({
         type="datetime-local"
         register={register}
         errors={errors}
-        validation={{
-          required: "종료 시간을 입력하세요.",
-          valueAsDate: true,
-        }}
       />
 
       <Button

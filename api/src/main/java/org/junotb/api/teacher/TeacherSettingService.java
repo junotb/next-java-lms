@@ -83,7 +83,7 @@ public class TeacherSettingService {
         // 방어 로직: 신청하려는 휴무 기간에 SCHEDULED 상태의 스케줄이 있는지 확인
         OffsetDateTime startDateTime = request.startDateTime().atOffset(ZoneOffset.UTC);
         OffsetDateTime endDateTime = request.endDateTime().atOffset(ZoneOffset.UTC);
-        if (scheduleRepository.existsByUserIdAndStartsAtBetweenAndStatus(
+        if (scheduleRepository.existsByUserIdAndScheduleOverlap(
                 teacherId,
                 startDateTime,
                 endDateTime,

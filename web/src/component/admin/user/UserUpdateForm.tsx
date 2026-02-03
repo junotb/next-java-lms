@@ -1,11 +1,13 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   User,
   UserProfileUpdateRequest,
   UserProfileUpdateFormValues,
 } from "@/schema/user/user";
+import { UserProfileUpdateRequestSchema } from "@/schema/user/user";
 import InputField from "@/component/common/InputField";
 import SelectField from "@/component/common/SelectField";
 import { UserRoleSchema } from "@/schema/user/user-role";
@@ -39,7 +41,9 @@ export default function UserUpdateForm({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<UserProfileUpdateFormValues>({
+    resolver: zodResolver(UserProfileUpdateRequestSchema),
     defaultValues: {
+      email: user.email,
       name: user.name,
       role: user.role,
       status: user.status,
@@ -67,7 +71,6 @@ export default function UserUpdateForm({
         label="이름"
         register={register}
         errors={errors}
-        validation={{ required: "이름을 입력하세요." }}
       />
 
       <SelectField
@@ -75,7 +78,6 @@ export default function UserUpdateForm({
         label="역할"
         register={register}
         errors={errors}
-        validation={{ required: "역할을 선택하세요." }}
       >
         {UserRoleSchema.options.map((role) => (
           <option key={role} value={role}>
@@ -89,7 +91,6 @@ export default function UserUpdateForm({
         label="상태"
         register={register}
         errors={errors}
-        validation={{ required: "상태를 선택하세요." }}
       >
         {UserStatusSchema.options.map((status) => (
           <option key={status} value={status}>

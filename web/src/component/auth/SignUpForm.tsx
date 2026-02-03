@@ -1,11 +1,13 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   BetterError,
   SignUpEmailFormValues,
   SignUpEmailRequest,
-} from "@/schema/auth";
+} from "@/schema/auth/auth";
+import { SignUpEmailRequestSchema } from "@/schema/auth/auth";
 import InputField from "@/component/common/InputField";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
@@ -21,10 +23,13 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignUpEmailFormValues>({
+    resolver: zodResolver(SignUpEmailRequestSchema),
     defaultValues: {
       email: "",
       password: "",
       name: "",
+      role: "STUDENT",
+      status: "ACTIVE",
     },
     mode: "onSubmit",
   });
@@ -53,13 +58,6 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
         type="email"
         register={register}
         errors={errors}
-        validation={{
-          required: "이메일을 입력하세요.",
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: "유효한 이메일 주소를 입력하세요.",
-          },
-        }}
       />
 
       <InputField
@@ -68,13 +66,6 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
         type="password"
         register={register}
         errors={errors}
-        validation={{
-          required: "비밀번호를 입력하세요.",
-          minLength: {
-            value: 8,
-            message: "비밀번호는 최소 8자 이상이어야 합니다.",
-          },
-        }}
       />
 
       <InputField
@@ -83,9 +74,6 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
         type="text"
         register={register}
         errors={errors}
-        validation={{
-          required: "이름을 입력하세요.",
-        }}
       />
 
       <Button

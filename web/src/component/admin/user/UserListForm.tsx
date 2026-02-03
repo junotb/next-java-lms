@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { UserListRequest, UserListFormValues } from "@/schema/user/user";
+import { UserListRequestSchema } from "@/schema/user/user";
 import { UserRoleSchema } from "@/schema/user/user-role";
 import { UserStatusSchema } from "@/schema/user/user-status";
 import { Input } from "@/component/ui/input";
@@ -24,6 +26,7 @@ interface UserListFormProps {
 
 export default function UserListForm({ onSubmit }: UserListFormProps) {
   const { register, handleSubmit, reset } = useForm<UserListFormValues>({
+    resolver: zodResolver(UserListRequestSchema),
     defaultValues: {
       role: undefined,
       status: undefined,

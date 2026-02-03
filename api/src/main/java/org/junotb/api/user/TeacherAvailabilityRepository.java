@@ -16,6 +16,16 @@ public interface TeacherAvailabilityRepository extends JpaRepository<TeacherAvai
     List<TeacherAvailability> findByTeacher_IdAndDayOfWeek(String teacherId, DayOfWeek dayOfWeek);
 
     /**
+     * 강사 ID로 가용성 목록을 조회 (요일 순서로 정렬)
+     */
+    List<TeacherAvailability> findByTeacher_IdOrderByDayOfWeek(String teacherId);
+
+    /**
+     * 강사로 가용성 목록 삭제
+     */
+    void deleteByTeacher(org.junotb.api.user.User teacher);
+
+    /**
      * 지정된 요일들과 시간 범위를 모두 커버하는 강사 ID 목록을 조회합니다.
      * 모든 요일에 대해 해당 시간 범위(startTime ~ endTime)를 커버하는 강사만 반환됩니다.
      *

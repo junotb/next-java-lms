@@ -6,7 +6,7 @@ import {
   BetterError,
   SignInEmailRequest,
   SignUpEmailRequest,
-} from "@/schema/auth";
+} from "@/schema/auth/auth";
 import { useAuthModalStore } from "@/store/useAuthModalStore";
 import { useToastStore } from "@/store/useToastStore";
 import SignInForm from "@/component/auth/SignInForm";

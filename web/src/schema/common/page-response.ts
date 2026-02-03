@@ -17,4 +17,4 @@ export type PageResponse<T> = {
   totalItems: number;
   totalPages: number;
   hasNext: boolean;
-}
+};

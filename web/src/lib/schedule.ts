@@ -1,5 +1,5 @@
 import api from "@/lib/api";
-import { PageResponseSchema } from "@/schema/page-response";
+import { PageResponseSchema } from "@/schema/common/page-response";
 import { Schedule, ScheduleSchema, ScheduleCreateRequest, ScheduleUpdateRequest, ScheduleListRequest } from "@/schema/schedule/schedule";
 import { ScheduleStatus } from "@/schema/schedule/schedule-status";
 

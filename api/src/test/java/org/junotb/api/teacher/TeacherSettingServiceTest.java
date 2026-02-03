@@ -152,7 +152,7 @@ class TeacherSettingServiceTest {
                 .build();
 
         given(userRepository.getReferenceById(teacherId)).willReturn(teacher);
-        given(scheduleRepository.existsByUserIdAndStartsAtBetweenAndStatus(anyString(), any(), any(), any())).willReturn(false);
+        given(scheduleRepository.existsByUserIdAndScheduleOverlap(anyString(), any(), any(), any())).willReturn(false);
         given(timeOffRepository.save(any(TeacherTimeOff.class))).willReturn(saved);
 
         // when
