@@ -64,14 +64,13 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
       <Button
         type="submit"
         className={cn(
-          "mt-4 w-full rounded-xl px-8 py-3 font-bold shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 disabled:shadow-none disabled:transform-none",
-          "bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300"
+          "mt-4 w-full rounded-xl px-8 py-3 font-bold shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 disabled:shadow-none disabled:transform-none"
         )}
         disabled={isSubmitting}
       >
         로그인
       </Button>
-      {error && <p className="text-red-500 text-sm">{error.message}</p>}
+      {error && <p className="text-destructive text-sm">{error.message}</p>}
     </form>
   );
 }

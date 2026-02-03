@@ -45,7 +45,7 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex flex-col gap-2">
-        <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="name" className="text-sm font-medium text-foreground">
           이름
         </Label>
         <Input
@@ -57,7 +57,7 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="role" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="role" className="text-sm font-medium text-foreground">
           역할
         </Label>
         <select
@@ -77,7 +77,7 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="status" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="status" className="text-sm font-medium text-foreground">
           상태
         </Label>
         <select
@@ -108,7 +108,7 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
 
         <Button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-2 lg:px-4 py-2 text-sm h-auto"
+          className="px-2 lg:px-4 py-2 text-sm h-auto"
         >
           검색
         </Button>

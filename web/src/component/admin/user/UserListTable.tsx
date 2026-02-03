@@ -16,14 +16,14 @@ const USER_STATUS_NAMES: Record<string, string> = {
 
 // 역할과 상태에 따른 색상 스타일을 매핑하여 관리합니다.
 const USER_ROLE_COLORS: Record<string, string> = {
-  STUDENT: "bg-blue-100 text-blue-800",
-  TEACHER: "bg-purple-100 text-purple-800",
-  ADMIN: "bg-yellow-100 text-yellow-800",
+  STUDENT: "bg-primary/10 text-primary",
+  TEACHER: "bg-secondary text-secondary-foreground",
+  ADMIN: "bg-accent text-accent-foreground",
 };
 
 const USER_STATUS_COLORS: Record<string, string> = {
   ACTIVE: "bg-green-100 text-green-800",
-  INACTIVE: "bg-red-100 text-red-800",
+  INACTIVE: "bg-destructive/10 text-destructive",
 };
 
 interface UserListTableProps {
@@ -33,30 +33,30 @@ interface UserListTableProps {
 
 export default function UserListTable({ users, onUpdate }: UserListTableProps) {
   return (
-    <table className="min-w-full divide-y divide-gray-200">
-      <thead className="bg-gray-50">
+    <table className="min-w-full divide-y divide-border">
+      <thead className="bg-muted">
         <tr>
           <th
             scope="col"
-            className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+            className="px-6 py-4 text-left text-sm font-medium text-muted-foreground uppercase tracking-wider"
           >
             이름
           </th>
           <th
             scope="col"
-            className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+            className="px-6 py-4 text-left text-sm font-medium text-muted-foreground uppercase tracking-wider"
           >
             이메일
           </th>
           <th
             scope="col"
-            className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+            className="px-6 py-4 text-left text-sm font-medium text-muted-foreground uppercase tracking-wider"
           >
             역할
           </th>
           <th
             scope="col"
-            className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+            className="px-6 py-4 text-left text-sm font-medium text-muted-foreground uppercase tracking-wider"
           >
             상태
           </th>
@@ -65,16 +65,16 @@ export default function UserListTable({ users, onUpdate }: UserListTableProps) {
           </th>
         </tr>
       </thead>
-      <tbody className="bg-white divide-y divide-gray-200">
+      <tbody className="bg-card divide-y divide-border">
         {users.map((user) => (
           <tr key={user.id}>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-left">
+            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground text-left">
               {user.name}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground text-left">
               {user.email}
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground text-left">
               <Badge
                 className={cn(
                   "inline-flex rounded-full px-3 py-1 text-sm font-semibold leading-5",
@@ -84,7 +84,7 @@ export default function UserListTable({ users, onUpdate }: UserListTableProps) {
                 {USER_ROLE_NAMES[user.role]}
               </Badge>
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground text-left">
               <Badge
                 className={cn(
                   "inline-flex rounded-full px-3 py-1 text-sm font-semibold leading-5",
@@ -94,10 +94,10 @@ export default function UserListTable({ users, onUpdate }: UserListTableProps) {
                 {USER_STATUS_NAMES[user.status]}
               </Badge>
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground text-right">
               <Button
                 onClick={() => onUpdate(user.id)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-2 lg:px-4 py-2 text-sm"
+                className="px-2 lg:px-4 py-2 text-sm"
               >
                 수정
               </Button>

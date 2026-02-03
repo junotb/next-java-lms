@@ -96,7 +96,7 @@ export default function AuthModalContainer() {
       <DialogContent
         onClose={closeModal}
         className={cn(
-          "relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl transition-all animate-scale-in p-8 sm:p-10"
+          "relative w-full max-w-md overflow-hidden rounded-2xl bg-card shadow-2xl transition-all animate-scale-in p-8 sm:p-10"
         )}
       >
         <Button
@@ -104,7 +104,7 @@ export default function AuthModalContainer() {
           size="icon"
           onClick={closeModal}
           aria-label="모달 닫기"
-          className="absolute right-5 top-5 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          className="absolute right-5 top-5 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           ✕
         </Button>
@@ -126,7 +126,7 @@ export default function AuthModalContainer() {
                 : MODAL_TYPES.SIGN_IN
             )
           }
-          className="mt-6 w-full text-center text-sm text-gray-500 hover:text-gray-600"
+          className="mt-6 w-full text-center text-sm text-muted-foreground hover:text-foreground"
         >
           {modalType === MODAL_TYPES.SIGN_IN
             ? "계정이 없으신가요? 회원가입"

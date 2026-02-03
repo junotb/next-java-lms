@@ -16,7 +16,7 @@ export default function UserList({ users, basePath }: UserListProps) {
           role="alert"
           className="flex justify-center items-center"
         >
-          <p className="text-sm text-gray-500">등록된 사용자가 없습니다.</p>
+          <p className="text-sm text-muted-foreground">등록된 사용자가 없습니다.</p>
         </div>
       )}
   
