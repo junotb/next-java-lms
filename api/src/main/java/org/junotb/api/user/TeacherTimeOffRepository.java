@@ -11,6 +11,11 @@ public interface TeacherTimeOffRepository extends JpaRepository<TeacherTimeOff, 
     List<TeacherTimeOff> findByTeacher_Id(String teacherId);
 
     /**
+     * 강사의 휴무 목록을 최신순(시작일시 내림차순)으로 조회합니다.
+     */
+    List<TeacherTimeOff> findByTeacher_IdOrderByStartDateTimeDesc(String teacherId);
+
+    /**
      * 강사의 휴무 중, 주어진 기간 [rangeStart, rangeEnd]와 겹치는 것만 조회.
      * 겹침: toff.startDateTime < rangeEnd AND toff.endDateTime > rangeStart
      */
