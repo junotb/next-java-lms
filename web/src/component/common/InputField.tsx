@@ -38,7 +38,7 @@ export default function InputField<T extends FieldValues>({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <Label htmlFor={id} className="text-left text-sm font-medium text-gray-500">
+      <Label htmlFor={id} className="text-left text-sm font-medium text-muted-foreground">
         {label}
       </Label>
       <Input
@@ -49,11 +49,11 @@ export default function InputField<T extends FieldValues>({
         defaultValue={defaultValue}
         className={cn(
           "w-full",
-          error && "border-red-500 focus-visible:ring-red-500"
+          error && "border-destructive focus-visible:ring-destructive"
         )}
         {...register(id, validation)}
       />
-      {error && <p className="text-sm text-red-500">{String(error.message)}</p>}
+      {error && <p className="text-sm text-destructive">{String(error.message)}</p>}
     </div>
   );
 }

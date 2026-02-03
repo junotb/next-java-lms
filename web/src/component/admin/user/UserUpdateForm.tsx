@@ -102,8 +102,7 @@ export default function UserUpdateForm({
         <Button
           type="submit"
           className={cn(
-            "mt-4 flex-1 rounded-xl px-8 py-3 font-bold shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 disabled:shadow-none disabled:transform-none",
-            "bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white"
+            "mt-4 flex-1 rounded-xl px-8 py-3 font-bold shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 disabled:shadow-none disabled:transform-none"
           )}
           disabled={isSubmitting}
         >
@@ -113,9 +112,9 @@ export default function UserUpdateForm({
         <Button
           type="button"
           onClick={onDelete}
+          variant="destructive"
           className={cn(
-            "mt-4 flex-1 rounded-xl px-8 py-3 font-bold shadow-lg shadow-red-500/20 transition-all hover:-translate-y-0.5",
-            "bg-red-600 hover:bg-red-700 text-white"
+            "mt-4 flex-1 rounded-xl px-8 py-3 font-bold shadow-lg shadow-destructive/20 transition-all hover:-translate-y-0.5"
           )}
         >
           삭제

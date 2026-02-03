@@ -26,10 +26,10 @@ export function StatCard({ title, value, unit }: StatCardProps) {
   return (
     <Card className="w-full rounded-xl">
       <CardContent className="p-4">
-        <p className="text-sm font-medium text-gray-500">{displayTitle(title)}</p>
-        <p className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+        <p className="text-sm font-medium text-muted-foreground">{displayTitle(title)}</p>
+        <p className="mt-1 text-3xl font-semibold tracking-tight text-foreground">
           {value}
-          <span className="ml-1 text-base font-normal text-gray-500">{unit}</span>
+          <span className="ml-1 text-base font-normal text-muted-foreground">{unit}</span>
         </p>
       </CardContent>
     </Card>

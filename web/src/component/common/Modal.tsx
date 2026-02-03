@@ -9,7 +9,7 @@ interface ModalProps {
 export default function Modal({ children, onClose, open = true }: ModalProps) {
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="bg-white rounded-2xl shadow-2xl">
+      <DialogContent className="bg-card rounded-2xl shadow-2xl">
         {children}
       </DialogContent>
     </Dialog>

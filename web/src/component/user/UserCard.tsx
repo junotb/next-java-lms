@@ -12,7 +12,7 @@ export default function UserCard({ href, name }: UserCardProps) {
   return (
     <Link
       href={href}
-      className="rounded-2xl border bg-white active:bg-gray-300 p-4 shadow active:shadow-xl transition"
+      className="rounded-2xl border bg-card active:bg-muted p-4 shadow active:shadow-xl transition"
       role="listitem"
       aria-label={`${name} 카드`}
     >

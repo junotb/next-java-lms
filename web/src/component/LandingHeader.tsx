@@ -10,7 +10,7 @@ export default function LandingHeader() {
   const { openModal } = useAuthModalStore();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-white/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
         <Link href="/" className="flex items-center space-x-2">
           <BookOpenIcon />
@@ -21,7 +21,7 @@ export default function LandingHeader() {
             variant="ghost"
             size="icon"
             onClick={() => openModal("signin")}
-            className="text-slate-500 hover:text-slate-800"
+            className="text-muted-foreground hover:text-foreground"
             aria-label="로그인"
           >
             <ArrowLeftEndOnRectangle className="h-6 w-6" />

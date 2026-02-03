@@ -23,9 +23,9 @@ export default function Toast() {
   }
 
   const typeClasses = {
-    success: "bg-green-500 text-white",
-    error: "bg-red-500 text-white",
-    info: "bg-blue-500 text-white",
+    success: "bg-green-500 text-primary-foreground",
+    error: "bg-destructive text-destructive-foreground",
+    info: "bg-primary text-primary-foreground",
   };
 
   return (
