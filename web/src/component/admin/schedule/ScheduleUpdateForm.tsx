@@ -14,6 +14,7 @@ import SelectField from "@/component/common/SelectField";
 import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
+import { Trash2 } from "lucide-react";
 
 const SCHEDULE_STATUS_NAMES: Record<string, string> = {
   SCHEDULED: "예정",
@@ -119,6 +120,7 @@ export default function ScheduleUpdateForm({
             "mt-4 flex-1 rounded-xl px-8 py-3 font-bold shadow-lg shadow-destructive/20 transition-all hover:-translate-y-0.5"
           )}
         >
+          <Trash2 className="mr-2 h-4 w-4" />
           삭제
         </Button>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import UserIcon from "@/asset/icon/user.svg";
+import { User } from "lucide-react";
 
 interface UserCardProps {
   href: string;
@@ -17,7 +17,7 @@ export default function UserCard({ href, name }: UserCardProps) {
       aria-label={`${name} 카드`}
     >
       <div className="flex flex-col items-center gap-2">
-        <UserIcon className="w-12 h-12 fill-black" />
+        <User className="w-12 h-12" />
         <div className="text-center">
           <h3 className="text-base font-semibold">{name}</h3>
         </div>

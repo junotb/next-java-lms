@@ -2,6 +2,7 @@ import { User } from "@/schema/user/user";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/component/ui/badge";
 import { Button } from "@/component/ui/button";
+import { Pencil } from "lucide-react";
 
 // 스키마와 UI 표시 이름을 매핑하여 중앙에서 관리합니다.
 const USER_ROLE_NAMES: Record<string, string> = {
@@ -22,7 +23,7 @@ const USER_ROLE_COLORS: Record<string, string> = {
 };
 
 const USER_STATUS_COLORS: Record<string, string> = {
-  ACTIVE: "bg-green-100 text-green-800",
+  ACTIVE: "bg-primary/10 text-primary",
   INACTIVE: "bg-destructive/10 text-destructive",
 };
 
@@ -99,6 +100,7 @@ export default function UserListTable({ users, onUpdate }: UserListTableProps) {
                 onClick={() => onUpdate(user.id)}
                 className="px-2 lg:px-4 py-2 text-sm"
               >
+                <Pencil className="mr-2 h-4 w-4" />
                 수정
               </Button>
             </td>

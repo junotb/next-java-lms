@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import PlusIcon from "@/asset/icon/plus.svg";
+import { Plus } from "lucide-react";
 import ScheduleListForm from "@/component/admin/schedule/ScheduleListForm";
 import ScheduleInfoCard from "@/component/admin/schedule/ScheduleInfoCard";
 import ScheduleListTable from "@/component/admin/schedule/ScheduleListTable";
@@ -43,18 +43,18 @@ export default function AdminSchedulesPage() {
       <div className="flex flex-col gap-8">
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               스케줄 관리
             </h1>
-            <p className="mt-2 text-lg text-gray-600">
+            <p className="mt-2 text-lg text-muted-foreground">
               사용자 스케줄을 검색하고 관리합니다.
             </p>
           </div>
           <Button
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+            className="flex items-center gap-2"
             onClick={openCreateModal}
           >
-            <PlusIcon className="h-4 w-4" />
+            <Plus className="mr-2 h-4 w-4" />
             <span>스케줄 추가</span>
           </Button>
         </header>
@@ -67,7 +67,7 @@ export default function AdminSchedulesPage() {
           {isLoading ? (
             <Loader />
           ) : error ? (
-            <p className="text-center text-red-500">
+            <p className="text-center text-destructive">
               스케줄 목록을 불러오는 중 오류가 발생했습니다.
             </p>
           ) : schedules?.length ? (
@@ -76,7 +76,7 @@ export default function AdminSchedulesPage() {
               onUpdate={openUpdateModal}
             />
           ) : (
-            <p className="text-center text-gray-500">스케줄이 없습니다.</p>
+            <p className="text-center text-muted-foreground">스케줄이 없습니다.</p>
           )}
         </div>
       </div>
