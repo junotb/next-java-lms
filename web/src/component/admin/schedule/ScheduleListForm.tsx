@@ -10,6 +10,7 @@ import { Input } from "@/component/ui/input";
 import { Label } from "@/component/ui/label";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
+import { Search, RotateCcw } from "lucide-react";
 
 // UI 표시 이름을 중앙에서 관리합니다.
 const SCHEDULE_STATUS_NAMES: Record<string, string> = {
@@ -83,6 +84,7 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
           onClick={handleReset}
           className="px-2 lg:px-4 py-2 text-sm h-auto"
         >
+          <RotateCcw className="mr-2 h-4 w-4" />
           초기화
         </Button>
 
@@ -90,6 +92,7 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
           type="submit"
           className="px-2 lg:px-4 py-2 text-sm h-auto"
         >
+          <Search className="mr-2 h-4 w-4" />
           검색
         </Button>
       </div>

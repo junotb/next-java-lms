@@ -23,7 +23,7 @@ export default function Toast() {
   }
 
   const typeClasses = {
-    success: "bg-green-500 text-primary-foreground",
+    success: "bg-primary text-primary-foreground",
     error: "bg-destructive text-destructive-foreground",
     info: "bg-primary text-primary-foreground",
   };

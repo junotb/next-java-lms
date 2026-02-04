@@ -19,10 +19,10 @@ export default function AdminPage() {
       <div className="flex flex-col gap-12">
         {/* 페이지 헤더: 좌측 정렬로 변경하여 대시보드 디자인의 가독성과 전문성을 높입니다. */}
         <header>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             대시보드
           </h1>
-          <p className="mt-2 text-lg text-gray-600">
+          <p className="mt-2 text-lg text-muted-foreground">
             서비스의 주요 현황을 한눈에 확인하세요.
           </p>
         </header>

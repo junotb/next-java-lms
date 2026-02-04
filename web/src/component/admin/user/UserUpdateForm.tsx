@@ -14,6 +14,7 @@ import { UserRoleSchema } from "@/schema/user/user-role";
 import { UserStatusSchema } from "@/schema/user/user-status";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
+import { Trash2 } from "lucide-react";
 
 const USER_ROLE_NAMES: Record<string, string> = {
   STUDENT: "학생",
@@ -118,6 +119,7 @@ export default function UserUpdateForm({
             "mt-4 flex-1 rounded-xl px-8 py-3 font-bold shadow-lg shadow-destructive/20 transition-all hover:-translate-y-0.5"
           )}
         >
+          <Trash2 className="mr-2 h-4 w-4" />
           삭제
         </Button>
       </div>

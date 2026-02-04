@@ -107,12 +107,12 @@ export default function StudyRegistrationPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
-      <Card className="rounded-xl border border-gray-200 bg-white shadow-sm">
-        <CardHeader className="border-b border-gray-200">
-          <CardTitle className="text-xl font-semibold text-gray-900">
+      <Card className="rounded-xl shadow-sm">
+        <CardHeader className="border-b">
+          <CardTitle className="text-xl font-semibold">
             수강 신청 마법사
           </CardTitle>
-          <CardDescription className="mt-1 text-sm text-gray-500">
+          <CardDescription className="mt-1 text-sm">
             Step {step} / 4 —{" "}
             {step === 1 && "기간 선택"}
             {step === 2 && "요일 선택"}
@@ -150,14 +150,14 @@ export default function StudyRegistrationPage() {
           )}
         </CardContent>
 
-        <div className="flex justify-between border-t border-gray-200 px-6 py-4">
+        <div className="flex justify-between border-t px-6 py-4">
           <Button
             type="button"
             variant="ghost"
             onClick={handleBack}
             disabled={step === 1}
             className={cn(
-              step === 1 && "cursor-not-allowed text-gray-400"
+              step === 1 && "cursor-not-allowed text-muted-foreground"
             )}
           >
             이전
@@ -171,13 +171,6 @@ export default function StudyRegistrationPage() {
                 (step === 2 && !canProceedStep2) ||
                 (step === 3 && !canProceedStep3)
               }
-              className={cn(
-                "bg-blue-600 hover:bg-blue-700 text-white",
-                ((step === 1 && !canProceedStep1) ||
-                  (step === 2 && !canProceedStep2) ||
-                  (step === 3 && !canProceedStep3)) &&
-                  "cursor-not-allowed bg-gray-300 hover:bg-gray-300"
-              )}
             >
               다음
             </Button>
@@ -198,7 +191,7 @@ function Step1({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <Label className="text-sm font-medium text-gray-700">
+        <Label className="text-sm font-medium">
           수강 기간 (개월)
         </Label>
         <select
@@ -238,7 +231,7 @@ function Step2({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-muted-foreground">
         희망 요일을 1개 이상 선택하세요.
       </p>
       <div className="flex flex-wrap gap-3">
@@ -248,15 +241,15 @@ function Step2({
             className={cn(
               "flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
               (formData.days ?? []).includes(d)
-                ? "border-blue-500 bg-blue-50 text-blue-700"
-                : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border bg-background text-foreground hover:bg-accent"
             )}
           >
             <input
               type="checkbox"
               checked={(formData.days ?? []).includes(d)}
               onChange={() => toggleDay(d)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="rounded border-input text-primary focus:ring-primary"
             />
             {DAY_LABELS[d]}
           </label>
@@ -280,7 +273,7 @@ function Step3({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <Label className="text-sm font-medium text-gray-700">
+        <Label className="text-sm font-medium">
           희망 시작 시간
         </Label>
         <Input
@@ -290,7 +283,7 @@ function Step3({
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label className="text-sm font-medium text-gray-700">
+        <Label className="text-sm font-medium">
           수업 시간 (분)
         </Label>
         <select
@@ -315,13 +308,13 @@ function Step3({
         formData.durationMinutes > 0 && (
           <div className="flex items-center gap-2">
             {candidatesLoading ? (
-              <span className="text-sm text-gray-500">확인 중…</span>
+              <span className="text-sm text-muted-foreground">확인 중…</span>
             ) : candidates.length > 0 ? (
-              <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+              <Badge className="bg-primary/10 text-primary hover:bg-primary/10">
                 신청 가능
               </Badge>
             ) : (
-              <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
+              <Badge variant="secondary" className="bg-muted text-muted-foreground">
                 해당 시간 가용 강사 없음
               </Badge>
             )}
@@ -349,26 +342,26 @@ function Step4({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-lg bg-gray-50 p-4 text-sm">
+      <div className="rounded-lg bg-muted p-4 text-sm">
         <dl className="grid gap-2">
           <div>
-            <dt className="font-medium text-gray-500">수강 기간</dt>
-            <dd className="text-gray-900">{formData.months}개월</dd>
+            <dt className="font-medium text-muted-foreground">수강 기간</dt>
+            <dd className="text-foreground">{formData.months}개월</dd>
           </div>
           <div>
-            <dt className="font-medium text-gray-500">희망 요일</dt>
-            <dd className="text-gray-900">{dayStr || "-"}</dd>
+            <dt className="font-medium text-muted-foreground">희망 요일</dt>
+            <dd className="text-foreground">{dayStr || "-"}</dd>
           </div>
           <div>
-            <dt className="font-medium text-gray-500">시작 시간 / 수업 시간</dt>
-            <dd className="text-gray-900">
+            <dt className="font-medium text-muted-foreground">시작 시간 / 수업 시간</dt>
+            <dd className="text-foreground">
               {formData.startTime} / {formData.durationMinutes}분
             </dd>
           </div>
         </dl>
       </div>
       {is429 && (
-        <p className="text-sm text-amber-600">
+        <p className="text-sm text-destructive">
           접속이 많아 처리되지 않았습니다. 잠시 후 다시 시도해주세요.
         </p>
       )}
@@ -377,7 +370,6 @@ function Step4({
           type="button"
           onClick={onSubmit}
           disabled={isSubmitting}
-          className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           {isSubmitting ? "처리 중…" : "신청하기"}
         </Button>

@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import BookOpenIcon from "@/asset/icon/book-open.svg";
+import { BookOpen } from "lucide-react";
 
 export default function AdminHeader() {
   return (
     <header className="sticky flex justify-center top-0 z-40 border-b w-full bg-background">
       <div className="flex items-center justify-between px-4 h-16 w-full">
         <Link href="/" className="flex items-center space-x-2">
-          <BookOpenIcon />
+          <BookOpen className="h-6 w-6" />
           <h1 className="font-bold">NexLang</h1>
         </Link>
         <nav className="flex items-center space-x-6">
