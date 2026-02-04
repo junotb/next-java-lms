@@ -98,7 +98,7 @@ export type ScheduleUpdateRequest = z.infer<typeof ScheduleUpdateRequestSchema>;
 // 스케줄 목록 요청 스키마
 export const ScheduleListRequestSchema = z.object({
   userId: z.string().optional(),
-  status: ScheduleStatusSchema.optional(),
+  status: ScheduleStatusSchema.optional().or(z.literal("")).transform((val) => val === "" ? undefined : val),
 });
 
 export type ScheduleListRequest = z.infer<typeof ScheduleListRequestSchema>;

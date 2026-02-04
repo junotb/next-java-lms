@@ -1,34 +1,27 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type {
-  ScheduleListRequest,
-  ScheduleListFormValues,
-} from "@/schema/schedule/schedule";
-import { ScheduleListRequestSchema } from "@/schema/schedule/schedule";
-import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
+  CourseListRequest,
+  CourseListFormValues,
+} from "@/schema/course/course";
+import { CourseListRequestSchema } from "@/schema/course/course";
+import { CourseStatus, CourseStatusSchema } from "@/schema/course/course-status";
+import { COURSE_STATUS_LABELS } from "@/constants/course";
 import { Input } from "@/component/ui/input";
 import { Label } from "@/component/ui/label";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
 import { Search, RotateCcw } from "lucide-react";
 
-// UI 표시 이름을 중앙에서 관리합니다.
-const SCHEDULE_STATUS_NAMES: Record<string, string> = {
-  SCHEDULED: "예정",
-  ATTENDED: "출석",
-  ABSENT: "결석",
-  CANCELLED: "취소",
-};
-
-interface ScheduleListFormProps {
-  onSubmit: (data: ScheduleListRequest) => void;
+interface CourseListFormProps {
+  onSubmit: (data: CourseListRequest) => void;
 }
 
-export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
-  const { register, handleSubmit, reset } = useForm<ScheduleListFormValues>({
-    resolver: zodResolver(ScheduleListRequestSchema),
+export default function CourseListForm({ onSubmit }: CourseListFormProps) {
+  const { register, handleSubmit, reset } = useForm<CourseListFormValues>({
+    resolver: zodResolver(CourseListRequestSchema),
     defaultValues: {
-      userId: undefined,
+      title: undefined,
       status: undefined,
     },
     mode: "onSubmit",
@@ -36,11 +29,11 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
 
   const handleReset = () =>
     reset({
-      userId: undefined,
+      title: undefined,
       status: undefined,
     });
 
-  const handleFormSubmit = (data: ScheduleListFormValues) => {
+  const handleFormSubmit = (data: CourseListFormValues) => {
     // 스키마에서 빈 문자열을 undefined로 변환하므로 그대로 전달
     onSubmit(data);
   };
@@ -51,14 +44,14 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
       onSubmit={handleSubmit(handleFormSubmit)}
     >
       <div className="flex flex-col gap-2">
-        <Label htmlFor="userId" className="text-sm font-medium text-foreground">
-          사용자 번호
+        <Label htmlFor="title" className="text-sm font-medium text-foreground">
+          제목
         </Label>
         <Input
-          id="userId"
+          id="title"
           type="text"
           className="px-2 lg:px-4 py-2 w-20 lg:w-32 text-sm h-auto"
-          {...register("userId")}
+          {...register("title")}
         />
       </div>
 
@@ -74,9 +67,9 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
           {...register("status")}
         >
           <option value="">전체</option>
-          {ScheduleStatusSchema.options.map((status) => (
+          {Object.values(CourseStatus).map((status) => (
             <option key={status} value={status}>
-              {SCHEDULE_STATUS_NAMES[status]}
+              {COURSE_STATUS_LABELS[status]}
             </option>
           ))}
         </select>

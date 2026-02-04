@@ -52,8 +52,8 @@ export type UserProfileRequest = {
 export const UserListRequestSchema = z.object({
   name: z.string().optional(),
   email: z.string().optional(),
-  role: UserRoleSchema.optional(),
-  status: UserStatusSchema.optional(),
+  role: UserRoleSchema.optional().or(z.literal("")).transform((val) => val === "" ? undefined : val),
+  status: UserStatusSchema.optional().or(z.literal("")).transform((val) => val === "" ? undefined : val),
 });
 
 export type UserListRequest = z.infer<typeof UserListRequestSchema>;

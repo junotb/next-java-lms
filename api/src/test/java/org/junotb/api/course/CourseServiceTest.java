@@ -40,7 +40,7 @@ class CourseServiceTest {
         // given
         String title = "Java Basics";
         String description = "Learn Java from scratch";
-        CourseStatus status = CourseStatus.OPEN;
+        CourseStatus status = CourseStatus.ACTIVE;
 
         Course course = Course.builder()
             .id(1L)
@@ -73,7 +73,7 @@ class CourseServiceTest {
         given(courseRepository.existsByTitle(title)).willReturn(true);
 
         // when & then
-        assertThatThrownBy(() -> courseService.create(title, "Description", CourseStatus.OPEN))
+        assertThatThrownBy(() -> courseService.create(title, "Description", CourseStatus.ACTIVE))
             .isInstanceOf(DuplicateResourceException.class)
             .hasMessageContaining("Title");
 
@@ -88,7 +88,7 @@ class CourseServiceTest {
         Course course = Course.builder()
             .id(courseId)
             .title("Java Basics")
-            .status(CourseStatus.OPEN)
+            .status(CourseStatus.ACTIVE)
             .build();
 
         given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
@@ -106,13 +106,13 @@ class CourseServiceTest {
     void findList_whenFiltersProvided_thenReturnFilteredList() {
         // given
         String title = "Java";
-        CourseStatus status = CourseStatus.OPEN;
+        CourseStatus status = CourseStatus.ACTIVE;
         Pageable pageable = PageRequest.of(0, 10);
 
         Course course = Course.builder()
             .id(1L)
             .title("Java Basics")
-            .status(CourseStatus.OPEN)
+            .status(CourseStatus.ACTIVE)
             .build();
 
         Page<Course> coursePage = new PageImpl<>(List.of(course));
@@ -135,13 +135,13 @@ class CourseServiceTest {
         Long courseId = 1L;
         String newTitle = "Advanced Java";
         String newDescription = "Deep dive into Java";
-        CourseStatus newStatus = CourseStatus.CLOSED;
+        CourseStatus newStatus = CourseStatus.INACTIVE;
 
         Course existingCourse = Course.builder()
             .id(courseId)
             .title("Java Basics")
             .description("Basic Java")
-            .status(CourseStatus.OPEN)
+            .status(CourseStatus.ACTIVE)
             .build();
 
         given(courseRepository.findById(courseId)).willReturn(Optional.of(existingCourse));
@@ -163,7 +163,7 @@ class CourseServiceTest {
         given(courseRepository.findById(courseId)).willReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> courseService.update(courseId, "Title", "Description", CourseStatus.OPEN))
+        assertThatThrownBy(() -> courseService.update(courseId, "Title", "Description", CourseStatus.ACTIVE))
             .isInstanceOf(EntityNotFoundException.class)
             .hasMessageContaining("Course not found");
     }
@@ -176,7 +176,7 @@ class CourseServiceTest {
         Course course = Course.builder()
             .id(courseId)
             .title("Java Basics")
-            .status(CourseStatus.OPEN)
+            .status(CourseStatus.ACTIVE)
             .build();
 
         given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
@@ -195,13 +195,13 @@ class CourseServiceTest {
         List<StatusCountRow> rows = List.of(
             new StatusCountRow() {
                 @Override
-                public CourseStatus getStatus() { return CourseStatus.OPEN; }
+                public CourseStatus getStatus() { return CourseStatus.ACTIVE; }
                 @Override
                 public Long getCount() { return 10L; }
             },
             new StatusCountRow() {
                 @Override
-                public CourseStatus getStatus() { return CourseStatus.CLOSED; }
+                public CourseStatus getStatus() { return CourseStatus.INACTIVE; }
                 @Override
                 public Long getCount() { return 5L; }
             }
@@ -214,7 +214,7 @@ class CourseServiceTest {
 
         // then
         assertThat(result).hasSize(2);
-        assertThat(result.get(CourseStatus.OPEN)).isEqualTo(10L);
-        assertThat(result.get(CourseStatus.CLOSED)).isEqualTo(5L);
+        assertThat(result.get(CourseStatus.ACTIVE)).isEqualTo(10L);
+        assertThat(result.get(CourseStatus.INACTIVE)).isEqualTo(5L);
     }
 }

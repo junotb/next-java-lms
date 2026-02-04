@@ -20,7 +20,7 @@ import type { TeacherCandidate } from "@/schema/registration";
 export function useCourseList() {
   return useQuery<Course[], Error>({
     queryKey: ["course", "list"],
-    queryFn: () => courseList({ status: "OPEN", size: 100 }),
+    queryFn: () => courseList({ status: "ACTIVE", size: 100 }),
     staleTime: 5 * 60 * 1000,
   });
 }

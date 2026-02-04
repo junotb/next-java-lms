@@ -43,10 +43,15 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
       name: "",
     });
 
+  const handleFormSubmit = (data: UserListFormValues) => {
+    // 스키마에서 빈 문자열을 undefined로 변환하므로 그대로 전달
+    onSubmit(data);
+  };
+
   return (
     <form
       className="flex flex-wrap justify-start items-end gap-4"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleFormSubmit)}
     >
       <div className="flex flex-col gap-2">
         <Label htmlFor="name" className="text-sm font-medium text-foreground">

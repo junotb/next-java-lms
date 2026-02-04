@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.junotb.api.common.web.PageResponse;
 import org.junotb.api.course.web.CourseCreateRequest;
 import org.junotb.api.course.web.CourseResponse;
 import org.junotb.api.course.web.CourseUpdateRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +24,15 @@ public class CourseController {
 
     @GetMapping
     @Operation(summary = "코스 목록 조회", description = "코스 목록을 페이징하여 조회합니다.")
-    public ResponseEntity<Page<CourseResponse>> list(
+    public ResponseEntity<PageResponse<CourseResponse>> list(
         @RequestParam(required = false) String title,
         @RequestParam(required = false) CourseStatus status,
         Pageable pageable
     ) {
-        Page<CourseResponse> courses = courseService.findList(title, status, pageable)
+        var courses = courseService.findList(title, status, pageable)
             .map(CourseResponse::from);
-        return ResponseEntity.ok(courses);
+        
+        return ResponseEntity.ok(PageResponse.from(courses));
     }
 
     @GetMapping("/{id}")
