@@ -78,7 +78,7 @@ class RegistrationConcurrencyTest {
         Course course = Course.builder()
             .title("Java Concurrency Test")
             .description("Test course for concurrency")
-            .status(CourseStatus.OPEN)
+            .status(CourseStatus.ACTIVE)
             .build();
         courseRepository.save(course);
 

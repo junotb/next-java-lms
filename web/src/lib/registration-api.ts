@@ -47,7 +47,7 @@ export async function findCandidates(
 
 /** 코스 목록 조회 (수강 신청 마법사 Step 1용) */
 export async function courseList(params?: {
-  status?: "OPEN" | "CLOSED";
+  status?: "ACTIVE" | "INACTIVE";
   page?: number;
   size?: number;
 }): Promise<Course[]> {

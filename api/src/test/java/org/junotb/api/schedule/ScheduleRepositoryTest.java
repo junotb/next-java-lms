@@ -58,7 +58,7 @@ class ScheduleRepositoryTest {
         course = Course.builder()
                 .title("Test Course")
                 .description("Test Description")
-                .status(CourseStatus.OPEN)
+                .status(CourseStatus.ACTIVE)
                 .build();
         course = courseRepository.save(course);
 

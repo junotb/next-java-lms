@@ -55,7 +55,7 @@ class CourseControllerTest {
             .id(1L)
             .title("Java Basics")
             .description("Learn Java")
-            .status(CourseStatus.OPEN)
+            .status(CourseStatus.ACTIVE)
             .createdAt(OffsetDateTime.now())
             .updatedAt(OffsetDateTime.now())
             .build();
@@ -79,7 +79,7 @@ class CourseControllerTest {
             .id(courseId)
             .title("Java Basics")
             .description("Learn Java")
-            .status(CourseStatus.OPEN)
+            .status(CourseStatus.ACTIVE)
             .createdAt(OffsetDateTime.now())
             .updatedAt(OffsetDateTime.now())
             .build();
@@ -112,7 +112,7 @@ class CourseControllerTest {
         CourseCreateRequest request = new CourseCreateRequest(
             "Java Basics",
             "Learn Java from scratch",
-            CourseStatus.OPEN
+            CourseStatus.ACTIVE
         );
 
         Course course = Course.builder()
@@ -132,7 +132,7 @@ class CourseControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.title").value("Java Basics"))
-            .andExpect(jsonPath("$.status").value("OPEN"));
+            .andExpect(jsonPath("$.status").value("ACTIVE"));
     }
 
     @Test
@@ -142,7 +142,7 @@ class CourseControllerTest {
         CourseCreateRequest request = new CourseCreateRequest(
             null,
             "Description",
-            CourseStatus.OPEN
+            CourseStatus.ACTIVE
         );
 
         // when & then
@@ -159,7 +159,7 @@ class CourseControllerTest {
         CourseCreateRequest request = new CourseCreateRequest(
             "Java Basics",
             "Description",
-            CourseStatus.OPEN
+            CourseStatus.ACTIVE
         );
 
         given(courseService.create(anyString(), anyString(), any()))
@@ -180,7 +180,7 @@ class CourseControllerTest {
         CourseUpdateRequest request = new CourseUpdateRequest(
             "Advanced Java",
             "Deep dive into Java",
-            CourseStatus.CLOSED
+            CourseStatus.INACTIVE
         );
 
         Course course = Course.builder()
@@ -200,7 +200,7 @@ class CourseControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.title").value("Advanced Java"))
-            .andExpect(jsonPath("$.status").value("CLOSED"));
+            .andExpect(jsonPath("$.status").value("INACTIVE"));
     }
 
     @Test
@@ -211,7 +211,7 @@ class CourseControllerTest {
         CourseUpdateRequest request = new CourseUpdateRequest(
             "Title",
             "Description",
-            CourseStatus.OPEN
+            CourseStatus.ACTIVE
         );
 
         given(courseService.update(anyLong(), anyString(), anyString(), any()))
@@ -254,15 +254,15 @@ class CourseControllerTest {
     void countByStatus_whenCalled_thenReturnStats() throws Exception {
         // given
         Map<CourseStatus, Long> stats = Map.of(
-            CourseStatus.OPEN, 10L,
-            CourseStatus.CLOSED, 5L
+            CourseStatus.ACTIVE, 10L,
+            CourseStatus.INACTIVE, 5L
         );
         given(courseService.countByStatus()).willReturn(stats);
 
         // when & then
         mockMvc.perform(get("/api/courses/stats/status"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.OPEN").value(10))
-            .andExpect(jsonPath("$.CLOSED").value(5));
+            .andExpect(jsonPath("$.ACTIVE").value(10))
+            .andExpect(jsonPath("$.INACTIVE").value(5));
     }
 }

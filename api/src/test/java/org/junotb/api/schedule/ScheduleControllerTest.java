@@ -68,7 +68,7 @@ class ScheduleControllerTest {
         Course course = Course.builder()
             .id(1L)
             .title("Java Basics")
-            .status(CourseStatus.OPEN)
+            .status(CourseStatus.ACTIVE)
             .build();
 
         Schedule schedule = Schedule.builder()
