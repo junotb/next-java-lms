@@ -1,6 +1,7 @@
 package org.junotb.api.schedule;
 
 import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Lock;
@@ -60,4 +61,53 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long>, JpaSp
             @Param("end") OffsetDateTime end,
             @Param("status") ScheduleStatus status
     );
+
+    /**
+     * 강사용: 다음 수업 1건 (SCHEDULED, 종료되지 않은 수업, 가장 빠른 것)
+     * - endsAt > now: 진행 중이거나 아직 시작하지 않은 수업 포함
+     * - LEFT JOIN FETCH: 연관 데이터(User, Course) 참조 무결성 문제로 인한 누락 방지
+     * - DISTINCT 사용: LEFT JOIN FETCH로 인한 중복 방지
+     */
+    @Query(value = """
+        SELECT DISTINCT s FROM Schedule s
+        LEFT JOIN FETCH s.user
+        LEFT JOIN FETCH s.course
+        WHERE s.user.id = :teacherId AND s.status = :status AND s.endsAt > :now
+        ORDER BY s.startsAt ASC
+        """)
+    List<Schedule> findNextSchedulesForTeacher(
+            @Param("teacherId") String teacherId,
+            @Param("status") ScheduleStatus status,
+            @Param("now") OffsetDateTime now,
+            Pageable pageable
+    );
+
+    /**
+     * 강사용: 오늘 예정된 수업 (startsAt이 dayStart 이상 dayEnd 미만)
+     * - LEFT JOIN FETCH: 연관 데이터 참조 무결성 문제 방지
+     */
+    @Query("""
+        SELECT s FROM Schedule s
+        LEFT JOIN FETCH s.user
+        LEFT JOIN FETCH s.course
+        WHERE s.user.id = :teacherId AND s.status = 'SCHEDULED'
+        AND s.startsAt >= :dayStart AND s.startsAt < :dayEnd
+        ORDER BY s.startsAt ASC
+        """)
+    List<Schedule> findTodaySchedulesForTeacher(
+            @Param("teacherId") String teacherId,
+            @Param("dayStart") OffsetDateTime dayStart,
+            @Param("dayEnd") OffsetDateTime dayEnd
+    );
+
+    /**
+     * 강사용: 예정된 수업 수 (SCHEDULED, endsAt > now)
+     * - endsAt > now: 진행 중이거나 아직 시작하지 않은 수업 포함
+     * - findNextSchedulesForTeacher와 동일한 조건 사용
+     */
+    @Query("""
+        SELECT COUNT(s) FROM Schedule s
+        WHERE s.user.id = :teacherId AND s.status = 'SCHEDULED' AND s.endsAt > :now
+        """)
+    long countUpcomingByTeacherId(@Param("teacherId") String teacherId, @Param("now") OffsetDateTime now);
 }

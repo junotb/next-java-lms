@@ -17,11 +17,11 @@ import { Dialog, DialogContent } from "@/component/ui/dialog";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
 
-// 역할(Role)과 리디렉션 경로를 상수로 관리하여 실수를 방지하고 유지보수성을 높입니다.
+// 역할(Role)에 따른 로그인 후 리다이렉트 경로 (middleware.ts ROLE_MAP과 일치)
 const roleRedirectMap: Record<string, string> = {
-  ADMIN: "/admin",
+  STUDENT: "/study",
   TEACHER: "/teach",
-  STUDENT: "/study", // middleware.ts와 경로 일치 (기존 /student -> /study)
+  ADMIN: "/admin",
 };
 
 const MODAL_TYPES = {
