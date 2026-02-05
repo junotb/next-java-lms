@@ -67,7 +67,7 @@ class CourseControllerTest {
         mockMvc.perform(get("/api/courses")
                 .param("title", "Java"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].title").value("Java Basics"));
+            .andExpect(jsonPath("$.items[0].title").value("Java Basics"));
     }
 
     @Test
