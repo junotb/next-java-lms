@@ -42,6 +42,9 @@ public class Schedule {
   @Column(name = "\"status\"", nullable = false)
   private ScheduleStatus status;
 
+  @Column(name = "\"meetLink\"", length = 2048)
+  private String meetLink;
+
   @Column(name = "\"createdAt\"", nullable = false, updatable = false)
   private OffsetDateTime createdAt;
 

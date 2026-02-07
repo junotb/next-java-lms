@@ -96,7 +96,8 @@ public class StudyDashboardService {
                 startsAt,
                 endsAt,
                 s.getUser() != null ? s.getUser().getName() : null,
-                null
+                null,
+                s.getMeetLink()
             );
         } catch (Exception e) {
             log.error("Error in findNextClass for studentId={}, now={}", studentId, now, e);

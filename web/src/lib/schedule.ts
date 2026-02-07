@@ -1,6 +1,13 @@
 import api from "@/lib/api";
 import { PageResponseSchema } from "@/schema/common/page-response";
-import { Schedule, ScheduleSchema, ScheduleCreateRequest, ScheduleUpdateRequest, ScheduleListRequest } from "@/schema/schedule/schedule";
+import {
+  Schedule,
+  ScheduleSchema,
+  ScheduleCreateRequest,
+  ScheduleUpdateRequest,
+  ScheduleListRequest,
+  ScheduleMeetLinkRequest,
+} from "@/schema/schedule/schedule";
 import { ScheduleStatus } from "@/schema/schedule/schedule-status";
 
 // 스케줄 목록 조회
@@ -33,7 +40,16 @@ export async function scheduleCreate(payload: ScheduleCreateRequest): Promise<Sc
   }
 }
 
-// 사용자 정보 수정
+// Meet 링크 수정 (강사 전용)
+export async function scheduleMeetLinkUpdate(
+  scheduleId: number,
+  payload: ScheduleMeetLinkRequest
+): Promise<Schedule> {
+  const response = await api.patch<Schedule>(`/api/v1/schedule/${scheduleId}/meet-link`, payload);
+  return ScheduleSchema.parse(response.data);
+}
+
+// 스케줄 수정
 export async function scheduleUpdate(scheduleId: number, payload: ScheduleUpdateRequest): Promise<Schedule> {
   try {
     const response = await api.patch<Schedule>(`/api/v1/schedule/${scheduleId}`, payload);

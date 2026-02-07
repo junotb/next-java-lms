@@ -8,6 +8,7 @@ import org.junotb.api.course.Course;
 import org.junotb.api.course.CourseRepository;
 import org.junotb.api.schedule.web.ScheduleCreateRequest;
 import org.junotb.api.schedule.web.ScheduleListRequest;
+import org.junotb.api.schedule.web.ScheduleMeetLinkRequest;
 import org.junotb.api.schedule.web.ScheduleUpdateRequest;
 import org.junotb.api.user.User;
 import org.junotb.api.user.UserRepository;
@@ -101,6 +102,29 @@ public class ScheduleService {
         if (request.endsAt() != null) schedule.setEndsAt(request.endsAt());
         if (request.status() != null) schedule.setStatus(request.status());
 
+        return schedule;
+    }
+
+    /**
+     * 강사 전용. 해당 스케줄의 Meet 링크를 등록/수정.
+     *
+     * @param scheduleId 스케줄 ID
+     * @param teacherId  강사 사용자 ID (본인 확인용)
+     * @param request    meet 링크 요청
+     * @return 수정된 스케줄
+     * @throws ResourceNotFoundException 스케줄 미존재
+     * @throws IllegalStateException     요청자가 해당 스케줄의 강사가 아님
+     */
+    @Transactional
+    public Schedule updateMeetLink(Long scheduleId, String teacherId, ScheduleMeetLinkRequest request) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+            .orElseThrow(() -> new ResourceNotFoundException("Schedule", scheduleId.toString()));
+
+        if (!schedule.getUser().getId().equals(teacherId)) {
+            throw new IllegalStateException("Meet 링크 수정은 해당 수업의 강사만 가능합니다.");
+        }
+
+        schedule.setMeetLink(request.meetLink().trim());
         return schedule;
     }
 

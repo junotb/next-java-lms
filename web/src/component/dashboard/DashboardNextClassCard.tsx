@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar } from "lucide-react";
+import { Calendar, Link2 } from "lucide-react";
 import { Button } from "@/component/ui/button";
+import MeetLinkModal from "@/component/teach/MeetLinkModal";
 import type { DashboardNextClass } from "@/schema/dashboard/dashboard";
 import { cn } from "@/lib/utils";
 
@@ -32,15 +34,22 @@ function canStudentEnter(startsAt: string): boolean {
   return Date.now() >= allowedFrom;
 }
 
+function hasMeetLink(schedule: DashboardNextClass): boolean {
+  return !!(schedule?.meetLink && schedule.meetLink.trim().length > 0);
+}
+
 export default function DashboardNextClassCard({
   schedule,
   role,
   variant = "study",
 }: DashboardNextClassCardProps) {
   const router = useRouter();
+  const [meetLinkModalOpen, setMeetLinkModalOpen] = useState(false);
   const isTeacher = role === "TEACHER";
-  // 강사는 예정된 수업(SCHEDULED)이면 시간 무관하게 항상 입장 가능
-  const canEnter = isTeacher ? true : (schedule ? canStudentEnter(schedule.startsAt) : false);
+  // 강사: meetLink 등록된 경우에만 입장 가능. 학생: 수업 10분 전부터 입장 가능.
+  const canEnter = isTeacher
+    ? !!(schedule && hasMeetLink(schedule))
+    : (schedule ? canStudentEnter(schedule.startsAt) : false);
   const entryMessage = schedule && !isTeacher && !canEnter ? formatEntryAvailable(schedule.startsAt) : null;
 
   const buttonClass =
@@ -100,14 +109,42 @@ export default function DashboardNextClassCard({
         {entryMessage && (
           <p className="text-xs text-muted-foreground">{entryMessage}</p>
         )}
-        <Button
-          className={cn("w-fit", buttonClass)}
-          onClick={() => router.push(`/classroom/${schedule.scheduleId}`)}
-          disabled={!canEnter}
-        >
-          수업 입장
-        </Button>
+        {isTeacher && !hasMeetLink(schedule) && (
+          <p className="text-xs text-amber-600 dark:text-amber-500">
+            입장하려면 Meet 링크를 등록해 주세요.
+          </p>
+        )}
+        <div className="flex flex-wrap gap-2">
+          {isTeacher && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-1.5"
+              onClick={() => setMeetLinkModalOpen(true)}
+            >
+              <Link2 className="size-4" />
+              {hasMeetLink(schedule) ? "Meet 링크 수정" : "Meet 링크 입력"}
+            </Button>
+          )}
+          <Button
+            className={cn("w-fit", buttonClass)}
+            onClick={() => router.push(`/classroom/${schedule.scheduleId}`)}
+            disabled={!canEnter}
+          >
+            수업 입장
+          </Button>
+        </div>
       </div>
+
+      {isTeacher && (
+        <MeetLinkModal
+          open={meetLinkModalOpen}
+          onOpenChange={setMeetLinkModalOpen}
+          scheduleId={schedule.scheduleId}
+          initialMeetLink={schedule.meetLink}
+        />
+      )}
     </div>
   );
 }

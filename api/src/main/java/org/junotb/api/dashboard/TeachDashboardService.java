@@ -176,7 +176,8 @@ public class TeachDashboardService {
                 s.getStartsAt() != null ? s.getStartsAt() : now,
                 s.getEndsAt() != null ? s.getEndsAt() : now,
                 null,
-                studentName
+                studentName,
+                s.getMeetLink()
             );
             log.info("findNextClass: SUCCESS - scheduleId={}, courseTitle={}, studentName={}", 
                 response.scheduleId(), response.courseTitle(), response.studentName());

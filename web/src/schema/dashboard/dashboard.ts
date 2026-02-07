@@ -22,6 +22,7 @@ export const DashboardNextClassSchema = z.object({
   endsAt: z.string(),
   instructorName: z.string().nullable(),
   studentName: z.string().nullable(),
+  meetLink: z.string().nullable().optional(),
 });
 
 export const StudyDashboardStatsSchema = z.object({

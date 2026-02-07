@@ -1,14 +1,18 @@
 package org.junotb.api.lesson.dto;
 
-import org.junotb.api.course.web.CourseResponse;
 import org.junotb.api.schedule.web.ScheduleResponse;
 
 /**
  * 수업방 입장 권한 검증 결과 DTO.
+ *
+ * @param allowed   입장 가능 여부
+ * @param role      TEACHER | STUDENT
+ * @param schedule  스케줄 정보
+ * @param meetLink  Google Meet 링크 (강사가 등록한 경우). 수업방에서 링크 전달용.
  */
 public record LessonAccessResponse(
     boolean allowed,
     String role,
     ScheduleResponse schedule,
-    CourseResponse course
+    String meetLink
 ) {}

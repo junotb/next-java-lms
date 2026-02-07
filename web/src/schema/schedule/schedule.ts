@@ -4,6 +4,12 @@ import {
   ScheduleStatusSchema,
 } from "@/schema/schedule/schedule-status";
 
+// Meet 링크 수정 요청 스키마
+export const ScheduleMeetLinkRequestSchema = z.object({
+  meetLink: z.string().min(1, "Meet 링크를 입력하세요.").max(2048),
+});
+export type ScheduleMeetLinkRequest = z.infer<typeof ScheduleMeetLinkRequestSchema>;
+
 // 스케줄 스키마
 export const ScheduleSchema = z
   .object({
@@ -13,6 +19,7 @@ export const ScheduleSchema = z
     startsAt: z.string(),
     endsAt: z.string(),
     status: ScheduleStatusSchema,
+    meetLink: z.string().nullable().optional(),
     createdAt: z.string(),
     updatedAt: z.string(),
   })
