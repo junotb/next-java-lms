@@ -4,8 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.junotb.api.common.web.PageResponse;
 import org.junotb.api.schedule.web.ScheduleCreateRequest;
-import org.junotb.api.schedule.web.ScheduleResponse;
 import org.junotb.api.schedule.web.ScheduleListRequest;
+import org.junotb.api.schedule.web.ScheduleMeetLinkRequest;
+import org.junotb.api.schedule.web.ScheduleResponse;
 import org.junotb.api.schedule.web.ScheduleUpdateRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +50,24 @@ public class ScheduleController {
 
     // 스케줄 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> update(@PathVariable Long id, @RequestBody @Valid ScheduleUpdateRequest request) {
+    public ResponseEntity<ScheduleResponse> update(
+        @PathVariable Long id,
+        @RequestBody @Valid ScheduleUpdateRequest request
+    ) {
         Schedule schedule = scheduleService.update(id, request);
+        return ResponseEntity.ok(ScheduleResponse.from(schedule));
+    }
+
+    /**
+     * 강사 전용. Meet 링크 등록/수정.
+     */
+    @PatchMapping("/{id}/meet-link")
+    public ResponseEntity<ScheduleResponse> updateMeetLink(
+        @PathVariable Long id,
+        @AuthenticationPrincipal String userId,
+        @RequestBody @Valid ScheduleMeetLinkRequest request
+    ) {
+        Schedule schedule = scheduleService.updateMeetLink(id, userId, request);
         return ResponseEntity.ok(ScheduleResponse.from(schedule));
     }
 

@@ -12,6 +12,7 @@ public record ScheduleResponse(
     OffsetDateTime startsAt,
     OffsetDateTime endsAt,
     ScheduleStatus status,
+    String meetLink,
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt
 ) {
@@ -23,6 +24,7 @@ public record ScheduleResponse(
             schedule.getStartsAt(),
             schedule.getEndsAt(),
             schedule.getStatus(),
+            schedule.getMeetLink(),
             schedule.getCreatedAt(),
             schedule.getUpdatedAt()
         );

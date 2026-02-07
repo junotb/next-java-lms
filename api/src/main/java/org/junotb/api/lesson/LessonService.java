@@ -2,7 +2,6 @@ package org.junotb.api.lesson;
 
 import lombok.RequiredArgsConstructor;
 import org.junotb.api.common.exception.ResourceNotFoundException;
-import org.junotb.api.course.web.CourseResponse;
 import org.junotb.api.lesson.dto.LessonAccessResponse;
 import org.junotb.api.registration.RegistrationRepository;
 import org.junotb.api.registration.RegistrationStatus;
@@ -27,8 +26,8 @@ public class LessonService {
 
     /**
      * 수업방 입장 권한 검증.
-     * - 강사: 상태가 SCHEDULED이면 시간 무관 입장 가능.
-     * - 학생: 상태가 SCHEDULED이고 현재 시각이 startsAt ~ endsAt 사이일 때만 입장 가능.
+     * - 강사: 상태가 SCHEDULED이고 meetLink가 등록된 경우에만 입장 가능.
+     * - 학생: 상태가 SCHEDULED이고 현재 시각이 startsAt ~ endsAt 사이일 때 입장 가능.
      */
     @Transactional(readOnly = true)
     public LessonAccessResponse validateAccess(Long scheduleId, String userId) {
@@ -47,7 +46,8 @@ public class LessonService {
         OffsetDateTime now = OffsetDateTime.now();
 
         if (ROLE_TEACHER.equals(role)) {
-            return buildAccessResponse(true, role, schedule);
+            boolean hasMeetLink = schedule.getMeetLink() != null && !schedule.getMeetLink().isBlank();
+            return buildAccessResponse(hasMeetLink, role, schedule);
         }
 
         if (ROLE_STUDENT.equals(role)) {
@@ -86,9 +86,7 @@ public class LessonService {
 
     private LessonAccessResponse buildAccessResponse(boolean allowed, String role, Schedule schedule) {
         ScheduleResponse scheduleResponse = ScheduleResponse.from(schedule);
-        CourseResponse courseResponse = schedule.getCourse() != null
-            ? CourseResponse.from(schedule.getCourse())
-            : null;
-        return new LessonAccessResponse(allowed, role != null ? role : "", scheduleResponse, courseResponse);
+        String meetLink = schedule.getMeetLink() != null ? schedule.getMeetLink() : null;
+        return new LessonAccessResponse(allowed, role != null ? role : "", scheduleResponse, meetLink);
     }
 }

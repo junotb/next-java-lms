@@ -2,8 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Loader from "@/component/common/Loader";
-import VideoArea from "@/component/classroom/VideoArea";
-import CourseViewer from "@/component/classroom/CourseViewer";
+import MeetLinkArea from "@/component/classroom/MeetLinkArea";
 import LessonController from "@/component/classroom/LessonController";
 import { useLessonAccess } from "@/hook/useLesson";
 
@@ -44,11 +43,8 @@ export default function ClassroomPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      <div className="flex-1 flex min-h-0">
-        <div className="flex-1 min-w-0 min-h-0 p-2">
-          <VideoArea />
-        </div>
-        <CourseViewer data={data} />
+      <div className="flex-1 flex min-h-0 p-2">
+        <MeetLinkArea meetLink={data.meetLink} />
       </div>
       <LessonController
         scheduleId={id}
