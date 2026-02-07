@@ -5,6 +5,10 @@
 - Backend Path: ./api
 - Frontend Path: ./web
 
+# General Preferences
+- **Language**: Answer in **Korean** (한국어) unless requested otherwise.
+- **Tone**: Professional, technical, and concise.
+
 # Tech Stack & Versions
 ## Backend (Java/Spring Boot)
 - **Framework**: Spring Boot 3.3.3
@@ -24,24 +28,48 @@
 - **Forms**: React Hook Form + Zod
 - **Auth**: Better-Auth (Do NOT suggest NextAuth)
 - **HTTP Client**: Axios
+- **Testing**: Jest, React Testing Library (RTL)
 
 # Coding Guidelines
 
-## 1. Backend Rules (./api)
+## 1. Code Style & Documentation
+### Comment Rules ("Why" over "What")
+- **Do NOT** explain what the code is doing (e.g., `// ID 증가` -> ❌ BAD).
+- **DO** explain **why** logic exists, business rules, or edge cases.
+  - ✅ GOOD: `// 외부 API 호출 제한(Rate Limit)을 피하기 위해 1초 대기`
+- Use a single space after `//`.
+
+### Mandatory Documentation (JavaDoc / JSDoc)
+- **Backend**: Add JavaDoc (`/** ... */`) to all **Controllers**, **Services**, and **DTOs**. Must include `@param`, `@return`, `@throws`.
+- **Frontend**: Add JSDoc to **Exported Components**, **Shared Hooks**, and **Utils**.
+
+### Clean Code (No Dead Code)
+- **NEVER** leave commented-out code. **DELETE** it immediately.
+
+## 2. Backend Rules (./api)
 - **Architecture**: Layered Architecture (Controller -> Service -> Repository).
 - **Lombok**: Mandatory. Use `@Getter`, `@NoArgsConstructor(access = AccessLevel.PROTECTED)`, `@AllArgsConstructor`.
 - **DTO**: Use strict Request/Response DTOs. Never return Entities directly in Controller.
-- **Swagger**: Annotate all Controllers with `@Tag` and `@Operation` for documentation.
+- **JPA & Enums (IMPORTANT)**: 
+  - Annotate Enum fields with `@Enumerated(EnumType.STRING)`.
+  - When using Enums in JPQL `@Query` parameters, **ALWAYS use SpEL** (`:#{#status.name()}`) to ensure strict String binding.
+- **Swagger**: Annotate all Controllers with `@Tag` and `@Operation`.
 - **Testing**: Use JUnit 5. Use `@DataJpaTest` for repositories.
-- **Concurrency**: When implementing course registration, consider Redis Distributed Lock (Redisson) or DB Pessimistic Lock.
+- **Concurrency**: Use Redis Distributed Lock (Redisson) or DB Pessimistic Lock for registration logic.
 
-## 2. Frontend Rules (./web)
+## 3. Frontend Rules (./web)
 - **React 19**: Prioritize Server Components. Use `'use client'` only when state/hooks are needed.
 - **Data Fetching**: Use TanStack Query (`useQuery`, `useMutation`) for API calls.
-- **Styling**: Use Tailwind v4 syntax. Avoid inline styles. Use `clsx` for conditional classes.
+- **Styling (Tailwind v4)**: 
+  - Use **utility classes** directly.
+  - **Avoid** creating `tailwind.config.js` or `tailwind.config.ts`. Use CSS variables in `globals.css` for theme customization.
+  - Use `clsx` or `tailwind-merge` (`cn` helper) for conditional classes.
 - **Type Safety**: Share types with Backend or define strictly in `types/`. Use Zod for validation.
+- **Testing**:
+  - Use **Jest** and **React Testing Library** for Unit/Integration tests.
+  - Test complex hooks and critical form flows (Login, Registration).
 - **Auth**: Implement authentication flows using `better-auth`.
 
-## 3. General Workflow
-- **Monorepo Awareness**: When I ask to "create a registration feature", generate the Spring Boot Controller/Service AND the Next.js Page/Form simultaneously.
+## 4. General Workflow
+- **Monorepo Awareness**: Generate Spring Boot Controller/Service AND Next.js Page/Form simultaneously for new features.
 - **Error Handling**: Implement global exception handling in Backend and display toast notifications in Frontend.

@@ -57,9 +57,8 @@ api.interceptors.request.use(
         if (token && config.headers) {
           config.headers.Authorization = `Bearer ${token}`;
         }
-      } catch (error) {
+      } catch {
         // 세션을 가져오지 못한 경우 무시 (인증되지 않은 요청일 수 있음)
-        console.debug("Failed to get session for Authorization header:", error);
       }
     }
     return config;

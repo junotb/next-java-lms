@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { checkLessonAccess, finishLesson } from "@/lib/lesson";
 import { useToastStore } from "@/store/useToastStore";
 import type { LessonAccessResponse } from "@/schema/lesson/lesson";

@@ -17,7 +17,6 @@ export async function courseList(
     const response = await api.get<Course[]>("/api/courses", { params });
     return PageResponseSchema(CourseSchema).parse(response.data).items;
   } catch (error) {
-    console.error("Error get courses:", error);
     throw error;
   }
 }
@@ -28,7 +27,6 @@ export async function courseInfo(courseId: number): Promise<Course> {
     const response = await api.get<Course>(`/api/courses/${courseId}`);
     return CourseSchema.parse(response.data);
   } catch (error) {
-    console.error("Error get course information:", error);
     throw error;
   }
 }
@@ -41,7 +39,6 @@ export async function courseCreate(
     const response = await api.post<Course>("/api/courses", payload);
     return CourseSchema.parse(response.data);
   } catch (error) {
-    console.error("Error create course:", error);
     throw error;
   }
 }
@@ -58,7 +55,6 @@ export async function courseUpdate(
     );
     return CourseSchema.parse(response.data);
   } catch (error) {
-    console.error("Error update course:", error);
     throw error;
   }
 }
@@ -68,7 +64,6 @@ export async function courseDelete(courseId: number): Promise<void> {
   try {
     await api.delete<void>(`/api/courses/${courseId}`);
   } catch (error) {
-    console.error("Error delete course:", error);
     throw error;
   }
 }
@@ -83,7 +78,6 @@ export async function courseStatusStats(): Promise<
     );
     return response.data;
   } catch (error) {
-    console.error("Error get course status stats:", error);
     throw error;
   }
 }

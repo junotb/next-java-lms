@@ -48,9 +48,8 @@ export default function ScheduleInfoCard({
         await modifyMutation.mutateAsync({ scheduleId, payload });
       }
       onSuccess();
-    } catch (error) {
-      console.error("Form submission failed:", error);
-      // 사용자에게 토스트 메시지 등으로 에러를 알려주는 로직을 추가할 수 있습니다.
+    } catch {
+      // onError는 mutation에서 처리됨
     }
   };
 

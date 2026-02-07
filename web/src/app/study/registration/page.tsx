@@ -9,6 +9,7 @@ import { Input } from "@/component/ui/input";
 import { Label } from "@/component/ui/label";
 import { Badge } from "@/component/ui/badge";
 import {
+  useCourseList,
   useFindCandidates,
 } from "@/hook/study/useRegistration";
 import type { ApiError } from "@/lib/api";
@@ -51,13 +52,14 @@ export default function StudyRegistrationPage() {
     return { days, startTime, durationMinutes };
   }, [formData]);
 
+  const { data: courses } = useCourseList();
   const { data: candidates, isLoading: candidatesLoading } = useFindCandidates(
     candidateParams,
     step === 3
   );
 
   const mutation = useMutation({
-    mutationFn: (payload: CourseRegistrationRequest & { courseId?: number }) => registerCourse(payload),
+    mutationFn: (payload: CourseRegistrationRequest) => registerCourse(payload),
     onSuccess: () => {
       showToast("수강 신청이 완료되었습니다.", "success");
       reset();
@@ -89,14 +91,11 @@ export default function StudyRegistrationPage() {
       showToast(msg, "error");
       return;
     }
-    // 백엔드 API 호출 시 courseId를 고정값 3로 설정
-    mutation.mutate({
-      ...parsed.data,
-      courseId: 3,
-    });
+    mutation.mutate(parsed.data);
   }, [formData, mutation, showToast]);
 
-  const canProceedStep1 = typeof formData.months === "number";
+  const canProceedStep1 =
+    typeof formData.courseId === "number" && typeof formData.months === "number";
   const canProceedStep2 =
     Array.isArray(formData.days) && formData.days.length >= 1;
   const canProceedStep3 =
@@ -114,7 +113,7 @@ export default function StudyRegistrationPage() {
           </CardTitle>
           <CardDescription className="mt-1 text-sm">
             Step {step} / 4 —{" "}
-            {step === 1 && "기간 선택"}
+            {step === 1 && "강좌·기간 선택"}
             {step === 2 && "요일 선택"}
             {step === 3 && "시간·강사 확인"}
             {step === 4 && "최종 확인"}
@@ -126,6 +125,7 @@ export default function StudyRegistrationPage() {
             <Step1
               formData={formData}
               updateFormData={updateFormData}
+              courses={courses ?? []}
             />
           )}
           {step === 2 && (
@@ -142,6 +142,7 @@ export default function StudyRegistrationPage() {
           {step === 4 && (
             <Step4
               formData={formData}
+              courses={courses ?? []}
               onSubmit={handleSubmit}
               isSubmitting={mutation.isPending}
               is429={mutation.isError && (mutation.error as ApiError)?.status === 429}
@@ -184,16 +185,34 @@ export default function StudyRegistrationPage() {
 function Step1({
   formData,
   updateFormData,
+  courses,
 }: {
   formData: Partial<CourseRegistrationRequest>;
   updateFormData: (d: Partial<CourseRegistrationRequest>) => void;
+  courses: { id: number; title: string }[];
 }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <Label className="text-sm font-medium">
-          수강 기간 (개월)
-        </Label>
+        <Label className="text-sm font-medium">강좌 선택</Label>
+        <select
+          value={formData.courseId ?? ""}
+          onChange={(e) =>
+            updateFormData({
+              courseId: e.target.value ? Number(e.target.value) : undefined,
+            })}
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          <option value="">선택하세요</option>
+          {courses.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.title}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label className="text-sm font-medium">수강 기간 (개월)</Label>
         <select
           value={formData.months ?? ""}
           onChange={(e) =>
@@ -326,12 +345,14 @@ function Step3({
 
 function Step4({
   formData,
+  courses,
   onSubmit,
   isSubmitting,
   is429,
   onRetry,
 }: {
   formData: Partial<CourseRegistrationRequest>;
+  courses: { id: number; title: string }[];
   onSubmit: () => void;
   isSubmitting: boolean;
   is429: boolean;
@@ -339,11 +360,18 @@ function Step4({
 }) {
   const days = formData.days ?? [];
   const dayStr = days.map((d) => DAY_LABELS[d]).join(", ");
+  const selectedCourse = courses.find((c) => c.id === formData.courseId);
 
   return (
     <div className="flex flex-col gap-6">
       <div className="rounded-lg bg-muted p-4 text-sm">
         <dl className="grid gap-2">
+          {selectedCourse && (
+            <div>
+              <dt className="font-medium text-muted-foreground">강좌</dt>
+              <dd className="text-foreground">{selectedCourse.title}</dd>
+            </div>
+          )}
           <div>
             <dt className="font-medium text-muted-foreground">수강 기간</dt>
             <dd className="text-foreground">{formData.months}개월</dd>

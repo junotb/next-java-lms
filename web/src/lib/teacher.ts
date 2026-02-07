@@ -12,7 +12,6 @@ export async function getAvailability(): Promise<TeacherAvailabilityResponse[]> 
     const response = await api.get<TeacherAvailabilityResponse[]>("/api/v1/teachers/me/availability");
     return z.array(TeacherAvailabilityResponseSchema).parse(response.data);
   } catch (error) {
-    console.error("Error get teacher availability:", error);
     throw error;
   }
 }
@@ -28,7 +27,6 @@ export async function updateAvailability(
     );
     return z.array(TeacherAvailabilityResponseSchema).parse(response.data);
   } catch (error) {
-    console.error("Error update teacher availability:", error);
     throw error;
   }
 }

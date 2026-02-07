@@ -47,8 +47,8 @@ export default function CourseInfoCard({
         await modifyMutation.mutateAsync({ courseId, payload });
       }
       onSuccess();
-    } catch (error) {
-      console.error("Form submission failed:", error);
+    } catch {
+      // onError는 mutation에서 처리됨
     }
   };
 

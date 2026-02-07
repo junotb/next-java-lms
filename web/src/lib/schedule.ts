@@ -9,7 +9,6 @@ export async function scheduleList(params: ScheduleListRequest): Promise<Schedul
     const response = await api.get<Schedule[]>("/api/v1/schedule", { params });
     return PageResponseSchema(ScheduleSchema).parse(response.data).items;
   } catch (error) {
-    console.error("Error get schedules:", error);
     throw error;
   }
 }
@@ -20,7 +19,6 @@ export async function scheduleInfo(scheduleId: number): Promise<Schedule> {
     const response = await api.get<Schedule>(`/api/v1/schedule/${scheduleId}`);
     return ScheduleSchema.parse(response.data);
   } catch (error) {
-    console.error("Error get schedule information:", error);
     throw error;
   }
 }
@@ -31,7 +29,6 @@ export async function scheduleCreate(payload: ScheduleCreateRequest): Promise<Sc
     const response = await api.post<Schedule>("/api/v1/schedule", payload);
     return ScheduleSchema.parse(response.data);
   } catch (error) {
-    console.error("Error create schedule:", error);
     throw error;
   }
 }
@@ -42,7 +39,6 @@ export async function scheduleUpdate(scheduleId: number, payload: ScheduleUpdate
     const response = await api.patch<Schedule>(`/api/v1/schedule/${scheduleId}`, payload);
     return ScheduleSchema.parse(response.data);
   } catch (error) {
-    console.error("Error update schedule:", error);
     throw error;
   }
 }
@@ -52,20 +48,14 @@ export async function scheduleDelete(scheduleId: number): Promise<void> {
   try {
     await api.delete<void>(`/api/v1/schedule/${scheduleId}`);
   } catch (error) {
-    console.error("Error delete schedule:", error);
     throw error;
   }
 }
 
 // 스케줄 상태별 통계
-export async function scheduleStatusStats(userId: number | null): Promise<Record<ScheduleStatus, number>> {
-  try {
-    const response = await api.get<Record<ScheduleStatus, number>>("/api/v1/schedule/stats/status", { params: { userId } });
-    return response.data;
-  } catch (error) {
-    console.error("Error get schedule status stats:", error);
-    throw error;
-  }
+export async function scheduleStatusStats(): Promise<Record<ScheduleStatus, number>> {
+  const response = await api.get<Record<ScheduleStatus, number>>("/api/v1/schedule/stats/status");
+  return response.data;
 }
 
 // 스케줄 상태명 변환

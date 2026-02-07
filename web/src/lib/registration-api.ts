@@ -11,10 +11,10 @@ import { RegistrationSchema, type Registration } from "@/schema/registration";
 
 /** 수강 신청 (강좌 기준, 강사 자동 매칭) */
 export async function registerCourse(
-  payload: CourseRegistrationRequest & { courseId?: number }
+  payload: CourseRegistrationRequest
 ): Promise<Registration> {
   const body = {
-    courseId: payload.courseId ?? 1, // courseId가 없으면 기본값 1 사용
+    courseId: payload.courseId,
     months: payload.months,
     days: payload.days,
     startTime: payload.startTime,
@@ -51,13 +51,13 @@ export async function courseList(params?: {
   page?: number;
   size?: number;
 }): Promise<Course[]> {
-  const response = await api.get<{ content: unknown[] }>("/api/courses", {
+  const response = await api.get<{ items: unknown[] }>("/api/courses", {
     params: {
       status: params?.status,
       page: params?.page ?? 0,
       size: params?.size ?? 100,
     },
   });
-  const content = response.data.content ?? [];
-  return z.array(CourseSchema).parse(content);
+  const items = response.data.items ?? [];
+  return z.array(CourseSchema).parse(items);
 }

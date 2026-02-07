@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiError } from "@/lib/api";
 import { scheduleList, scheduleInfo, scheduleCreate, scheduleUpdate, scheduleDelete, scheduleStatusStats } from "@/lib/schedule";
 import { Schedule, ScheduleListRequest, ScheduleCreateRequest, ScheduleUpdateRequest } from "@/schema/schedule/schedule";
 import { ScheduleStatus } from "@/schema/schedule/schedule-status";
@@ -32,7 +31,7 @@ export function useScheduleCreate() {
   return useMutation({
     mutationFn: (payload: ScheduleCreateRequest) => scheduleCreate(payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["schedule"] }),
-    onError: (error: ApiError) => console.error(`Failed to register schedule: ${error.status} ${error.message}`)
+    onError: () => {}
   });
 }
 
@@ -43,7 +42,7 @@ export function useScheduleUpdate() {
   return useMutation({
     mutationFn: async ({ scheduleId, payload }: { scheduleId: number; payload: ScheduleUpdateRequest }) => scheduleUpdate(scheduleId, payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["schedule"] }),
-    onError: (error: ApiError) => console.error(`Failed to modify schedule: ${error.status} ${error.message}`)
+    onError: () => {}
   });
 }
 
@@ -54,15 +53,15 @@ export function useScheduleDelete() {
   return useMutation({
     mutationFn: async (scheduleId: number) => scheduleDelete(scheduleId),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["schedule"] }),
-    onError: (error: ApiError) => console.error(`Failed to delete schedule: ${error.status} ${error.message}`)
+    onError: () => {}
   });
 }
 
 // 스케줄 상태별 통계
-export function useScheduleStatusStats(userId: number | null) {
+export function useScheduleStatusStats() {
   return useQuery<Record<ScheduleStatus, number>, Error>({
     queryKey: ["schedule", "status-stats"],
-    queryFn: async () => await scheduleStatusStats(userId),
+    queryFn: scheduleStatusStats,
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });
