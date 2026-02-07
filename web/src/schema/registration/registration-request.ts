@@ -11,6 +11,7 @@ export const DAYS_OF_WEEK = [
 ] as const;
 
 export const CourseRegistrationSchema = z.object({
+  courseId: z.number().int().positive("강좌를 선택해주세요."),
   months: z.number().int().positive(), // 1, 3, 6, 12
   days: z
     .array(z.enum(DAYS_OF_WEEK))

@@ -9,6 +9,8 @@ export const UserSchema = z.object({
   email: z.email(),
   emailVerified: z.boolean(),
   image: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
   role: UserRoleSchema,
   status: UserStatusSchema,
 });
@@ -35,12 +37,6 @@ export const UserProfileUpdateRequestSchema = z.object({
 });
 
 export type UserProfileUpdateRequest = z.infer<typeof UserProfileUpdateRequestSchema>;
-
-// 사용자 비밀번호 수정 요청
-export type UserPasswordUpdateRequest = {
-  id: number;
-  password: string;
-};
 
 // 사용자 조회 요청
 export type UserProfileRequest = {

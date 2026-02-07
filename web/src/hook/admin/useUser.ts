@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiError } from "@/lib/api";
 import { userList, userProfile, userCreate, userProfileUpdate, userDelete, userRoleStats } from "@/lib/user";
 import { User, UserListRequest, UserCreateRequest, UserProfileUpdateRequest } from "@/schema/user/user";
 import { UserRole } from "@/schema/user/user-role";
@@ -32,7 +31,7 @@ export function useUserCreate() {
   return useMutation({
     mutationFn: (payload: UserCreateRequest) => userCreate(payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["user"] }),
-    onError: (error: ApiError) => console.error(`Failed to register user: ${error.status} ${error.message}`)
+    onError: () => {}
   });
 }
 
@@ -43,7 +42,7 @@ export function useUserProfileUpdate() {
   return useMutation({
     mutationFn: async ({ userId, payload }: { userId: string; payload: UserProfileUpdateRequest }) => userProfileUpdate(userId, payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["user"] }),
-    onError: (error: ApiError) => console.error(`Failed to modify user: ${error.status} ${error.message}`)
+    onError: () => {}
   });
 }
 
@@ -54,7 +53,7 @@ export function useUserDelete() {
   return useMutation({
     mutationFn: async (userId: string) => userDelete(userId),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["user"] }),
-    onError: (error: ApiError) => console.error(`Failed to delete user: ${error.status} ${error.message}`)
+    onError: () => {}
   });
 }
 

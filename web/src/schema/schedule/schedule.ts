@@ -9,6 +9,7 @@ export const ScheduleSchema = z
   .object({
     id: z.number().int().positive(),
     userId: z.string(),
+    courseId: z.number().int().positive().nullable().optional(),
     startsAt: z.string(),
     endsAt: z.string(),
     status: ScheduleStatusSchema,

@@ -1,6 +1,6 @@
 import api from "@/lib/api";
 import { PageResponseSchema } from "@/schema/common/page-response";
-import { User, UserSchema, UserCreateRequest, UserProfileUpdateRequest, UserListRequest, UserPasswordUpdateRequest } from "@/schema/user/user";
+import { User, UserSchema, UserCreateRequest, UserProfileUpdateRequest, UserListRequest } from "@/schema/user/user";
 import { UserRole } from "@/schema/user/user-role";
 import { UserStatus } from "@/schema/user/user-status";
 
@@ -10,7 +10,6 @@ export async function userList(params: UserListRequest): Promise<User[]> {
     const response = await api.get<User[]>("/api/v1/user", { params });
     return PageResponseSchema(UserSchema).parse(response.data).items;
   } catch (error) {
-    console.error("Error get users:", error);
     throw error;
   }
 }
@@ -21,7 +20,6 @@ export async function userProfile(userId: string): Promise<User> {
     const response = await api.get<User>(`/api/v1/user/${userId}`);
     return UserSchema.parse(response.data);
   } catch (error) {
-    console.error("Error get user profile:", error);
     throw error;
   }
 }
@@ -32,7 +30,6 @@ export async function userCreate(payload: UserCreateRequest): Promise<User> {
     const response = await api.post<User>("/api/v1/user", payload);
     return UserSchema.parse(response.data);
   } catch (error) {
-    console.error("Error create user:", error);
     throw error;
   }
 }
@@ -43,17 +40,6 @@ export async function userProfileUpdate(userId: string, payload: UserProfileUpda
     const response = await api.patch<User>(`/api/v1/user/${userId}`, payload);
     return UserSchema.parse(response.data);
   } catch (error) {
-    console.error("Error update user:", error);
-    throw error;
-  }
-}
-
-// 사용자 비밀번호 수정
-export async function userPasswordUpdate(userId: string, payload: UserPasswordUpdateRequest): Promise<void> {
-  try {
-    await api.patch<void>(`/api/v1/user/${userId}/password`, payload);
-  } catch (error) {
-    console.error("Error update user password:", error);
     throw error;
   }
 }
@@ -63,7 +49,6 @@ export async function userDelete(userId: string): Promise<void> {
   try {
     await api.delete<void>(`/api/v1/user/${userId}`);
   } catch (error) {
-    console.error("Error delete user:", error);
     throw error;
   }
 }
@@ -74,7 +59,6 @@ export async function userRoleStats(): Promise<Record<UserRole, number>> {
     const response = await api.get<Record<UserRole, number>>("/api/v1/user/stats/role");
     return response.data;
   } catch (error) {
-    console.error("Error get user role stats:", error);
     throw error;
   }
 }

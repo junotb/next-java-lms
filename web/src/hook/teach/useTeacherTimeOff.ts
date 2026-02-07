@@ -31,7 +31,6 @@ export function useCreateTeacherTimeOff() {
       showToast("휴무가 등록되었습니다.", "success");
     },
     onError: (error: ApiError) => {
-      console.error("Failed to create time off:", error);
       showToast(error.message || "휴무 등록에 실패했습니다.", "error");
     },
   });
@@ -48,7 +47,6 @@ export function useDeleteTeacherTimeOff() {
       showToast("휴무가 삭제되었습니다.", "success");
     },
     onError: (error: ApiError) => {
-      console.error("Failed to delete time off:", error);
       showToast(error.message || "휴무 삭제에 실패했습니다.", "error");
     },
   });

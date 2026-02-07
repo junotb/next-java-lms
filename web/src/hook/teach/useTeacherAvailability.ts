@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiError } from "@/lib/api";
 import { getAvailability, updateAvailability } from "@/lib/teacher";
 import {
   TeacherAvailabilityFormValues,
@@ -80,8 +79,7 @@ export function useUpdateAvailability() {
       await queryClient.invalidateQueries({ queryKey: ["teacher", "availability"] });
       showToast("저장되었습니다.", "success");
     },
-    onError: (error: ApiError) => {
-      console.error("Failed to update availability:", error);
+    onError: () => {
       showToast("저장에 실패했습니다.", "error");
     },
   });

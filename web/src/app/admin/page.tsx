@@ -9,7 +9,7 @@ import { UserRole } from "@/schema/user/user-role";
 
 export default function AdminPage() {
   const { data: scheduleStatusStats, isLoading: isScheduleStatusLoading } =
-    useScheduleStatusStats(null);
+    useScheduleStatusStats();
   const { data: userRoleStats, isLoading: isUserRoleLoading } =
     useUserRoleStats();
 

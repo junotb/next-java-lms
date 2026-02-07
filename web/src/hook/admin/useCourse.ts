@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiError } from "@/lib/api";
 import {
   courseList,
   courseInfo,
@@ -48,10 +47,7 @@ export function useCourseCreate() {
     mutationFn: (payload: CourseCreateRequest) => courseCreate(payload),
     onSuccess: async () =>
       await qc.invalidateQueries({ queryKey: ["course"] }),
-    onError: (error: ApiError) =>
-      console.error(
-        `Failed to register course: ${error.status} ${error.message}`
-      ),
+    onError: () => {},
   });
 }
 
@@ -69,10 +65,7 @@ export function useCourseUpdate() {
     }) => courseUpdate(courseId, payload),
     onSuccess: async () =>
       await qc.invalidateQueries({ queryKey: ["course"] }),
-    onError: (error: ApiError) =>
-      console.error(
-        `Failed to modify course: ${error.status} ${error.message}`
-      ),
+    onError: () => {},
   });
 }
 
@@ -84,10 +77,7 @@ export function useCourseDelete() {
     mutationFn: async (courseId: number) => courseDelete(courseId),
     onSuccess: async () =>
       await qc.invalidateQueries({ queryKey: ["course"] }),
-    onError: (error: ApiError) =>
-      console.error(
-        `Failed to delete course: ${error.status} ${error.message}`
-      ),
+    onError: () => {},
   });
 }
 
