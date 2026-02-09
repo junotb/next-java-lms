@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { LogIn, BookOpen } from "lucide-react";
 import { useAuthModalStore } from "@/store/useAuthModalStore";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@/component/ui/button";
+import HeaderUserMenu from "@/component/common/HeaderUserMenu";
 
 export default function LandingHeader() {
   const { openModal } = useAuthModalStore();
+  const { data: session, isPending } = authClient.useSession();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm">
@@ -16,15 +19,25 @@ export default function LandingHeader() {
           <h1 className="font-bold">NexLang</h1>
         </Link>
         <div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => openModal("signin")}
-            className="text-muted-foreground hover:text-foreground"
-            aria-label="로그인"
-          >
-            <LogIn className="h-6 w-6" />
-          </Button>
+          {isPending ? (
+            <div className="h-10 w-10 animate-pulse rounded-md bg-muted" />
+          ) : session?.user ? (
+            <HeaderUserMenu
+              user={session.user}
+              showDashboardLink
+              variant="compact"
+            />
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => openModal("signin")}
+              className="text-muted-foreground hover:text-foreground"
+              aria-label="로그인"
+            >
+              <LogIn />
+            </Button>
+          )}
         </div>
       </div>
     </header>

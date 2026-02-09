@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
 import {
@@ -72,8 +73,19 @@ export default function MeetLinkModal({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               취소
             </Button>
-            <Button type="submit" disabled={!meetLink.trim() || mutation.isPending}>
-              {mutation.isPending ? "저장 중..." : "저장"}
+            <Button
+              type="submit"
+              disabled={!meetLink.trim() || mutation.isPending}
+              className="min-w-[5.5rem]"
+            >
+              {mutation.isPending ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  저장 중...
+                </>
+              ) : (
+                "저장"
+              )}
             </Button>
           </div>
         </form>

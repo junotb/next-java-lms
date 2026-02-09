@@ -25,6 +25,7 @@ import {
   useCreateTeacherTimeOff,
   useDeleteTeacherTimeOff,
 } from "@/hook/teach/useTeacherTimeOff";
+import { Loader2 } from "lucide-react";
 import Loader from "@/component/common/Loader";
 import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -336,8 +337,19 @@ export default function TimeOffManager() {
               />
             </div>
 
-            <Button type="submit" disabled={createMutation.isPending}>
-              {createMutation.isPending ? "등록 중..." : "휴무 등록"}
+            <Button
+              type="submit"
+              disabled={createMutation.isPending}
+              className="min-w-[5.5rem]"
+            >
+              {createMutation.isPending ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  등록 중...
+                </>
+              ) : (
+                "휴무 등록"
+              )}
             </Button>
           </form>
         </CardContent>
