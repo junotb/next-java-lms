@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { Upload } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/component/ui/button";
 import {
   Dialog,
@@ -68,10 +69,19 @@ export default function VideoUploadModal({
             type="button"
             onClick={handleClick}
             disabled={mutation.isPending}
-            className="w-full gap-2"
+            className="w-full min-h-10 gap-2"
           >
-            <Upload className="size-4" />
-            {mutation.isPending ? "업로드 중..." : "비디오 파일 선택"}
+            {mutation.isPending ? (
+              <>
+                <Loader2 className="animate-spin" />
+                업로드 중...
+              </>
+            ) : (
+              <>
+                <Upload className="size-4" />
+                비디오 파일 선택
+              </>
+            )}
           </Button>
           <p className="mt-2 text-xs text-muted-foreground">
             mp4, webm, mov 형식 지원

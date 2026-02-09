@@ -17,6 +17,7 @@ import { Switch } from "@/component/ui/switch";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
 import { useTeacherAvailability, useUpdateAvailability } from "@/hook/teach/useTeacherAvailability";
+import { Loader2 } from "lucide-react";
 import Loader from "@/component/common/Loader";
 
 interface AvailabilityFormProps {
@@ -219,8 +220,19 @@ export default function AvailabilityForm({ onSubmit }: AvailabilityFormProps) {
           })}
 
           <div className="flex justify-end gap-4 pt-4">
-            <Button type="submit" disabled={updateMutation.isPending}>
-              {updateMutation.isPending ? "저장 중..." : "저장"}
+            <Button
+              type="submit"
+              disabled={updateMutation.isPending}
+              className="min-w-[5.5rem]"
+            >
+              {updateMutation.isPending ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  저장 중...
+                </>
+              ) : (
+                "저장"
+              )}
             </Button>
           </div>
         </form>
