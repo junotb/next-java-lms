@@ -31,7 +31,9 @@ public interface TeacherAvailabilityRepository extends JpaRepository<TeacherAvai
      *
      * 조건:
      * - 강사의 status는 ACTIVE, role은 TEACHER
-     * - 휴무(TeacherTimeOff): 구간과 겹치는 휴무가 있는 강사 제외 (NOT EXISTS)
+     * - 휴무(TeacherTimeOff)는 이 단계에서 제외하지 않음. 요청 요일 중 일부만 휴무인 경우
+     *   해당 요일만 제외하고 나머지 요일은 가능할 수 있으므로, 휴무 검사는 findAvailableTeacher에서
+     *   수업 일자별로 수행함.
      * - 기존 스케줄(Schedule): 동일 요일 + 시간대가 겹치는 수업이 있는 강사 제외 (NOT EXISTS)
      *
      * @param days 요청 요일 목록 (DayOfWeek enum)
@@ -51,13 +53,6 @@ public interface TeacherAvailabilityRepository extends JpaRepository<TeacherAvai
           AND ta."endTime" >= :endTime
           AND u."status" = 'ACTIVE'
           AND u."role" = 'TEACHER'
-          AND NOT EXISTS (
-              SELECT 1
-              FROM "teacherTimeOff" toff
-              WHERE toff."teacherId" = ta."teacherId"
-                AND toff."startDateTime" < :scheduleEndDateTime
-                AND toff."endDateTime" > :scheduleStartDateTime
-          )
           AND NOT EXISTS (
               SELECT 1
               FROM "schedule" s

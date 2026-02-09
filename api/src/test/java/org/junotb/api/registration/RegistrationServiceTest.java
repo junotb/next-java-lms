@@ -610,6 +610,169 @@ class RegistrationServiceTest {
         then(transactionTemplate).should(never()).execute(any(TransactionCallback.class));
     }
 
+    /**
+     * 시나리오: 강사 1명, 월/수/금 9~18시 가능, 2/11(수)~2/12(목) 휴가.
+     * 수강 신청일 2/10(화) 기준.
+     * 불가: 1개월 월/수/금 9시 1시간 → 수요일 수업이 휴가와 겹쳐 불가.
+     */
+    @Test
+    @DisplayName("registerCourse_VacationOnRequestedDay_MonWedFri_ThenFails - 요청 요일(수)에 휴가가 있으면 수강 신청 불가")
+    void registerCourse_VacationOnRequestedDay_MonWedFri_ThenFails() {
+        String studentId = UUID.randomUUID().toString();
+        String teacherId = UUID.randomUUID().toString();
+        Long courseId = 1L;
+
+        User student = User.builder()
+                .id(studentId)
+                .name("Student")
+                .email("student@test.com")
+                .role(UserRole.STUDENT)
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        Course course = Course.builder()
+                .id(courseId)
+                .title("Java Basics")
+                .build();
+
+        CourseRegistrationRequest request = new CourseRegistrationRequest(
+                courseId,
+                1,
+                List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY),
+                LocalTime.of(9, 0),
+                60
+        );
+
+        LocalDate firstWed = LocalDate.now();
+        while (firstWed.getDayOfWeek() != DayOfWeek.WEDNESDAY) {
+            firstWed = firstWed.plusDays(1);
+        }
+        LocalDateTime wedClassStart = firstWed.atTime(9, 0);
+
+        User teacher = User.builder()
+                .id(teacherId)
+                .name("Teacher")
+                .email("teacher@test.com")
+                .role(UserRole.TEACHER)
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        TeacherTimeOff timeOff = TeacherTimeOff.builder()
+                .id(1L)
+                .teacher(teacher)
+                .startDateTime(wedClassStart.atOffset(ZoneOffset.UTC))
+                .endDateTime(wedClassStart.plusHours(1).atOffset(ZoneOffset.UTC))
+                .type(TeacherTimeOffType.VACATION)
+                .reason("휴가")
+                .build();
+
+        given(userRepository.findById(studentId)).willReturn(Optional.of(student));
+        given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
+        given(teacherAvailabilityRepository.findCandidates(
+                any(), any(), any(), anyLong(), any(), any(), any()
+        )).willReturn(List.of(teacherId));
+        given(scheduleRepository.findAll(any(Specification.class))).willReturn(List.of());
+        given(teacherTimeOffRepository.findOverlappingByTeacherAndRange(
+                anyString(), any(), any()
+        )).willReturn(List.of(timeOff));
+
+        assertThatThrownBy(() -> registrationService.registerCourse(studentId, request))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("No available teacher found");
+
+        then(scheduleRepository).should(never()).saveAll(any());
+        then(registrationRepository).should(never()).save(any(Registration.class));
+    }
+
+    /**
+     * 시나리오: 강사 1명, 월/수/금 9~18시 가능, 2/11(수)~2/12(목) 휴가.
+     * 가능: 1개월 금 9시 1시간 → 금요일만이라 휴가와 겹치지 않음.
+     */
+    @Test
+    @DisplayName("registerCourse_VacationNotOnRequestedDay_FriOnly_ThenSuccess - 요청 요일(금)에 휴가가 없으면 수강 신청 가능")
+    void registerCourse_VacationNotOnRequestedDay_FriOnly_ThenSuccess() throws Exception {
+        String studentId = UUID.randomUUID().toString();
+        String teacherId = UUID.randomUUID().toString();
+        Long courseId = 1L;
+
+        User student = User.builder()
+                .id(studentId)
+                .name("Student")
+                .email("student@test.com")
+                .role(UserRole.STUDENT)
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        User teacher = User.builder()
+                .id(teacherId)
+                .name("Teacher")
+                .email("teacher@test.com")
+                .role(UserRole.TEACHER)
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        Course course = Course.builder()
+                .id(courseId)
+                .title("Java Basics")
+                .build();
+
+        CourseRegistrationRequest request = new CourseRegistrationRequest(
+                courseId,
+                1,
+                List.of(DayOfWeek.FRIDAY),
+                LocalTime.of(9, 0),
+                60
+        );
+
+        LocalDate firstWed = LocalDate.now();
+        while (firstWed.getDayOfWeek() != DayOfWeek.WEDNESDAY) {
+            firstWed = firstWed.plusDays(1);
+        }
+        TeacherTimeOff timeOff = TeacherTimeOff.builder()
+                .id(1L)
+                .teacher(teacher)
+                .startDateTime(firstWed.atTime(9, 0).atOffset(ZoneOffset.UTC))
+                .endDateTime(firstWed.atTime(18, 0).atOffset(ZoneOffset.UTC))
+                .type(TeacherTimeOffType.VACATION)
+                .reason("휴가")
+                .build();
+
+        Registration expectedRegistration = Registration.builder()
+                .id(1L)
+                .student(student)
+                .status(RegistrationStatus.REGISTERED)
+                .build();
+
+        given(redissonClient.getLock(anyString())).willReturn(lock);
+        given(lock.tryLock(anyLong(), anyLong(), any(TimeUnit.class))).willReturn(true);
+        given(lock.isHeldByCurrentThread()).willReturn(true);
+        given(userRepository.findById(studentId)).willReturn(Optional.of(student));
+        given(courseRepository.findById(courseId)).willReturn(Optional.of(course));
+        given(teacherAvailabilityRepository.findCandidates(
+                any(), any(), any(), anyLong(), any(), any(), any()
+        )).willReturn(List.of(teacherId));
+        given(scheduleRepository.findAll(any(Specification.class))).willReturn(List.of());
+        given(teacherTimeOffRepository.findOverlappingByTeacherAndRange(
+                anyString(), any(), any()
+        )).willReturn(List.of(timeOff));
+        given(userRepository.findById(teacherId)).willReturn(Optional.of(teacher));
+        given(scheduleRepository.saveAll(any())).willAnswer(invocation -> {
+            List<Schedule> schedules = invocation.getArgument(0);
+            for (int i = 0; i < schedules.size(); i++) {
+                schedules.get(i).setId((long) (i + 1));
+            }
+            return schedules;
+        });
+        given(registrationRepository.save(any(Registration.class))).willReturn(expectedRegistration);
+
+        Registration result = registrationService.registerCourse(studentId, request);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getStatus()).isEqualTo(RegistrationStatus.REGISTERED);
+        then(scheduleRepository).should().saveAll(any());
+        then(registrationRepository).should().save(any(Registration.class));
+    }
+
     @Test
     @DisplayName("registerCourse_Success_Skip_Busy_Teacher - 강사 A는 바쁘고 강사 B는 가능한 경우 -> 강사 B와 매칭 성공")
     void registerCourse_Success_Skip_Busy_Teacher() throws Exception {
