@@ -2,8 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { BetterError } from "@/types/auth";
 import type {
-  BetterError,
   SignInEmailFormValues,
   SignInEmailRequest,
 } from "@/schema/auth/auth";

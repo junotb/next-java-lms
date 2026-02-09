@@ -1,12 +1,5 @@
 import { create } from "zustand";
-
-type AuthModalType = "signin" | "signup" | null;
-
-interface AuthModalStore {
-  modalType: AuthModalType;
-  openModal: (type: AuthModalType) => void;
-  closeModal: () => void;
-}
+import type { AuthModalStore } from "@/types/store";
 
 export const useAuthModalStore = create<AuthModalStore>((set) => ({
   modalType: null, // 초기값은 닫힘 상태

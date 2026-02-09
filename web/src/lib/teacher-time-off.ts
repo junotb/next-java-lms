@@ -5,8 +5,9 @@ import {
   TeacherTimeOffResponseSchema,
   TeacherTimeOffRequest,
 } from "@/schema/teacher/time-off";
+import { TEACHER_TIME_OFF_BASE_URL } from "@/constants/api";
 
-const BASE_URL = "/api/v1/teachers/me/time-off";
+const BASE_URL = TEACHER_TIME_OFF_BASE_URL;
 
 export async function getTeacherTimeOffList(): Promise<TeacherTimeOffResponse[]> {
   const response = await api.get<TeacherTimeOffResponse[]>(BASE_URL);

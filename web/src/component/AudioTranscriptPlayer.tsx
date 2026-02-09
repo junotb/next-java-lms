@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { parseVtt, type VttCue } from "@/lib/parseVtt";
+import { parseVtt } from "@/lib/parseVtt";
+import type { VttCue } from "@/types/vtt";
 import { Card, CardContent, CardHeader } from "@/component/ui/card";
 import { ScrollArea } from "@/component/ui/scroll-area";
 import { cn } from "@/lib/utils";
