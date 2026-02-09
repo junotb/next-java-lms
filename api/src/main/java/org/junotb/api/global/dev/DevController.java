@@ -25,13 +25,18 @@ public class DevController {
     @GetMapping("/token")
     @Operation(summary = "개발용 토큰 생성", description = "지정된 userId로 유효기간이 긴(1년) 세션 토큰을 생성합니다.")
     public ResponseEntity<Map<String, String>> generateToken(@RequestParam String userId) {
+        String id = UUID.randomUUID().toString();
         String token = UUID.randomUUID().toString();
         OffsetDateTime expiresAt = OffsetDateTime.now().plusYears(1);
+        OffsetDateTime now = OffsetDateTime.now();
 
         Session session = Session.builder()
+            .id(id)
             .token(token)
             .userId(userId)
             .expiresAt(expiresAt)
+            .createdAt(now)
+            .updatedAt(now)
             .build();
 
         sessionRepository.save(session);

@@ -67,3 +67,6 @@ app:
     api-key: ${GOOGLE_GEMINI_API_KEY:}
     model: ${GEMINI_MODEL:gemini-1.5-flash}
     prompt-path: ${PROMPT_FEEDBACK_PATH:config/prompts/feedback.txt}
+  session:
+    expires-in-days: ${SESSION_EXPIRES_IN_DAYS:7}
+    cache-ttl-seconds: ${SESSION_CACHE_TTL_SECONDS:300}

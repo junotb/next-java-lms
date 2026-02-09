@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCookieCache } from "better-auth/cookies";
-
-// 1. 경로별 허용 권한 매핑
-const ROLE_MAP: Record<string, string> = {
-  "/admin": "ADMIN",
-  "/study": "STUDENT",
-  "/teach": "TEACHER",
-};
+import { ROLE_MAP } from "@/constants/auth";
 
 export async function middleware(request: NextRequest) {
   const session = await getCookieCache(request);

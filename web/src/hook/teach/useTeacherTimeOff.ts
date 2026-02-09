@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ApiError } from "@/lib/api";
+import type { ApiError } from "@/types/api";
 import {
   getTeacherTimeOffList,
   createTeacherTimeOff,

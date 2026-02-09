@@ -12,7 +12,6 @@ spring:
       validation-timeout: 3000
       connection-test-query: SELECT 1
 
-
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -27,6 +26,10 @@ spring:
   sql:
     init:
       mode: never
+
+  data:
+    redis:
+      url: redis://localhost:6379
 
 logging:
   level:

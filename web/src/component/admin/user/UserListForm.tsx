@@ -9,17 +9,7 @@ import { Label } from "@/component/ui/label";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
 import { Search, RotateCcw } from "lucide-react";
-
-// 스키마와 UI 표시 이름을 매핑하여 중앙에서 관리합니다.
-const USER_ROLE_NAMES: Record<string, string> = {
-  STUDENT: "학생",
-  TEACHER: "강사",
-  ADMIN: "관리자",
-};
-const USER_STATUS_NAMES: Record<string, string> = {
-  ACTIVE: "활성",
-  INACTIVE: "비활성",
-};
+import { USER_ROLE_NAMES, USER_STATUS_NAMES } from "@/constants/auth";
 
 interface UserListFormProps {
   onSubmit: (data: UserListRequest) => void;

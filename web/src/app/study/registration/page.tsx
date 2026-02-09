@@ -12,7 +12,7 @@ import {
   useCourseList,
   useFindCandidates,
 } from "@/hook/study/useRegistration";
-import type { ApiError } from "@/lib/api";
+import type { ApiError } from "@/types/api";
 import { registerCourse } from "@/lib/registration-api";
 import {
   CourseRegistrationSchema,
@@ -22,18 +22,7 @@ import {
 } from "@/schema/registration";
 import { useRegistrationStore } from "@/store/useRegistrationStore";
 import { useToastStore } from "@/store/useToastStore";
-
-const MONTH_OPTIONS = [1, 3, 6, 12] as const;
-const DURATION_OPTIONS = [30, 45, 60, 90] as const;
-const DAY_LABELS: Record<DayOfWeek, string> = {
-  MONDAY: "월",
-  TUESDAY: "화",
-  WEDNESDAY: "수",
-  THURSDAY: "목",
-  FRIDAY: "금",
-  SATURDAY: "토",
-  SUNDAY: "일",
-};
+import { MONTH_OPTIONS, DURATION_OPTIONS, DAY_LABELS } from "@/constants/registration";
 
 export default function StudyRegistrationPage() {
   const { step, formData, setStep, updateFormData, reset } =

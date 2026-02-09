@@ -4,16 +4,10 @@
  * [Speaker Name] 형식의 화자 라벨을 name 필드로 추출하고, 나머지는 text에 저장.
  */
 
-export interface VttCue {
-  /** 시작 시간 (초) */
-  start: number;
-  /** 종료 시간 (초) */
-  end: number;
-  /** 화자 이름 (예: Speaker 1) */
-  name: string;
-  /** 자막 텍스트 */
-  text: string;
-}
+import type { VttCue } from "@/types/vtt";
+
+// 하위 호환성을 위해 타입 re-export
+export type { VttCue } from "@/types/vtt";
 
 /** VTT 타임코드 (00:00:00.000)를 초로 변환 */
 function parseVttTime(timeStr: string): number {

@@ -3,29 +3,12 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/component/ui/badge";
 import { Button } from "@/component/ui/button";
 import { Pencil } from "lucide-react";
-
-// 스키마와 UI 표시 이름을 매핑하여 중앙에서 관리합니다.
-const USER_ROLE_NAMES: Record<string, string> = {
-  STUDENT: "학생",
-  TEACHER: "강사",
-  ADMIN: "관리자",
-};
-const USER_STATUS_NAMES: Record<string, string> = {
-  ACTIVE: "활성",
-  INACTIVE: "비활성",
-};
-
-// 역할과 상태에 따른 색상 스타일을 매핑하여 관리합니다.
-const USER_ROLE_COLORS: Record<string, string> = {
-  STUDENT: "bg-primary/10 text-primary",
-  TEACHER: "bg-secondary text-secondary-foreground",
-  ADMIN: "bg-accent text-accent-foreground",
-};
-
-const USER_STATUS_COLORS: Record<string, string> = {
-  ACTIVE: "bg-primary/10 text-primary",
-  INACTIVE: "bg-destructive/10 text-destructive",
-};
+import {
+  USER_ROLE_NAMES,
+  USER_STATUS_NAMES,
+  USER_ROLE_COLORS,
+  USER_STATUS_COLORS,
+} from "@/constants/auth";
 
 interface UserListTableProps {
   users: User[];

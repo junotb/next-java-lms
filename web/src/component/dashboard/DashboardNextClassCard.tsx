@@ -7,8 +7,7 @@ import { Button } from "@/component/ui/button";
 import MeetLinkModal from "@/component/teach/MeetLinkModal";
 import type { DashboardNextClass } from "@/schema/dashboard/dashboard";
 import { cn } from "@/lib/utils";
-
-const ENTRY_MINUTES_BEFORE = 10;
+import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
 
 type Role = "STUDENT" | "TEACHER";
 

@@ -43,9 +43,9 @@ public interface TeacherAvailabilityRepository extends JpaRepository<TeacherAvai
      * @param dayStrings 요청 요일 문자열 Set ("MONDAY", "TUESDAY", ... 대문자)
      */
     @Query(value = """
-        SELECT ta."userId"
+        SELECT ta."teacherId"
         FROM "teacherAvailability" ta
-        INNER JOIN "user" u ON u."id" = ta."userId"
+        INNER JOIN "user" u ON u."id" = ta."teacherId"
         WHERE ta."dayOfWeek" IN (:days)
           AND ta."startTime" <= :startTime
           AND ta."endTime" >= :endTime
@@ -54,14 +54,14 @@ public interface TeacherAvailabilityRepository extends JpaRepository<TeacherAvai
           AND NOT EXISTS (
               SELECT 1
               FROM "teacherTimeOff" toff
-              WHERE toff."teacherId" = ta."userId"
+              WHERE toff."teacherId" = ta."teacherId"
                 AND toff."startDateTime" < :scheduleEndDateTime
                 AND toff."endDateTime" > :scheduleStartDateTime
           )
           AND NOT EXISTS (
               SELECT 1
               FROM "schedule" s
-              WHERE s."userId" = ta."userId"
+              WHERE s."userId" = ta."teacherId"
                 AND s."status" <> 'CANCELLED'
                 AND s."startsAt" >= :scheduleStartDateTime
                 AND s."endsAt" <= :scheduleEndDateTime
@@ -69,7 +69,7 @@ public interface TeacherAvailabilityRepository extends JpaRepository<TeacherAvai
                 AND s."endsAt"::time > :startTime
                 AND UPPER(to_char(s."startsAt", 'FMDay')) IN (:dayStrings)
           )
-        GROUP BY ta."userId"
+        GROUP BY ta."teacherId"
         HAVING COUNT(DISTINCT ta."dayOfWeek") = :dayCount
         """, nativeQuery = true)
     List<String> findCandidates(

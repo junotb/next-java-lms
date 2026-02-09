@@ -15,16 +15,7 @@ import { UserStatusSchema } from "@/schema/user/user-status";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
-
-const USER_ROLE_NAMES: Record<string, string> = {
-  STUDENT: "학생",
-  TEACHER: "강사",
-  ADMIN: "관리자",
-};
-const USER_STATUS_NAMES: Record<string, string> = {
-  ACTIVE: "활성",
-  INACTIVE: "비활성",
-};
+import { USER_ROLE_NAMES, USER_STATUS_NAMES } from "@/constants/auth";
 
 interface UserUpdateFormProps {
   user: User;

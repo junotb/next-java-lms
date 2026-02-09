@@ -2,13 +2,6 @@ import { z } from "zod";
 import { UserRole, UserRoleSchema } from "@/schema/user/user-role";
 import { UserStatus, UserStatusSchema } from "@/schema/user/user-status";
 
-export type BetterError = {
-  code?: string | undefined;
-  message?: string | undefined;
-  status: number;
-  statusText: string;
-};
-
 // 이메일 로그인 요청 스키마
 export const SignInEmailRequestSchema = z.object({
   email: z.string().email("유효한 이메일 주소를 입력하세요."),

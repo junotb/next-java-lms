@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  BetterError,
+import type { BetterError } from "@/types/auth";
+import type {
   SignInEmailRequest,
   SignUpEmailRequest,
 } from "@/schema/auth/auth";
@@ -16,18 +16,7 @@ import { authClient } from "@/lib/auth-client";
 import { Dialog, DialogContent } from "@/component/ui/dialog";
 import { Button } from "@/component/ui/button";
 import { cn } from "@/lib/utils";
-
-// 역할(Role)에 따른 로그인 후 리다이렉트 경로 (middleware.ts ROLE_MAP과 일치)
-const roleRedirectMap: Record<string, string> = {
-  STUDENT: "/study",
-  TEACHER: "/teach",
-  ADMIN: "/admin",
-};
-
-const MODAL_TYPES = {
-  SIGN_IN: "signin",
-  SIGN_UP: "signup",
-} as const;
+import { ROLE_REDIRECT_MAP, MODAL_TYPES } from "@/constants/auth";
 
 export default function AuthModalContainer() {
   const [isLoading, setIsLoading] = useState(false);
@@ -65,7 +54,7 @@ export default function AuthModalContainer() {
 
     const { role } = data.user as unknown as { role: string };
 
-    const redirectPath = roleRedirectMap[role] || "/";
+    const redirectPath = ROLE_REDIRECT_MAP[role] || "/";
 
     // 로그인 후 뒤로가기 시 모달이 다시 뜨는 것을 방지하기 위해 push 대신 replace를 사용합니다.
     // 이 방식은 사용자 경험을 향상시킵니다.

@@ -1,13 +1,5 @@
 import { create } from "zustand";
-import type { CourseRegistrationRequest } from "@/schema/registration";
-
-interface RegistrationStore {
-  step: number;
-  formData: Partial<CourseRegistrationRequest>;
-  setStep: (step: number) => void;
-  updateFormData: (data: Partial<CourseRegistrationRequest>) => void;
-  reset: () => void;
-}
+import type { RegistrationStore } from "@/types/store";
 
 const initialState = {
   step: 1,

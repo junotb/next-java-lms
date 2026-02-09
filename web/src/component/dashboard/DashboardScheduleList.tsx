@@ -9,6 +9,7 @@ import { getScheduleStatusName } from "@/lib/schedule";
 import type { DashboardScheduleItem } from "@/schema/dashboard/dashboard";
 import type { ScheduleStatus } from "@/schema/schedule/schedule-status";
 import { cn } from "@/lib/utils";
+import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
 
 type Role = "STUDENT" | "TEACHER";
 
@@ -21,8 +22,6 @@ interface DashboardScheduleListProps {
   /** Student: blue. Teacher: violet */
   variant?: "study" | "teach";
 }
-
-const ENTRY_MINUTES_BEFORE = 10;
 
 const statusVariant: Record<ScheduleStatus, "default" | "secondary" | "destructive" | "outline"> = {
   SCHEDULED: "secondary",
