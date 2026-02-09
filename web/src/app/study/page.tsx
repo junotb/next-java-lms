@@ -43,7 +43,7 @@ export default function StudyDashboardPage() {
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-foreground">내 공부방</h1>
-        <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button asChild className="bg-foreground hover:bg-foreground/90 text-background">
           <Link href="/study/registration" className="flex items-center gap-2">
             <PlusCircle className="size-4" />
             수업 신청하기

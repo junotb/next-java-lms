@@ -39,7 +39,7 @@ export function useFinishLesson(scheduleId: number | null) {
     onSuccess: () => {
       showToast("수업이 종료되었습니다.", "success");
       queryClient.invalidateQueries({ queryKey: ["lesson", "access", scheduleId] });
-      router.push("/admin/schedule");
+      router.push("/teach");
     },
     onError: (err: { message?: string }) => {
       showToast(err?.message ?? "수업 종료에 실패했습니다.", "error");

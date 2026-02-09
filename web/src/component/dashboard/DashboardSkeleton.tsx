@@ -15,8 +15,8 @@ export default function DashboardSkeleton({ variant = "study", className }: Dash
         className={cn(
           "rounded-xl border p-6 min-h-[180px]",
           variant === "teach"
-            ? "border-violet-200 bg-violet-50/50 dark:border-violet-900/30 dark:bg-violet-950/20"
-            : "border-blue-200 bg-blue-50/50 dark:border-blue-900/30 dark:bg-blue-950/20"
+            ? "border-primary/20 bg-primary/5"
+            : "border-secondary bg-secondary/50"
         )}
       >
         <div className="h-5 w-48 rounded bg-muted mb-3" />

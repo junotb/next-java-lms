@@ -54,8 +54,8 @@ export default function DashboardNextClassCard({
 
   const buttonClass =
     variant === "teach"
-      ? "bg-violet-600 hover:bg-violet-700 text-white"
-      : "bg-blue-600 hover:bg-blue-700 text-white";
+      ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+      : "bg-primary hover:bg-primary/90 text-primary-foreground";
 
   if (!schedule) {
     return (
@@ -63,12 +63,12 @@ export default function DashboardNextClassCard({
         className={cn(
           "rounded-xl border p-6 flex flex-col items-center justify-center gap-3 min-h-[180px]",
           variant === "teach"
-            ? "border-violet-200 bg-violet-50 dark:border-violet-900/50 dark:bg-violet-950/30"
-            : "border-blue-200 bg-blue-50 dark:border-blue-900/50 dark:bg-blue-950/30"
+            ? "border-primary/20 bg-primary/5"
+            : "border-secondary bg-secondary/50"
         )}
       >
         <Calendar
-          className={cn("size-10", variant === "teach" ? "text-violet-500" : "text-blue-500")}
+          className={cn("size-10", variant === "teach" ? "text-primary" : "text-secondary-foreground")}
           strokeWidth={1.5}
         />
         <p className="text-sm font-medium text-muted-foreground">예정된 수업이 없습니다</p>
@@ -90,8 +90,8 @@ export default function DashboardNextClassCard({
       className={cn(
         "rounded-xl border p-6 flex flex-col gap-4",
         variant === "teach"
-          ? "border-violet-200 bg-violet-50 dark:border-violet-900/50 dark:bg-violet-950/30"
-          : "border-blue-200 bg-blue-50 dark:border-blue-900/50 dark:bg-blue-950/30"
+          ? "border-primary/20 bg-primary/5"
+          : "border-secondary bg-secondary/50"
       )}
     >
       <div className="flex items-start justify-between gap-4">
@@ -110,7 +110,7 @@ export default function DashboardNextClassCard({
           <p className="text-xs text-muted-foreground">{entryMessage}</p>
         )}
         {isTeacher && !hasMeetLink(schedule) && (
-          <p className="text-xs text-amber-600 dark:text-amber-500">
+          <p className="text-xs text-muted-foreground">
             입장하려면 Meet 링크를 등록해 주세요.
           </p>
         )}

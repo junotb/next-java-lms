@@ -31,7 +31,7 @@ public class LessonFeedback {
     @JoinColumn(name = "\"scheduleId\"", nullable = false)
     private Schedule schedule;
 
-    @Column(name = "\"vttContent\"", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "\"vttContent\"", columnDefinition = "TEXT")
     private String vttContent;
 
     @Column(name = "\"feedbackContent\"", columnDefinition = "TEXT")
@@ -46,6 +46,14 @@ public class LessonFeedback {
 
     @Column(name = "\"updatedAt\"", nullable = false)
     private OffsetDateTime updatedAt;
+
+    public static LessonFeedback createForProcessing(Schedule schedule) {
+        return LessonFeedback.builder()
+            .schedule(schedule)
+            .vttContent(null)
+            .feedbackStatus(LessonFeedbackStatus.PROCESSING)
+            .build();
+    }
 
     public static LessonFeedback create(Schedule schedule, String vttContent) {
         return LessonFeedback.builder()

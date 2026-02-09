@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/component/ui/badge";
 import { Button } from "@/component/ui/button";
+import VideoUploadModal from "@/component/teach/VideoUploadModal";
 import { getScheduleStatusName } from "@/lib/schedule";
 import type { DashboardScheduleItem } from "@/schema/dashboard/dashboard";
 import type { ScheduleStatus } from "@/schema/schedule/schedule-status";
@@ -71,6 +73,7 @@ export default function DashboardScheduleList({
   variant = role === "TEACHER" ? "teach" : "study",
 }: DashboardScheduleListProps) {
   const router = useRouter();
+  const [videoUploadScheduleId, setVideoUploadScheduleId] = useState<number | null>(null);
   const isTeacher = role === "TEACHER";
 
   const handleEnter = (scheduleId: number) => {
@@ -108,8 +111,8 @@ export default function DashboardScheduleList({
                     : "";
                   const otherName = isTeacher ? row.studentName : row.instructorName;
                   const buttonClass = variant === "teach"
-                    ? "bg-violet-600 hover:bg-violet-700 text-white"
-                    : "bg-blue-600 hover:bg-blue-700 text-white";
+                    ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground";
 
                   return (
                     <tr key={row.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
@@ -128,7 +131,7 @@ export default function DashboardScheduleList({
                         {otherName ?? "-"}
                       </td>
                       <td className="p-3">
-                        <div className="flex justify-end">
+                        <div className="flex justify-end gap-1">
                           {isScheduled ? (
                             <Button
                               size="sm"
@@ -140,7 +143,26 @@ export default function DashboardScheduleList({
                               입장
                             </Button>
                           ) : (
-                            <span className="text-xs text-muted-foreground">완료</span>
+                            <>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-xs"
+                                onClick={() => router.push(`/feedback/${row.id}`)}
+                              >
+                                피드백
+                              </Button>
+                              {isTeacher && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="text-xs"
+                                  onClick={() => setVideoUploadScheduleId(row.id)}
+                                >
+                                  영상
+                                </Button>
+                              )}
+                            </>
                           )}
                         </div>
                       </td>
@@ -152,6 +174,14 @@ export default function DashboardScheduleList({
           </div>
         )}
       </div>
+
+      {isTeacher && videoUploadScheduleId != null && (
+        <VideoUploadModal
+          open={true}
+          onOpenChange={(open) => !open && setVideoUploadScheduleId(null)}
+          scheduleId={videoUploadScheduleId}
+        />
+      )}
     </section>
   );
 }

@@ -26,7 +26,7 @@ export default function MeetLinkArea({ meetLink }: MeetLinkAreaProps) {
           </p>
           <Button
             asChild
-            className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="gap-2 bg-foreground hover:bg-foreground/90 text-background"
           >
             <a href={meetLink} target="_blank" rel="noopener noreferrer">
               Google Meet 참가

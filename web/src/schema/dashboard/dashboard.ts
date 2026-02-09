@@ -3,7 +3,7 @@ import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
 
 export const ScheduleSummarySchema = z.object({
   id: z.number(),
-  userId: z.string(),
+  userId: z.string().nullable().optional(),
   courseId: z.number().nullable().optional(),
   courseTitle: z.string().nullable().optional(),
   startsAt: z.string(),
@@ -37,14 +37,15 @@ export const StudyDashboardResponseSchema = z.object({
 });
 
 export const TeachDashboardStatsSchema = z.object({
-  todayClassCount: z.number(),
-  upcomingClassCount: z.number(),
+  todayClassCount: z.coerce.number(),
+  upcomingClassCount: z.coerce.number(),
 });
 
 export const TeachDashboardResponseSchema = z.object({
   nextClass: DashboardNextClassSchema.nullable(),
   stats: TeachDashboardStatsSchema,
-  todaySchedules: z.array(ScheduleSummarySchema),
+  todaySchedules: z.array(ScheduleSummarySchema).default([]),
+  recentCompletedSchedules: z.array(ScheduleSummarySchema).optional().default([]),
 });
 
 export type DashboardNextClass = z.infer<typeof DashboardNextClassSchema>;

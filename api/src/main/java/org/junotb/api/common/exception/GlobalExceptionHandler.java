@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
     /**
      * 비즈니스 로직 오류 (400 Bad Request 또는 409 Conflict)
      */
-    @ExceptionHandler({CustomException.class, IllegalStateException.class})
+    @ExceptionHandler({CustomException.class, IllegalStateException.class, IllegalArgumentException.class})
     public ResponseEntity<ErrorResponse> handleBusinessException(RuntimeException ex) {
         // CustomException은 409, IllegalStateException은 400으로 처리
         HttpStatus status = ex instanceof CustomException
