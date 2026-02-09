@@ -27,6 +27,8 @@ dependencies {
     implementation("me.paulschwarz:spring-dotenv:3.0.0")
     implementation("org.redisson:redisson-spring-boot-starter:3.37.0")
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
+    implementation("com.google.cloud:google-cloud-speech:4.55.0")
+    implementation("com.google.genai:google-genai:1.38.0")
     runtimeOnly("org.postgresql:postgresql")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

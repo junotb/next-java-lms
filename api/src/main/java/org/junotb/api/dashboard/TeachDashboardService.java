@@ -38,6 +38,7 @@ public class TeachDashboardService {
             return new TeachDashboardResponse(
                 null,
                 new TeachDashboardResponse.TeachDashboardStats(0L, 0L),
+                Collections.emptyList(),
                 Collections.emptyList()
             );
         }
@@ -103,20 +104,60 @@ public class TeachDashboardService {
                 })
                 .collect(Collectors.toList());
 
+            List<ScheduleSummaryResponse> recentCompletedSchedules = findRecentCompletedSchedules(teacherId);
+
             TeachDashboardResponse.TeachDashboardStats stats =
                 new TeachDashboardResponse.TeachDashboardStats(todayClassCount, upcomingClassCount);
 
-            log.info("getDashboard: FINISH - nextClass={}, stats={}, todaySchedules.size={}", 
-                nextClass != null ? "exists" : "null", stats, todaySchedules.size());
-            
-            return new TeachDashboardResponse(nextClass, stats, todaySchedules);
+            log.info("getDashboard: FINISH - nextClass={}, stats={}, todaySchedules.size={}, recentCompleted.size={}",
+                nextClass != null ? "exists" : "null", stats, todaySchedules.size(), recentCompletedSchedules.size());
+
+            return new TeachDashboardResponse(nextClass, stats, todaySchedules, recentCompletedSchedules);
         } catch (Exception e) {
             log.error("Error in getDashboard for teacherId={}", teacherId, e);
             return new TeachDashboardResponse(
                 null,
                 new TeachDashboardResponse.TeachDashboardStats(0L, 0L),
+                Collections.emptyList(),
                 Collections.emptyList()
             );
+        }
+    }
+
+    private List<ScheduleSummaryResponse> findRecentCompletedSchedules(String teacherId) {
+        try {
+            List<Schedule> list = scheduleRepository.findRecentCompletedSchedulesForTeacher(
+                teacherId, PageRequest.of(0, 10)
+            );
+            if (list == null) return Collections.emptyList();
+            return list.stream()
+                .filter(s -> s != null)
+                .map(schedule -> {
+                    ScheduleSummaryResponse base = ScheduleSummaryResponse.from(schedule);
+                    String studentName = null;
+                    try {
+                        var registrations = registrationRepository.findByScheduleIdOrderByRegisteredAtDesc(schedule.getId());
+                        if (registrations != null) {
+                            studentName = registrations.stream()
+                                .filter(r -> r != null && r.getStatus() == RegistrationStatus.REGISTERED)
+                                .filter(r -> r.getStudent() != null)
+                                .findFirst()
+                                .map(r -> r.getStudent().getName())
+                                .orElse(null);
+                        }
+                    } catch (Exception e) {
+                        log.debug("Error fetching student name for scheduleId={}", schedule.getId(), e);
+                    }
+                    return new ScheduleSummaryResponse(
+                        base.id(), base.userId(), base.courseId(), base.courseTitle(),
+                        base.startsAt(), base.endsAt(), base.status(),
+                        base.createdAt(), base.updatedAt(), base.instructorName(), studentName
+                    );
+                })
+                .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.warn("Error fetching recent completed schedules for teacherId={}", teacherId, e);
+            return Collections.emptyList();
         }
     }
 

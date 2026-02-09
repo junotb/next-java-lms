@@ -27,6 +27,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // /feedback: 강사 또는 학생만 접근 (세션 필수)
+  if (pathname.startsWith("/feedback")) {
+    if (!session) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    const role = session.user.role;
+    if (role !== "TEACHER" && role !== "STUDENT") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
@@ -43,5 +54,6 @@ export const config = {
     "/admin/:path*",
     "/study/:path*",
     "/teach/:path*",
+    "/feedback/:path*",
   ],
 };

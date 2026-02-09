@@ -71,7 +71,7 @@ export default function LessonController({
               type="button"
               variant="default"
               size="sm"
-              className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="gap-2 bg-foreground hover:bg-foreground/90 text-background"
               onClick={handleFinishClick}
               disabled={finishMutation.isPending}
             >
@@ -111,7 +111,7 @@ export default function LessonController({
             </Button>
             <Button
               type="button"
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-foreground hover:bg-foreground/90 text-background"
               onClick={handleConfirmFinish}
               disabled={finishMutation.isPending}
             >

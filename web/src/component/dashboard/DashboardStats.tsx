@@ -21,7 +21,9 @@ export default function DashboardStats({
   variant = "study",
   className,
 }: DashboardStatsProps) {
-  const iconBg = variant === "teach" ? "bg-violet-100 text-violet-600 dark:bg-violet-900/50 dark:text-violet-400" : "bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400";
+  const iconBg = variant === "teach" 
+    ? "bg-primary/10 text-primary" 
+    : "bg-secondary text-secondary-foreground";
 
   return (
     <div className={cn("grid grid-cols-2 gap-4 md:grid-cols-3", className)}>

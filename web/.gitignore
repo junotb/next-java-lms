@@ -33,6 +33,15 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# prompts (Gemini 등, Git 노출 금지)
+prompts/
+
+# GCP (서비스 계정 키, 인증 정보)
+gcp*.json
+*-credentials.json
+service-account*.json
+credentials/
+
 # vercel
 .vercel
 

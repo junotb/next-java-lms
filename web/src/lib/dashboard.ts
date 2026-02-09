@@ -12,6 +12,13 @@ export async function getStudyDashboard(): Promise<StudyDashboardResponse> {
 }
 
 export async function getTeachDashboard(): Promise<TeachDashboardResponse> {
-  const response = await api.get<TeachDashboardResponse>("/api/v1/teach/dashboard");
-  return TeachDashboardResponseSchema.parse(response.data);
+  const response = await api.get<unknown>("/api/v1/teach/dashboard");
+  const parsed = TeachDashboardResponseSchema.safeParse(response.data);
+  if (!parsed.success) {
+    console.error("[getTeachDashboard] Schema validation failed:", parsed.error.format());
+    throw new Error(
+      `대시보드 응답 형식 오류: ${parsed.error.issues.map((i) => i.message).join(", ")}`
+    );
+  }
+  return parsed.data;
 }

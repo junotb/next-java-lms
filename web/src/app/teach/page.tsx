@@ -9,7 +9,7 @@ import DashboardScheduleList from "@/component/dashboard/DashboardScheduleList";
 import DashboardSkeleton from "@/component/dashboard/DashboardSkeleton";
 
 export default function TeachDashboardPage() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["teach", "dashboard"],
     queryFn: getTeachDashboard,
   });
@@ -26,7 +26,19 @@ export default function TeachDashboardPage() {
   if (!data) {
     return (
       <div className="container mx-auto py-8 px-4 max-w-4xl">
-        <p className="text-muted-foreground">데이터를 불러올 수 없습니다.</p>
+        <h1 className="text-2xl font-bold text-foreground mb-6">관리 모드</h1>
+        <p className="text-muted-foreground mb-4">
+          {isError ? "데이터를 불러오는 중 오류가 발생했습니다." : "데이터를 불러올 수 없습니다."}
+        </p>
+        {isError && (
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90"
+          >
+            다시 시도
+          </button>
+        )}
       </div>
     );
   }
@@ -57,6 +69,13 @@ export default function TeachDashboardPage() {
           role="TEACHER"
           variant="teach"
           emptyMessage="오늘 예정된 수업이 없습니다."
+        />
+        <DashboardScheduleList
+          title="최근 완료 수업"
+          schedules={data.recentCompletedSchedules ?? []}
+          role="TEACHER"
+          variant="teach"
+          emptyMessage="최근 완료한 수업이 없습니다."
         />
       </div>
     </div>

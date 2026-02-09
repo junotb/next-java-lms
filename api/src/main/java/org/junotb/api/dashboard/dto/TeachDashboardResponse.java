@@ -8,7 +8,8 @@ import java.util.List;
 public record TeachDashboardResponse(
     DashboardNextClassResponse nextClass,
     TeachDashboardStats stats,
-    List<ScheduleSummaryResponse> todaySchedules
+    List<ScheduleSummaryResponse> todaySchedules,
+    List<ScheduleSummaryResponse> recentCompletedSchedules
 ) {
     public record TeachDashboardStats(
         long todayClassCount,

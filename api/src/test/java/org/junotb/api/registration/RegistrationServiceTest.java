@@ -345,6 +345,25 @@ class RegistrationServiceTest {
     }
 
     @Test
+    @DisplayName("register_whenLockAcquisitionTimeout_thenThrowException")
+    void register_whenLockAcquisitionTimeout_thenThrowException() throws Exception {
+        // given
+        Long scheduleId = 1L;
+        String studentId = UUID.randomUUID().toString();
+
+        given(redissonClient.getLock(anyString())).willReturn(lock);
+        given(lock.tryLock(anyLong(), anyLong(), any(TimeUnit.class))).willReturn(false);
+
+        // when & then
+        assertThatThrownBy(() -> registrationService.register(scheduleId, studentId))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("Failed to acquire lock");
+
+        then(transactionTemplate).should(never()).execute(any(TransactionCallback.class));
+        then(registrationRepository).should(never()).save(any(Registration.class));
+    }
+
+    @Test
     @DisplayName("cancel_whenRegistrationExists_thenSuccess")
     void cancel_whenRegistrationExists_thenSuccess() {
         // given
@@ -855,5 +874,64 @@ class RegistrationServiceTest {
         then(transactionTemplate).should(never()).execute(any(TransactionCallback.class));
         then(scheduleRepository).should(never()).saveAll(any());
         then(registrationRepository).should(never()).save(any(Registration.class));
+    }
+
+    @Test
+    @DisplayName("registerCourse_whenStudentNotFound_thenThrowException")
+    void registerCourse_whenStudentNotFound_thenThrowException() {
+        // given
+        String studentId = UUID.randomUUID().toString();
+        Long courseId = 1L;
+        CourseRegistrationRequest request = new CourseRegistrationRequest(
+            courseId,
+            1,
+            List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY),
+            LocalTime.of(14, 0),
+            60
+        );
+
+        given(userRepository.findById(studentId)).willReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> registrationService.registerCourse(studentId, request))
+            .isInstanceOf(EntityNotFoundException.class)
+            .hasMessageContaining("Student not found");
+
+        then(redissonClient).should(never()).getLock(anyString());
+        then(scheduleRepository).should(never()).saveAll(any());
+    }
+
+    @Test
+    @DisplayName("registerCourse_whenCourseNotFound_thenThrowException")
+    void registerCourse_whenCourseNotFound_thenThrowException() {
+        // given
+        String studentId = UUID.randomUUID().toString();
+        Long courseId = 999L;
+        CourseRegistrationRequest request = new CourseRegistrationRequest(
+            courseId,
+            1,
+            List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY),
+            LocalTime.of(14, 0),
+            60
+        );
+
+        User student = User.builder()
+            .id(studentId)
+            .name("Student")
+            .email("student@test.com")
+            .role(UserRole.STUDENT)
+            .status(UserStatus.ACTIVE)
+            .build();
+
+        given(userRepository.findById(studentId)).willReturn(Optional.of(student));
+        given(courseRepository.findById(courseId)).willReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> registrationService.registerCourse(studentId, request))
+            .isInstanceOf(EntityNotFoundException.class)
+            .hasMessageContaining("Course not found");
+
+        then(redissonClient).should(never()).getLock(anyString());
+        then(scheduleRepository).should(never()).saveAll(any());
     }
 }

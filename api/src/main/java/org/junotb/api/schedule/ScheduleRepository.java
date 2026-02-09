@@ -110,4 +110,19 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long>, JpaSp
         WHERE s.user.id = :teacherId AND s.status = 'SCHEDULED' AND s.endsAt > :now
         """)
     long countUpcomingByTeacherId(@Param("teacherId") String teacherId, @Param("now") OffsetDateTime now);
+
+    /**
+     * 강사용: 최근 완료 수업 (ATTENDED 또는 ABSENT, endsAt 기준 내림차순)
+     */
+    @Query("""
+        SELECT s FROM Schedule s
+        LEFT JOIN FETCH s.user
+        LEFT JOIN FETCH s.course
+        WHERE s.user.id = :teacherId AND (s.status = 'ATTENDED' OR s.status = 'ABSENT')
+        ORDER BY s.endsAt DESC
+        """)
+    List<Schedule> findRecentCompletedSchedulesForTeacher(
+        @Param("teacherId") String teacherId,
+        Pageable pageable
+    );
 }
