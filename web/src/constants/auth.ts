@@ -1,5 +1,5 @@
-import type { UserRole } from "@/schema/user/user-role";
-import type { UserStatus } from "@/schema/user/user-status";
+import type { UserRole } from "@/schemas/user/user-role";
+import type { UserStatus } from "@/schemas/user/user-status";
 
 /**
  * 경로별 허용 권한 매핑 (middleware.ts에서 사용)

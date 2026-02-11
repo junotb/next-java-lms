@@ -14,8 +14,8 @@ import {
   CourseListRequest,
   CourseCreateRequest,
   CourseUpdateRequest,
-} from "@/schema/course/course";
-import { CourseStatus } from "@/schema/course/course-status";
+} from "@/schemas/course/course";
+import { CourseStatus } from "@/schemas/course/course-status";
 
 // 강의 목록 조회
 export function useCourseList(request: CourseListRequest) {

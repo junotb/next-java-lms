@@ -1,5 +1,5 @@
 import api from "@/lib/api";
-import { PageResponseSchema } from "@/schema/common/page-response";
+import { PageResponseSchema } from "@/schemas/common/page-response";
 import {
   Schedule,
   ScheduleSchema,
@@ -7,8 +7,8 @@ import {
   ScheduleUpdateRequest,
   ScheduleListRequest,
   ScheduleMeetLinkRequest,
-} from "@/schema/schedule/schedule";
-import { ScheduleStatus } from "@/schema/schedule/schedule-status";
+} from "@/schemas/schedule/schedule";
+import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 
 // 스케줄 목록 조회
 export async function scheduleList(params: ScheduleListRequest): Promise<Schedule[]> {

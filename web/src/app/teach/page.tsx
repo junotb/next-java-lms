@@ -3,10 +3,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, CalendarRange, ListTodo } from "lucide-react";
 import { getTeachDashboard } from "@/lib/dashboard";
-import DashboardNextClassCard from "@/component/dashboard/DashboardNextClassCard";
-import DashboardStats, { type DashboardStatItem } from "@/component/dashboard/DashboardStats";
-import DashboardScheduleList from "@/component/dashboard/DashboardScheduleList";
-import DashboardSkeleton from "@/component/dashboard/DashboardSkeleton";
+import DashboardNextClassCard from "@/components/dashboard/DashboardNextClassCard";
+import DashboardStats, { type DashboardStatItem } from "@/components/dashboard/DashboardStats";
+import DashboardScheduleList from "@/components/dashboard/DashboardScheduleList";
+import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
 
 export default function TeachDashboardPage() {
   const { data, isLoading, isError, refetch } = useQuery({

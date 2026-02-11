@@ -2,7 +2,7 @@
  * Zustand Store 관련 타입 정의
  */
 
-import type { CourseRegistrationRequest } from "@/schema/registration";
+import type { CourseRegistrationRequest } from "@/schemas/registration";
 
 // Toast Store
 export type ToastType = "success" | "error" | "info";

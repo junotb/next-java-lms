@@ -4,7 +4,7 @@ import {
   TeachDashboardResponseSchema,
   type StudyDashboardResponse,
   type TeachDashboardResponse,
-} from "@/schema/dashboard/dashboard";
+} from "@/schemas/dashboard/dashboard";
 
 export async function getStudyDashboard(): Promise<StudyDashboardResponse> {
   const response = await api.get<StudyDashboardResponse>("/api/v1/study/dashboard");

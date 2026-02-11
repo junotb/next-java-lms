@@ -3,13 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   CourseListRequest,
   CourseListFormValues,
-} from "@/schema/course/course";
-import { CourseListRequestSchema } from "@/schema/course/course";
-import { CourseStatus, CourseStatusSchema } from "@/schema/course/course-status";
+} from "@/schemas/course/course";
+import { CourseListRequestSchema } from "@/schemas/course/course";
+import { CourseStatus, CourseStatusSchema } from "@/schemas/course/course-status";
 import { COURSE_STATUS_LABELS } from "@/constants/course";
-import { Input } from "@/component/ui/input";
-import { Label } from "@/component/ui/label";
-import { Button } from "@/component/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Search, RotateCcw } from "lucide-react";
 

@@ -7,7 +7,7 @@ import type {
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
-import { Label } from "@/component/ui/label";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 interface SelectFieldProps<T extends FieldValues> {

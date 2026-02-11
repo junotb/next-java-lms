@@ -2,8 +2,8 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { scheduleMeetLinkUpdate } from "@/lib/schedule";
-import type { ScheduleMeetLinkRequest } from "@/schema/schedule/schedule";
-import { useToastStore } from "@/store/useToastStore";
+import type { ScheduleMeetLinkRequest } from "@/schemas/schedule/schedule";
+import { useToastStore } from "@/stores/useToastStore";
 
 /**
  * 강사 전용. Meet 링크 등록/수정 mutation.

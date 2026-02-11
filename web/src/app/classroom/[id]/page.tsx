@@ -1,10 +1,10 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import Loader from "@/component/common/Loader";
-import MeetLinkArea from "@/component/classroom/MeetLinkArea";
-import LessonController from "@/component/classroom/LessonController";
-import { useLessonAccess } from "@/hook/useLesson";
+import ClassroomSkeleton from "@/components/classroom/ClassroomSkeleton";
+import MeetLinkArea from "@/components/classroom/MeetLinkArea";
+import LessonController from "@/components/classroom/LessonController";
+import { useLessonAccess } from "@/hooks/useLesson";
 
 export default function ClassroomPage() {
   const params = useParams();
@@ -22,11 +22,7 @@ export default function ClassroomPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex-1 flex items-center justify-center bg-zinc-950">
-        <Loader />
-      </div>
-    );
+    return <ClassroomSkeleton />;
   }
 
   if (isError || !data) {

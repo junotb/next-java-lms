@@ -1,17 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/component/ui/button";
-import { Input } from "@/component/ui/input";
+import Loader from "@/components/common/Loader";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/component/ui/dialog";
-import { useMeetLinkUpdate } from "@/hook/teach/useMeetLink";
+} from "@/components/ui/dialog";
+import { useMeetLinkUpdate } from "@/hooks/teach/useMeetLink";
 
 interface MeetLinkModalProps {
   open: boolean;
@@ -80,7 +80,7 @@ export default function MeetLinkModal({
             >
               {mutation.isPending ? (
                 <>
-                  <Loader2 className="animate-spin" />
+                  <Loader variant="inline" />
                   저장 중...
                 </>
               ) : (

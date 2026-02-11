@@ -6,9 +6,9 @@ import {
   TeacherAvailabilityFormValues,
   TeacherAvailabilityResponse,
   DayAvailability,
-} from "@/schema/teacher/teacher-availability";
-import { ALL_DAYS_OF_WEEK, DayOfWeek } from "@/schema/common/day-of-week";
-import { useToastStore } from "@/store/useToastStore";
+} from "@/schemas/teacher/teacher-availability";
+import { ALL_DAYS_OF_WEEK, DayOfWeek } from "@/schemas/common/day-of-week";
+import { useToastStore } from "@/stores/useToastStore";
 
 /**
  * 강사 가용 시간 설정 조회

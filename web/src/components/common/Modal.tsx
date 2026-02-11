@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/component/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface ModalProps {
   children: React.ReactNode;

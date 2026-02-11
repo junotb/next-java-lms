@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import UserListForm from "@/component/admin/user/UserListForm";
-import UserInfoCard from "@/component/admin/user/UserInfoCard";
-import UserListTable from "@/component/admin/user/UserListTable";
-import Loader from "@/component/common/Loader";
-import Modal from "@/component/common/Modal";
-import { useUserList } from "@/hook/admin/useUser";
-import { UserListRequest } from "@/schema/user/user";
-import { Button } from "@/component/ui/button";
+import UserListForm from "@/components/admin/user/UserListForm";
+import UserInfoCard from "@/components/admin/user/UserInfoCard";
+import UserListTable from "@/components/admin/user/UserListTable";
+import ListTableSkeleton from "@/components/admin/ListTableSkeleton";
+import Modal from "@/components/common/Modal";
+import { useUserList } from "@/hooks/admin/useUser";
+import { UserListRequest } from "@/schemas/user/user";
+import { Button } from "@/components/ui/button";
 
 export default function AdminUsersPage() {
   const [request, setRequest] = useState<UserListRequest>({
@@ -65,7 +65,7 @@ export default function AdminUsersPage() {
 
         <div className="flex-1 flex flex-col gap-4">
           {isLoading ? (
-            <Loader />
+            <ListTableSkeleton columnCount={5} rowCount={8} />
           ) : error ? (
             <p className="text-center text-destructive">
               사용자 목록을 불러오는 중 오류가 발생했습니다.

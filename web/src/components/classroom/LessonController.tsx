@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { LogOut, CheckCircle } from "lucide-react";
-import { Button } from "@/component/ui/button";
+import Loader from "@/components/common/Loader";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/component/ui/dialog";
-import { useFinishLesson } from "@/hook/useLesson";
+} from "@/components/ui/dialog";
+import { useFinishLesson } from "@/hooks/useLesson";
 
 interface LessonControllerProps {
   scheduleId: number;
@@ -75,7 +76,11 @@ export default function LessonController({
               onClick={handleFinishClick}
               disabled={finishMutation.isPending}
             >
-              <CheckCircle className="size-4" />
+              {finishMutation.isPending ? (
+                <Loader variant="inline" />
+              ) : (
+                <CheckCircle className="size-4" />
+              )}
               수업 종료
             </Button>
           )}
@@ -111,10 +116,13 @@ export default function LessonController({
             </Button>
             <Button
               type="button"
-              className="bg-foreground hover:bg-foreground/90 text-background"
+              className="gap-2 bg-foreground hover:bg-foreground/90 text-background"
               onClick={handleConfirmFinish}
               disabled={finishMutation.isPending}
             >
+              {finishMutation.isPending ? (
+                <Loader variant="inline" />
+              ) : null}
               수업 종료
             </Button>
           </div>

@@ -4,7 +4,7 @@ import {
   TeacherTimeOffResponse,
   TeacherTimeOffResponseSchema,
   TeacherTimeOffRequest,
-} from "@/schema/teacher/time-off";
+} from "@/schemas/teacher/time-off";
 import { TEACHER_TIME_OFF_BASE_URL } from "@/constants/api";
 
 const BASE_URL = TEACHER_TIME_OFF_BASE_URL;

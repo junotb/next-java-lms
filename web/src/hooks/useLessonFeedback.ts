@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { uploadLessonVideo, getLessonFeedback } from "@/lib/lesson";
-import { useToastStore } from "@/store/useToastStore";
+import { useToastStore } from "@/stores/useToastStore";
 
 export function useVideoUpload(scheduleId: number | null) {
   const queryClient = useQueryClient();

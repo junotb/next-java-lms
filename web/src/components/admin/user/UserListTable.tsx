@@ -1,7 +1,7 @@
-import { User } from "@/schema/user/user";
+import { User } from "@/schemas/user/user";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/component/ui/badge";
-import { Button } from "@/component/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import {
   USER_ROLE_NAMES,

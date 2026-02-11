@@ -7,8 +7,8 @@ import type {
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
-import { Textarea } from "@/component/ui/textarea";
-import { Label } from "@/component/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 interface TextareaFieldProps<T extends FieldValues> {

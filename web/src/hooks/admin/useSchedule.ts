@@ -2,8 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { scheduleList, scheduleInfo, scheduleCreate, scheduleUpdate, scheduleDelete, scheduleStatusStats } from "@/lib/schedule";
-import { Schedule, ScheduleListRequest, ScheduleCreateRequest, ScheduleUpdateRequest } from "@/schema/schedule/schedule";
-import { ScheduleStatus } from "@/schema/schedule/schedule-status";
+import { Schedule, ScheduleListRequest, ScheduleCreateRequest, ScheduleUpdateRequest } from "@/schemas/schedule/schedule";
+import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 
 // 스케줄 목록 조회
 export function useScheduleList(request: ScheduleListRequest) {

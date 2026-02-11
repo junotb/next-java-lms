@@ -1,8 +1,8 @@
 "use client";
 
-import AuthModalContainer from "@/component/auth/AuthModalContainer";
-import { useAuthModalStore } from "@/store/useAuthModalStore";
-import { Button } from "@/component/ui/button";
+import AuthModalContainer from "@/components/auth/AuthModalContainer";
+import { useAuthModalStore } from "@/stores/useAuthModalStore";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function LandingPage() {

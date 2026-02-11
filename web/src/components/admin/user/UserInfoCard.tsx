@@ -1,19 +1,19 @@
 "use client";
 
-import Loader from "@/component/common/Loader";
-import UserCreateForm from "@/component/admin/user/UserCreateForm";
-import UserUpdateForm from "@/component/admin/user/UserUpdateForm";
+import Loader from "@/components/common/Loader";
+import UserCreateForm from "@/components/admin/user/UserCreateForm";
+import UserUpdateForm from "@/components/admin/user/UserUpdateForm";
 import {
   useUserProfile,
   useUserCreate,
   useUserProfileUpdate,
   useUserDelete,
-} from "@/hook/admin/useUser";
+} from "@/hooks/admin/useUser";
 import {
   UserCreateRequest,
   UserProfileUpdateRequest,
-} from "@/schema/user/user";
-import { Card, CardContent, CardHeader, CardTitle } from "@/component/ui/card";
+} from "@/schemas/user/user";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface UserInfoCardProps {
   userId: string | null;

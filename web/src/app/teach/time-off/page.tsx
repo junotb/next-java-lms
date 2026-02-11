@@ -1,6 +1,6 @@
 "use client";
 
-import TimeOffManager from "@/component/teach/TimeOffManager";
+import TimeOffManager from "@/components/teach/TimeOffManager";
 
 export default function TimeOffPage() {
   return (

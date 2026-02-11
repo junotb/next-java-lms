@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { LogIn, BookOpen } from "lucide-react";
-import { useAuthModalStore } from "@/store/useAuthModalStore";
+import { useAuthModalStore } from "@/stores/useAuthModalStore";
 import { authClient } from "@/lib/auth-client";
-import { Button } from "@/component/ui/button";
-import HeaderUserMenu from "@/component/common/HeaderUserMenu";
+import { Button } from "@/components/ui/button";
+import HeaderUserMenu from "@/components/common/HeaderUserMenu";
 
 export default function LandingHeader() {
   const { openModal } = useAuthModalStore();

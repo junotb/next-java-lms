@@ -6,10 +6,10 @@ import type { BetterError } from "@/types/auth";
 import type {
   SignInEmailFormValues,
   SignInEmailRequest,
-} from "@/schema/auth/auth";
-import { SignInEmailRequestSchema } from "@/schema/auth/auth";
-import InputField from "@/component/common/InputField";
-import { Button } from "@/component/ui/button";
+} from "@/schemas/auth/auth";
+import { SignInEmailRequestSchema } from "@/schemas/auth/auth";
+import InputField from "@/components/common/InputField";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface SignInFormProps {

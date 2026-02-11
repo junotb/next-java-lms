@@ -1,8 +1,8 @@
-import { Course } from "@/schema/course/course";
+import { Course } from "@/schemas/course/course";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/component/ui/badge";
-import { Button } from "@/component/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { COURSE_STATUS_LABELS, COURSE_STATUS_COLORS } from "@/constants/course";
 

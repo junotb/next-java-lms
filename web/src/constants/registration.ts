@@ -1,4 +1,4 @@
-import { DayOfWeek } from "@/schema/common/day-of-week";
+import { DayOfWeek } from "@/schemas/common/day-of-week";
 
 /**
  * 수강 기간 옵션 (개월)

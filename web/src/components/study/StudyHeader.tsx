@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
-import HeaderUserMenu from "@/component/common/HeaderUserMenu";
+import HeaderUserMenu from "@/components/common/HeaderUserMenu";
 
 export default function StudyHeader() {
   const pathname = usePathname();

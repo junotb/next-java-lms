@@ -3,15 +3,16 @@
 import { useMutation } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { useCallback, useMemo } from "react";
-import { Button } from "@/component/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/component/ui/card";
-import { Input } from "@/component/ui/input";
-import { Label } from "@/component/ui/label";
-import { Badge } from "@/component/ui/badge";
+import Loader from "@/components/common/Loader";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import {
   useCourseList,
   useFindCandidates,
-} from "@/hook/study/useRegistration";
+} from "@/hooks/study/useRegistration";
 import type { ApiError } from "@/types/api";
 import { registerCourse } from "@/lib/registration-api";
 import {
@@ -19,9 +20,9 @@ import {
   DAYS_OF_WEEK,
   type CourseRegistrationRequest,
   type DayOfWeek,
-} from "@/schema/registration";
-import { useRegistrationStore } from "@/store/useRegistrationStore";
-import { useToastStore } from "@/store/useToastStore";
+} from "@/schemas/registration";
+import { useRegistrationStore } from "@/stores/useRegistrationStore";
+import { useToastStore } from "@/stores/useToastStore";
 import { MONTH_OPTIONS, DURATION_OPTIONS, DAY_LABELS } from "@/constants/registration";
 
 export default function StudyRegistrationPage() {
@@ -316,7 +317,10 @@ function Step3({
         formData.durationMinutes > 0 && (
           <div className="flex items-center gap-2">
             {candidatesLoading ? (
-              <span className="text-sm text-muted-foreground">확인 중…</span>
+              <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader variant="inline" />
+                확인 중…
+              </span>
             ) : candidates.length > 0 ? (
               <Badge className="bg-primary/10 text-primary hover:bg-primary/10">
                 신청 가능
@@ -387,8 +391,16 @@ function Step4({
           type="button"
           onClick={onSubmit}
           disabled={isSubmitting}
+          className="gap-2"
         >
-          {isSubmitting ? "처리 중…" : "신청하기"}
+          {isSubmitting ? (
+            <>
+              <Loader variant="inline" />
+              처리 중…
+            </>
+          ) : (
+            "신청하기"
+          )}
         </Button>
         {is429 && (
           <Button

@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { LogOut, User } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { Button } from "@/component/ui/button";
+import { Button } from "@/components/ui/button";
 import { ROLE_REDIRECT_MAP } from "@/constants/auth";
-import type { UserRole } from "@/schema/user/user-role";
+import type { UserRole } from "@/schemas/user/user-role";
 
 interface HeaderUserMenuProps {
   user: {

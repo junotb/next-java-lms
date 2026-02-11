@@ -1,17 +1,17 @@
 "use client";
 
 import { BookOpen, DoorOpen, Lock } from "lucide-react";
-import { useCourseStatusStats } from "@/hook/admin/useCourse";
-import { CourseStatus } from "@/schema/course/course-status";
+import { useCourseStatusStats } from "@/hooks/admin/useCourse";
+import { CourseStatus } from "@/schemas/course/course-status";
 import { COURSE_STATUS_LABELS } from "@/constants/course";
-import { Card, CardContent } from "@/component/ui/card";
-import Loader from "@/component/common/Loader";
+import { Card, CardContent } from "@/components/ui/card";
+import CourseStatsSkeleton from "@/components/admin/course/CourseStatsSkeleton";
 
 export default function CourseStats() {
   const { data: stats, isLoading } = useCourseStatusStats();
 
   if (isLoading) {
-    return <Loader />;
+    return <CourseStatsSkeleton />;
   }
 
   if (!stats) {

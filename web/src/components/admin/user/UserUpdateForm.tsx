@@ -6,13 +6,13 @@ import type {
   User,
   UserProfileUpdateRequest,
   UserProfileUpdateFormValues,
-} from "@/schema/user/user";
-import { UserProfileUpdateRequestSchema } from "@/schema/user/user";
-import InputField from "@/component/common/InputField";
-import SelectField from "@/component/common/SelectField";
-import { UserRoleSchema } from "@/schema/user/user-role";
-import { UserStatusSchema } from "@/schema/user/user-status";
-import { Button } from "@/component/ui/button";
+} from "@/schemas/user/user";
+import { UserProfileUpdateRequestSchema } from "@/schemas/user/user";
+import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
+import { UserRoleSchema } from "@/schemas/user/user-role";
+import { UserStatusSchema } from "@/schemas/user/user-status";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import { USER_ROLE_NAMES, USER_STATUS_NAMES } from "@/constants/auth";

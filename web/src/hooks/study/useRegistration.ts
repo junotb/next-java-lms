@@ -11,11 +11,11 @@ import {
   findCandidates,
   registerCourse,
 } from "@/lib/registration-api";
-import type { CandidateSearchRequest } from "@/schema/registration";
-import type { Course } from "@/schema/course/course";
-import type { CourseRegistrationRequest } from "@/schema/registration";
-import type { Registration } from "@/schema/registration";
-import type { TeacherCandidate } from "@/schema/registration";
+import type { CandidateSearchRequest } from "@/schemas/registration";
+import type { Course } from "@/schemas/course/course";
+import type { CourseRegistrationRequest } from "@/schemas/registration";
+import type { Registration } from "@/schemas/registration";
+import type { TeacherCandidate } from "@/schemas/registration";
 
 export function useCourseList() {
   return useQuery<Course[], Error>({

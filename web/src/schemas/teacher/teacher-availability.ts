@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DayOfWeek, DayOfWeekSchema } from "@/schema/common/day-of-week";
+import { DayOfWeek, DayOfWeekSchema } from "@/schemas/common/day-of-week";
 
 // 개별 요일 가용 시간 스키마
 export const DayAvailabilitySchema = z

@@ -5,12 +5,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   ScheduleCreateRequest,
   ScheduleCreateFormValues,
-} from "@/schema/schedule/schedule";
-import { ScheduleCreateRequestSchema } from "@/schema/schedule/schedule";
-import InputField from "@/component/common/InputField";
-import SelectField from "@/component/common/SelectField";
-import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
-import { Button } from "@/component/ui/button";
+} from "@/schemas/schedule/schedule";
+import { ScheduleCreateRequestSchema } from "@/schemas/schedule/schedule";
+import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
+import { ScheduleStatusSchema } from "@/schemas/schedule/schedule-status";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const SCHEDULE_STATUS_NAMES: Record<string, string> = {

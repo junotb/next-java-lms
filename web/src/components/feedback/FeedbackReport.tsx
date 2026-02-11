@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Alert, AlertDescription } from "@/component/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CorrectionCard } from "./CorrectionCard";
 import type { FeedbackData } from "@/types/feedback";
 
