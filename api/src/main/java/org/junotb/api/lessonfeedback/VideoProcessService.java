@@ -1,7 +1,5 @@
 package org.junotb.api.lessonfeedback;
 
-import com.google.api.gax.core.FixedCredentialsProvider;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.speech.v1.LongRunningRecognizeResponse;
 import com.google.cloud.speech.v1.RecognitionAudio;
 import com.google.cloud.speech.v1.RecognitionConfig;
@@ -9,16 +7,16 @@ import com.google.cloud.speech.v1.SpeakerDiarizationConfig;
 import com.google.cloud.speech.v1.SpeechClient;
 import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1.SpeechRecognitionResult;
-import com.google.cloud.speech.v1.SpeechSettings;
 import com.google.cloud.speech.v1.WordInfo;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -35,45 +33,13 @@ public class VideoProcessService {
     @Value("${app.video.ffmpeg-path:ffmpeg}")
     private String ffmpegPath;
 
-    @Value("${app.gcp.credentials-path:}")
-    private String credentialsPath;
-
     @Value("${app.gemini.api-key:${GOOGLE_GEMINI_API_KEY:}}")
     private String geminiApiKey;
 
-    @Value("${app.gemini.model:gemini-1.5-flash}")
+    @Value("${app.gemini.model:gemini-2.5-flash}")
     private String geminiModel;
 
-    @Value("${app.gemini.prompt-path:}")
-    private String promptPath;
-
-    private Path resolvedCredentialsPath;
-
-    @PostConstruct
-    void initCredentials() {
-        if (credentialsPath == null || credentialsPath.isBlank()) {
-            return;
-        }
-        Path path = Path.of(credentialsPath);
-        if (!path.isAbsolute()) {
-            path = Path.of(System.getProperty("user.dir")).resolve(credentialsPath);
-        }
-        Path jsonPath = path;
-        if (Files.isDirectory(path)) {
-            try {
-                jsonPath = Files.list(path)
-                    .filter(p -> p.toString().endsWith(".json"))
-                    .findFirst()
-                    .orElse(path);
-            } catch (IOException e) {
-                log.warn("Could not list credentials dir: {}", path, e);
-            }
-        }
-        if (Files.exists(jsonPath) && !Files.isDirectory(jsonPath)) {
-            resolvedCredentialsPath = jsonPath.toAbsolutePath();
-            log.debug("Resolved GCP credentials path: {}", resolvedCredentialsPath);
-        }
-    }
+    private static final String PROMPT_RESOURCE_PATH = "prompts/feedback.txt";
 
     /**
      * 비디오에서 VTT 문자열 추출. FFmpeg → GCP Speech-to-Text.
@@ -218,13 +184,6 @@ public class VideoProcessService {
     }
 
     private SpeechClient createSpeechClient() throws IOException {
-        if (resolvedCredentialsPath != null) {
-            GoogleCredentials credentials = GoogleCredentials.fromStream(Files.newInputStream(resolvedCredentialsPath));
-            SpeechSettings settings = SpeechSettings.newBuilder()
-                .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
-                .build();
-            return SpeechClient.create(settings);
-        }
         return SpeechClient.create();
     }
 
@@ -237,20 +196,11 @@ public class VideoProcessService {
 
     private String loadPromptTemplate() {
         String defaultPrompt = "다음 수업 자막을 분석하여 수업 피드백을 작성해주세요.\n\n{{vttContent}}";
-        if (promptPath == null || promptPath.isBlank()) {
+        try {
+            return new ClassPathResource(PROMPT_RESOURCE_PATH).getContentAsString(StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            log.warn("프롬프트 파일 로드 실패: {}", PROMPT_RESOURCE_PATH, e);
             return defaultPrompt;
         }
-        Path path = Path.of(promptPath);
-        if (!path.isAbsolute()) {
-            path = Path.of(System.getProperty("user.dir")).resolve(promptPath);
-        }
-        if (Files.exists(path)) {
-            try {
-                return Files.readString(path);
-            } catch (IOException e) {
-                log.warn("프롬프트 파일 로드 실패: {}", path, e);
-            }
-        }
-        return defaultPrompt;
     }
 }
