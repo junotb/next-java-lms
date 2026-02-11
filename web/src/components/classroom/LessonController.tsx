@@ -39,13 +39,20 @@ export default function LessonController({
       const now = Date.now();
       const end = new Date(endsAt).getTime();
       if (now >= end) {
-        setRemaining("00:00");
+        setRemaining("00:00:00");
         return;
       }
       const diff = Math.max(0, Math.floor((end - now) / 1000));
-      const m = Math.floor(diff / 60);
+      const h = Math.floor(diff / 3600);
+      const m = Math.floor((diff % 3600) / 60);
       const s = diff % 60;
-      setRemaining(`${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`);
+      setRemaining(
+        [
+          String(h).padStart(2, "0"),
+          String(m).padStart(2, "0"),
+          String(s).padStart(2, "0"),
+        ].join(":")
+      );
     };
     update();
     const id = setInterval(update, 1000);

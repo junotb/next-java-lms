@@ -17,6 +17,14 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long>, JpaSp
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select s from Schedule s where s.id = :id")
     Optional<Schedule> findByIdWithLock(@Param("id") Long id);
+
+    @Query("""
+        select s from Schedule s
+        left join fetch s.user
+        left join fetch s.course
+        where s.id = :id
+        """)
+    Optional<Schedule> findByIdWithCourseAndUser(@Param("id") Long id);
     
     @Query("""
         select s.status as status, count(s) as count

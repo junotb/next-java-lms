@@ -13,11 +13,17 @@ const ScheduleInLessonSchema = z.object({
   updatedAt: z.string(),
 });
 
+const CourseInLessonSchema = z.object({
+  title: z.string(),
+  description: z.string().nullable(),
+});
+
 export const LessonAccessResponseSchema = z.object({
   allowed: z.boolean(),
   role: z.string(),
   schedule: ScheduleInLessonSchema,
   meetLink: z.string().nullable(),
+  course: CourseInLessonSchema,
 });
 
 export type LessonAccessResponse = z.infer<typeof LessonAccessResponseSchema>;

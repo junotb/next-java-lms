@@ -63,35 +63,71 @@ export default function LandingPage() {
             </div>
 
             <div className="relative lg:ml-auto">
-              <div className="relative z-10 w-full rounded-3xl bg-foreground p-2 shadow-2xl ring-1 ring-foreground/10 lg:w-[540px]">
-                <div className="relative aspect-video overflow-hidden rounded-2xl bg-foreground/90">
-                  <div className="absolute inset-0 flex items-center justify-center border-b border-foreground/5">
-                    <div className="text-center">
-                      <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary/20 p-2 ring-1 ring-primary/50 animate-pulse" />
-                      <p className="text-xs font-medium text-muted-foreground">
-                        강사님과 교육 콘텐츠 공유 중...
+              <div className="relative z-10 w-full overflow-hidden rounded-2xl border border-border/50 bg-background shadow-2xl shadow-foreground/5 lg:w-[520px]">
+                <div className="flex items-center gap-2 border-b border-border/50 bg-muted/30 px-4 py-2.5">
+                  <div className="flex gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-zinc-400" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-zinc-400" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-zinc-400" />
+                  </div>
+                  <span className="ml-2 truncate text-[11px] text-muted-foreground">
+                    classroom.nexlang.io
+                  </span>
+                </div>
+
+                <div className="grid gap-3 p-3 sm:grid-cols-[1fr_200px]">
+                  <div className="relative overflow-hidden rounded-lg bg-zinc-950 aspect-[4/3] flex items-center justify-center">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,var(--color-primary)/8,transparent)]" />
+                    <div className="relative text-center">
+                      <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-800/90 ring-1 ring-zinc-700/50">
+                        <div className="h-6 w-6 rounded bg-primary/30" />
+                      </div>
+                      <p className="text-xs font-medium text-zinc-500">
+                        Google Meet 연결됨
+                      </p>
+                      <p className="mt-1 text-[10px] text-zinc-600">
+                        1:1 대면 수업 진행 중
+                      </p>
+                    </div>
+                    <div className="absolute right-2 bottom-2 h-16 w-20 overflow-hidden rounded-md bg-zinc-800/95 ring-1 ring-zinc-700/60">
+                      <div className="flex h-full w-full items-center justify-center">
+                        <span className="text-[10px] text-zinc-600">강사</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent p-4">
+                    <div className="mb-2.5 flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
+                        AI 교정 피드백
+                      </span>
+                    </div>
+                    <p className="text-xs italic text-foreground/90">
+                      &quot;I have a plan to go there...&quot;
+                    </p>
+                    <div className="mt-2 rounded border-l-2 border-primary bg-muted/50 px-2 py-1.5">
+                      <p className="text-[11px] leading-relaxed text-muted-foreground">
+                        비즈니스 상황에서는{" "}
+                        <strong className="font-semibold text-foreground">
+                          &quot;I intend to visit...&quot;
+                        </strong>{" "}
+                        가 더 전문적입니다.
                       </p>
                     </div>
                   </div>
-                  <div className="absolute right-4 bottom-4 h-24 w-32 rounded-lg bg-foreground/80 ring-1 ring-foreground/20 shadow-lg" />
                 </div>
 
-                <div className="mt-4 rounded-xl bg-card p-5 shadow-inner">
-                  <div className="flex items-center gap-2 mb-3 text-primary">
-                    <span className="h-2 w-2 rounded-full bg-primary animate-bounce" />
-                    <span className="text-xs font-bold uppercase tracking-tighter italic">
-                      AI Analysis Report
+                <div className="flex items-center justify-between border-t border-border/50 bg-zinc-900/80 px-4 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-zinc-500">남은 시간</span>
+                    <span className="font-mono text-sm font-medium tabular-nums text-zinc-300">
+                      00:45:22
                     </span>
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-sm font-semibold text-foreground italic">
-                      &quot;I have a plan to go there...&quot;
-                    </p>
-                    <p className="text-xs text-muted-foreground bg-muted p-2 rounded-md border-l-2 border-primary">
-                      비즈니스 상황에서는{" "}
-                      <strong>&quot;I intend to visit...&quot;</strong> 가 더
-                      전문적인 뉘앙스를 줍니다.
-                    </p>
+                  <div className="flex gap-2">
+                    <div className="h-7 w-16 rounded-md bg-zinc-700/60" />
+                    <div className="h-7 w-14 rounded-md border border-zinc-600/80 bg-zinc-800/60" />
                   </div>
                 </div>
               </div>
