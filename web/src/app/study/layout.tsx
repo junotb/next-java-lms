@@ -1,4 +1,4 @@
-import StudyHeader from "@/component/study/StudyHeader";
+import StudyHeader from "@/components/study/StudyHeader";
 
 export default function StudyLayout({
   children,

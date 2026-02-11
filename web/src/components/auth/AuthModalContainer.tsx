@@ -6,15 +6,15 @@ import type { BetterError } from "@/types/auth";
 import type {
   SignInEmailRequest,
   SignUpEmailRequest,
-} from "@/schema/auth/auth";
-import { useAuthModalStore } from "@/store/useAuthModalStore";
-import { useToastStore } from "@/store/useToastStore";
-import SignInForm from "@/component/auth/SignInForm";
-import SignUpForm from "@/component/auth/SignUpForm";
-import Loader from "@/component/common/Loader";
+} from "@/schemas/auth/auth";
+import { useAuthModalStore } from "@/stores/useAuthModalStore";
+import { useToastStore } from "@/stores/useToastStore";
+import SignInForm from "@/components/auth/SignInForm";
+import SignUpForm from "@/components/auth/SignUpForm";
+import Loader from "@/components/common/Loader";
 import { authClient } from "@/lib/auth-client";
-import { Dialog, DialogContent } from "@/component/ui/dialog";
-import { Button } from "@/component/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ROLE_REDIRECT_MAP, MODAL_TYPES } from "@/constants/auth";
 

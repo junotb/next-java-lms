@@ -8,17 +8,17 @@ import type {
   CourseUpdateRequest,
   CourseCreateFormValues,
   CourseUpdateFormValues,
-} from "@/schema/course/course";
+} from "@/schemas/course/course";
 import {
   CourseCreateRequestSchema,
   CourseUpdateRequestSchema,
-} from "@/schema/course/course";
-import { CourseStatus, CourseStatusSchema } from "@/schema/course/course-status";
+} from "@/schemas/course/course";
+import { CourseStatus, CourseStatusSchema } from "@/schemas/course/course-status";
 import { COURSE_STATUS_LABELS } from "@/constants/course";
-import InputField from "@/component/common/InputField";
-import TextareaField from "@/component/common/TextareaField";
-import SelectField from "@/component/common/SelectField";
-import { Button } from "@/component/ui/button";
+import InputField from "@/components/common/InputField";
+import TextareaField from "@/components/common/TextareaField";
+import SelectField from "@/components/common/SelectField";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 

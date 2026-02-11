@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   ScheduleStatus,
   ScheduleStatusSchema,
-} from "@/schema/schedule/schedule-status";
+} from "@/schemas/schedule/schedule-status";
 
 // Meet 링크 수정 요청 스키마
 export const ScheduleMeetLinkRequestSchema = z.object({

@@ -1,5 +1,5 @@
-import { ScheduleStatus } from "@/schema/schedule/schedule-status";
-import { UserRole } from "@/schema/user/user-role";
+import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
+import { UserRole } from "@/schemas/user/user-role";
 import { StatCard } from "./StatCard";
 
 type StatKey = UserRole | ScheduleStatus;

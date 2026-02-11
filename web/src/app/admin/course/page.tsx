@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import CourseStats from "@/component/admin/course/CourseStats";
-import CourseListForm from "@/component/admin/course/CourseListForm";
-import CourseInfoCard from "@/component/admin/course/CourseInfoCard";
-import CourseListTable from "@/component/admin/course/CourseListTable";
-import Loader from "@/component/common/Loader";
-import Modal from "@/component/common/Modal";
-import { useCourseList, useCourseDelete } from "@/hook/admin/useCourse";
-import { CourseListRequest } from "@/schema/course/course";
-import { Button } from "@/component/ui/button";
+import CourseStats from "@/components/admin/course/CourseStats";
+import CourseListForm from "@/components/admin/course/CourseListForm";
+import CourseInfoCard from "@/components/admin/course/CourseInfoCard";
+import CourseListTable from "@/components/admin/course/CourseListTable";
+import ListTableSkeleton from "@/components/admin/ListTableSkeleton";
+import Modal from "@/components/common/Modal";
+import { useCourseList, useCourseDelete } from "@/hooks/admin/useCourse";
+import { CourseListRequest } from "@/schemas/course/course";
+import { Button } from "@/components/ui/button";
 
 export default function AdminCoursesPage() {
   const [request, setRequest] = useState<CourseListRequest>({
@@ -79,7 +79,7 @@ export default function AdminCoursesPage() {
 
         <div className="flex-1 flex flex-col gap-4">
           {isLoading ? (
-            <Loader />
+            <ListTableSkeleton columnCount={4} rowCount={8} />
           ) : error ? (
             <p className="text-center text-destructive">
               강의 목록을 불러오는 중 오류가 발생했습니다.

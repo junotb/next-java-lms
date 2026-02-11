@@ -4,8 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { checkLessonAccess, finishLesson } from "@/lib/lesson";
-import { useToastStore } from "@/store/useToastStore";
-import type { LessonAccessResponse } from "@/schema/lesson/lesson";
+import { useToastStore } from "@/stores/useToastStore";
+import type { LessonAccessResponse } from "@/schemas/lesson/lesson";
 
 export function useLessonAccess(scheduleId: number | null, options?: { enabled?: boolean }) {
   const router = useRouter();

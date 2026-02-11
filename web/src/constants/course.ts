@@ -1,4 +1,4 @@
-import { CourseStatus } from "@/schema/course/course-status";
+import { CourseStatus } from "@/schemas/course/course-status";
 
 // 강의 상태 한글 명칭
 export const COURSE_STATUS_LABELS: Record<CourseStatus, string> = {

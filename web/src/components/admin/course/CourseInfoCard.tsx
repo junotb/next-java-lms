@@ -1,18 +1,18 @@
 "use client";
 
-import Loader from "@/component/common/Loader";
-import CourseForm from "@/component/admin/course/CourseForm";
+import Loader from "@/components/common/Loader";
+import CourseForm from "@/components/admin/course/CourseForm";
 import {
   useCourseInfo,
   useCourseCreate,
   useCourseUpdate,
   useCourseDelete,
-} from "@/hook/admin/useCourse";
+} from "@/hooks/admin/useCourse";
 import {
   CourseCreateRequest,
   CourseUpdateRequest,
-} from "@/schema/course/course";
-import { Card, CardContent, CardHeader, CardTitle } from "@/component/ui/card";
+} from "@/schemas/course/course";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CourseInfoCardProps {
   courseId: number | null;

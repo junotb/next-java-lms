@@ -1,8 +1,8 @@
 "use client";
 
-import { useToastStore } from "@/store/useToastStore";
+import { useToastStore } from "@/stores/useToastStore";
 import { cn } from "@/lib/utils";
-import { Button } from "@/component/ui/button";
+import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 
 export default function Toast() {

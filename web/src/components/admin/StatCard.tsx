@@ -3,8 +3,8 @@ import { getUserRoleName } from "@/lib/user";
 import {
   ScheduleStatus,
   ScheduleStatusSchema,
-} from "@/schema/schedule/schedule-status";
-import { UserRole, UserRoleSchema } from "@/schema/user/user-role";
+} from "@/schemas/schedule/schedule-status";
+import { UserRole, UserRoleSchema } from "@/schemas/user/user-role";
 import { Users, UserCheck, GraduationCap, Calendar, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 

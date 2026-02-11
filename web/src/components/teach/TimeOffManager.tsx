@@ -8,25 +8,24 @@ import {
   TeacherTimeOffRequest,
   TEACHER_TIME_OFF_TYPE_LABELS,
   TeacherTimeOffType,
-} from "@/schema/teacher/time-off";
+} from "@/schemas/teacher/time-off";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/component/ui/card";
-import { Label } from "@/component/ui/label";
-import { Button } from "@/component/ui/button";
-import { Input } from "@/component/ui/input";
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   useTeacherTimeOffList,
   useCreateTeacherTimeOff,
   useDeleteTeacherTimeOff,
-} from "@/hook/teach/useTeacherTimeOff";
-import { Loader2 } from "lucide-react";
-import Loader from "@/component/common/Loader";
+} from "@/hooks/teach/useTeacherTimeOff";
+import Loader from "@/components/common/Loader";
 import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 
@@ -344,7 +343,7 @@ export default function TimeOffManager() {
             >
               {createMutation.isPending ? (
                 <>
-                  <Loader2 className="animate-spin" />
+                  <Loader variant="inline" />
                   등록 중...
                 </>
               ) : (

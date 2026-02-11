@@ -1,13 +1,13 @@
 import { z } from "zod";
 import api from "@/lib/api";
-import { CourseSchema, type Course } from "@/schema/course/course";
+import { CourseSchema, type Course } from "@/schemas/course/course";
 import {
   type CandidateSearchRequest,
   type CourseRegistrationRequest,
   type TeacherCandidate,
   TeacherCandidateSchema,
-} from "@/schema/registration";
-import { RegistrationSchema, type Registration } from "@/schema/registration";
+} from "@/schemas/registration";
+import { RegistrationSchema, type Registration } from "@/schemas/registration";
 
 /** 수강 신청 (강좌 기준, 강사 자동 매칭) */
 export async function registerCourse(

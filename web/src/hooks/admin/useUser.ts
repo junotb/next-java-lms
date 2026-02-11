@@ -2,8 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userList, userProfile, userCreate, userProfileUpdate, userDelete, userRoleStats } from "@/lib/user";
-import { User, UserListRequest, UserCreateRequest, UserProfileUpdateRequest } from "@/schema/user/user";
-import { UserRole } from "@/schema/user/user-role";
+import { User, UserListRequest, UserCreateRequest, UserProfileUpdateRequest } from "@/schemas/user/user";
+import { UserRole } from "@/schemas/user/user-role";
 
 // 사용자 목록 조회
 export function useUserList(request: UserListRequest) {

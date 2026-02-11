@@ -2,16 +2,16 @@
 
 import { useRef } from "react";
 import { Upload } from "lucide-react";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/component/ui/button";
+import Loader from "@/components/common/Loader";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/component/ui/dialog";
-import { useVideoUpload } from "@/hook/useLessonFeedback";
+} from "@/components/ui/dialog";
+import { useVideoUpload } from "@/hooks/useLessonFeedback";
 
 interface VideoUploadModalProps {
   open: boolean;
@@ -73,7 +73,7 @@ export default function VideoUploadModal({
           >
             {mutation.isPending ? (
               <>
-                <Loader2 className="animate-spin" />
+                <Loader variant="inline" />
                 업로드 중...
               </>
             ) : (

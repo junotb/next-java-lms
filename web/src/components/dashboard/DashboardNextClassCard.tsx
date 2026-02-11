@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, Link2 } from "lucide-react";
-import { Button } from "@/component/ui/button";
-import MeetLinkModal from "@/component/teach/MeetLinkModal";
-import type { DashboardNextClass } from "@/schema/dashboard/dashboard";
+import { Button } from "@/components/ui/button";
+import MeetLinkModal from "@/components/teach/MeetLinkModal";
+import type { DashboardNextClass } from "@/schemas/dashboard/dashboard";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ArrowRight, XCircle, CheckCircle2, Lightbulb } from "lucide-react";
-import { Card, CardContent } from "@/component/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Correction } from "@/types/feedback";
 

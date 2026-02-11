@@ -1,5 +1,5 @@
-import AdminHeader from "@/component/admin/Header";
-import AdminFooter from "@/component/admin/Footer";
+import AdminHeader from "@/components/admin/Header";
+import AdminFooter from "@/components/admin/Footer";
 //
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

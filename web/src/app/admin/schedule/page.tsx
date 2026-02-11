@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import ScheduleListForm from "@/component/admin/schedule/ScheduleListForm";
-import ScheduleInfoCard from "@/component/admin/schedule/ScheduleInfoCard";
-import ScheduleListTable from "@/component/admin/schedule/ScheduleListTable";
-import Loader from "@/component/common/Loader";
-import Modal from "@/component/common/Modal";
-import { useScheduleList } from "@/hook/admin/useSchedule";
-import { ScheduleListRequest } from "@/schema/schedule/schedule";
-import { Button } from "@/component/ui/button";
+import ScheduleListForm from "@/components/admin/schedule/ScheduleListForm";
+import ScheduleInfoCard from "@/components/admin/schedule/ScheduleInfoCard";
+import ScheduleListTable from "@/components/admin/schedule/ScheduleListTable";
+import ListTableSkeleton from "@/components/admin/ListTableSkeleton";
+import Modal from "@/components/common/Modal";
+import { useScheduleList } from "@/hooks/admin/useSchedule";
+import { ScheduleListRequest } from "@/schemas/schedule/schedule";
+import { Button } from "@/components/ui/button";
 
 export default function AdminSchedulesPage() {
   const [request, setRequest] = useState<ScheduleListRequest>({
@@ -65,7 +65,7 @@ export default function AdminSchedulesPage() {
 
         <div className="flex-1 flex flex-col gap-4">
           {isLoading ? (
-            <Loader />
+            <ListTableSkeleton columnCount={5} rowCount={8} />
           ) : error ? (
             <p className="text-center text-destructive">
               스케줄 목록을 불러오는 중 오류가 발생했습니다.

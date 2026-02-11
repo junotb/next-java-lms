@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Badge } from "@/component/ui/badge";
-import { Button } from "@/component/ui/button";
-import VideoUploadModal from "@/component/teach/VideoUploadModal";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import VideoUploadModal from "@/components/teach/VideoUploadModal";
 import { getScheduleStatusName } from "@/lib/schedule";
-import type { DashboardScheduleItem } from "@/schema/dashboard/dashboard";
-import type { ScheduleStatus } from "@/schema/schedule/schedule-status";
+import type { DashboardScheduleItem } from "@/schemas/dashboard/dashboard";
+import type { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Video } from "lucide-react";
-import { Button } from "@/component/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface MeetLinkAreaProps {
   meetLink: string | null;

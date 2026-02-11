@@ -6,19 +6,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   TeacherAvailabilityFormValues,
   TeacherAvailabilitySchema,
-} from "@/schema/teacher/teacher-availability";
+} from "@/schemas/teacher/teacher-availability";
 import {
   ALL_DAYS_OF_WEEK,
   getDayOfWeekName,
-} from "@/schema/common/day-of-week";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/component/ui/card";
-import { Label } from "@/component/ui/label";
-import { Switch } from "@/component/ui/switch";
-import { Button } from "@/component/ui/button";
+} from "@/schemas/common/day-of-week";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useTeacherAvailability, useUpdateAvailability } from "@/hook/teach/useTeacherAvailability";
-import { Loader2 } from "lucide-react";
-import Loader from "@/component/common/Loader";
+import { useTeacherAvailability, useUpdateAvailability } from "@/hooks/teach/useTeacherAvailability";
+import Loader from "@/components/common/Loader";
 
 interface AvailabilityFormProps {
   onSubmit?: (data: TeacherAvailabilityFormValues) => void;
@@ -227,7 +226,7 @@ export default function AvailabilityForm({ onSubmit }: AvailabilityFormProps) {
             >
               {updateMutation.isPending ? (
                 <>
-                  <Loader2 className="animate-spin" />
+                  <Loader variant="inline" />
                   저장 중...
                 </>
               ) : (

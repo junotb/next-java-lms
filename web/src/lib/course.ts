@@ -1,13 +1,13 @@
 import api from "@/lib/api";
-import { PageResponseSchema } from "@/schema/common/page-response";
+import { PageResponseSchema } from "@/schemas/common/page-response";
 import {
   Course,
   CourseSchema,
   CourseCreateRequest,
   CourseUpdateRequest,
   CourseListRequest,
-} from "@/schema/course/course";
-import { CourseStatus } from "@/schema/course/course-status";
+} from "@/schemas/course/course";
+import { CourseStatus } from "@/schemas/course/course-status";
 
 // 강의 목록 조회
 export async function courseList(

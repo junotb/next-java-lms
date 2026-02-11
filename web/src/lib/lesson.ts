@@ -2,13 +2,13 @@ import api from "@/lib/api";
 import {
   LessonAccessResponse,
   LessonAccessResponseSchema,
-} from "@/schema/lesson/lesson";
+} from "@/schemas/lesson/lesson";
 import {
   LessonFeedbackResponse,
   LessonFeedbackResponseSchema,
   VideoUploadResponse,
   VideoUploadResponseSchema,
-} from "@/schema/lesson/lesson-feedback";
+} from "@/schemas/lesson/lesson-feedback";
 
 export async function checkLessonAccess(
   scheduleId: number

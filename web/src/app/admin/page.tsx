@@ -1,11 +1,11 @@
 "use client";
 
-import StatsList from "@/component/admin/StatsList";
-import StatsListSkeleton from "@/component/admin/StatsListSkeleton";
-import { useScheduleStatusStats } from "@/hook/admin/useSchedule";
-import { useUserRoleStats } from "@/hook/admin/useUser";
-import { ScheduleStatus } from "@/schema/schedule/schedule-status";
-import { UserRole } from "@/schema/user/user-role";
+import StatsList from "@/components/admin/StatsList";
+import StatsListSkeleton from "@/components/admin/StatsListSkeleton";
+import { useScheduleStatusStats } from "@/hooks/admin/useSchedule";
+import { useUserRoleStats } from "@/hooks/admin/useUser";
+import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
+import { UserRole } from "@/schemas/user/user-role";
 
 export default function AdminPage() {
   const {

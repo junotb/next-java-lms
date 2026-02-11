@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
+import { ScheduleStatusSchema } from "@/schemas/schedule/schedule-status";
 
 const ScheduleInLessonSchema = z.object({
   id: z.number(),

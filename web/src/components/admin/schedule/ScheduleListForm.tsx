@@ -3,12 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   ScheduleListRequest,
   ScheduleListFormValues,
-} from "@/schema/schedule/schedule";
-import { ScheduleListRequestSchema } from "@/schema/schedule/schedule";
-import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
-import { Input } from "@/component/ui/input";
-import { Label } from "@/component/ui/label";
-import { Button } from "@/component/ui/button";
+} from "@/schemas/schedule/schedule";
+import { ScheduleListRequestSchema } from "@/schemas/schedule/schedule";
+import { ScheduleStatusSchema } from "@/schemas/schedule/schedule-status";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Search, RotateCcw } from "lucide-react";
 

@@ -1,8 +1,8 @@
-import { Schedule } from "@/schema/schedule/schedule";
+import { Schedule } from "@/schemas/schedule/schedule";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/component/ui/badge";
-import { Button } from "@/component/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 
 // UI 표시 이름을 중앙에서 관리합니다.

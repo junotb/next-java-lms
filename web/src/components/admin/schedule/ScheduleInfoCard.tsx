@@ -1,19 +1,19 @@
 "use client";
 
-import Loader from "@/component/common/Loader";
-import ScheduleCreateForm from "@/component/admin/schedule/ScheduleCreateForm";
-import ScheduleUpdateForm from "@/component/admin/schedule/ScheduleUpdateForm";
+import Loader from "@/components/common/Loader";
+import ScheduleCreateForm from "@/components/admin/schedule/ScheduleCreateForm";
+import ScheduleUpdateForm from "@/components/admin/schedule/ScheduleUpdateForm";
 import {
   useScheduleInfo,
   useScheduleCreate,
   useScheduleUpdate,
   useScheduleDelete,
-} from "@/hook/admin/useSchedule";
+} from "@/hooks/admin/useSchedule";
 import {
   ScheduleCreateRequest,
   ScheduleUpdateRequest,
-} from "@/schema/schedule/schedule";
-import { Card, CardContent, CardHeader, CardTitle } from "@/component/ui/card";
+} from "@/schemas/schedule/schedule";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ScheduleInfoCardProps {
   scheduleId: number | null;

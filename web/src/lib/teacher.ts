@@ -4,7 +4,7 @@ import {
   TeacherAvailabilityResponse,
   TeacherAvailabilityResponseSchema,
   DayAvailability,
-} from "@/schema/teacher/teacher-availability";
+} from "@/schemas/teacher/teacher-availability";
 
 // 강사 가용 시간 설정 조회
 export async function getAvailability(): Promise<TeacherAvailabilityResponse[]> {

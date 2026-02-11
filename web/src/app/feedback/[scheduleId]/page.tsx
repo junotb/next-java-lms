@@ -2,12 +2,13 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Loader from "@/component/common/Loader";
-import { useLessonFeedback } from "@/hook/useLessonFeedback";
-import { Button } from "@/component/ui/button";
+import Loader from "@/components/common/Loader";
+import FeedbackSkeleton from "@/components/feedback/FeedbackSkeleton";
+import { useLessonFeedback } from "@/hooks/useLessonFeedback";
+import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { AudioTranscriptPlayer } from "@/component/AudioTranscriptPlayer";
-import { FeedbackReport } from "@/component/feedback/FeedbackReport";
+import { AudioTranscriptPlayer } from "@/components/AudioTranscriptPlayer";
+import { FeedbackReport } from "@/components/feedback/FeedbackReport";
 
 export default function FeedbackPage() {
   const params = useParams();
@@ -37,11 +38,7 @@ export default function FeedbackPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="container max-w-4xl py-12 flex justify-center">
-        <Loader />
-      </div>
-    );
+    return <FeedbackSkeleton />;
   }
 
   if (isError || !data) {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "@/app/globals.css";
 import Providers from "@/app/providers";
-import Toast from "@/component/common/Toast";
+import Toast from "@/components/common/Toast";
 
 const notoSans = Noto_Sans_KR({
   variable: "--font-noto-sans",

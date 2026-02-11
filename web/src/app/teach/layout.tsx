@@ -1,4 +1,4 @@
-import TeachHeader from "@/component/teach/TeachHeader";
+import TeachHeader from "@/components/teach/TeachHeader";
 
 export default function TeachLayout({
   children,

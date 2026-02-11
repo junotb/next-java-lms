@@ -1,6 +1,6 @@
 "use client";
 
-import AvailabilityForm from "@/component/teach/AvailabilityForm";
+import AvailabilityForm from "@/components/teach/AvailabilityForm";
 
 export default function AvailabilityPage() {
   return (

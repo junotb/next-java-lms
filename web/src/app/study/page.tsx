@@ -4,11 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { BookOpen, Award, ClipboardList, PlusCircle } from "lucide-react";
 import { getStudyDashboard } from "@/lib/dashboard";
-import DashboardNextClassCard from "@/component/dashboard/DashboardNextClassCard";
-import DashboardStats, { type DashboardStatItem } from "@/component/dashboard/DashboardStats";
-import DashboardScheduleList from "@/component/dashboard/DashboardScheduleList";
-import DashboardSkeleton from "@/component/dashboard/DashboardSkeleton";
-import { Button } from "@/component/ui/button";
+import DashboardNextClassCard from "@/components/dashboard/DashboardNextClassCard";
+import DashboardStats, { type DashboardStatItem } from "@/components/dashboard/DashboardStats";
+import DashboardScheduleList from "@/components/dashboard/DashboardScheduleList";
+import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
+import { Button } from "@/components/ui/button";
 
 export default function StudyDashboardPage() {
   const { data, isLoading } = useQuery({

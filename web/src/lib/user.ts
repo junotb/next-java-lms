@@ -1,8 +1,8 @@
 import api from "@/lib/api";
-import { PageResponseSchema } from "@/schema/common/page-response";
-import { User, UserSchema, UserCreateRequest, UserProfileUpdateRequest, UserListRequest } from "@/schema/user/user";
-import { UserRole } from "@/schema/user/user-role";
-import { UserStatus } from "@/schema/user/user-status";
+import { PageResponseSchema } from "@/schemas/common/page-response";
+import { User, UserSchema, UserCreateRequest, UserProfileUpdateRequest, UserListRequest } from "@/schemas/user/user";
+import { UserRole } from "@/schemas/user/user-role";
+import { UserStatus } from "@/schemas/user/user-status";
 
 // 사용자 목록 조회
 export async function userList(params: UserListRequest): Promise<User[]> {

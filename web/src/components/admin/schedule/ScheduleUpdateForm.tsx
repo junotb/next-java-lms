@@ -7,12 +7,12 @@ import type {
   Schedule,
   ScheduleUpdateRequest,
   ScheduleUpdateFormValues,
-} from "@/schema/schedule/schedule";
-import { ScheduleUpdateRequestSchema } from "@/schema/schedule/schedule";
-import InputField from "@/component/common/InputField";
-import SelectField from "@/component/common/SelectField";
-import { ScheduleStatusSchema } from "@/schema/schedule/schedule-status";
-import { Button } from "@/component/ui/button";
+} from "@/schemas/schedule/schedule";
+import { ScheduleUpdateRequestSchema } from "@/schemas/schedule/schedule";
+import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
+import { ScheduleStatusSchema } from "@/schemas/schedule/schedule-status";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 

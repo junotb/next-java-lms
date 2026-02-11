@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { UserRole, UserRoleSchema } from "@/schema/user/user-role";
-import { UserStatus, UserStatusSchema } from "@/schema/user/user-status";
+import { UserRole, UserRoleSchema } from "@/schemas/user/user-role";
+import { UserStatus, UserStatusSchema } from "@/schemas/user/user-status";
 
 // 사용자 스키마
 export const UserSchema = z.object({

@@ -7,8 +7,8 @@ import {
   createTeacherTimeOff,
   deleteTeacherTimeOff,
 } from "@/lib/teacher-time-off";
-import type { TeacherTimeOffResponse, TeacherTimeOffRequest } from "@/schema/teacher/time-off";
-import { useToastStore } from "@/store/useToastStore";
+import type { TeacherTimeOffResponse, TeacherTimeOffRequest } from "@/schemas/teacher/time-off";
+import { useToastStore } from "@/stores/useToastStore";
 
 const QUERY_KEY = ["teacher", "time-off"];
 
