@@ -21,6 +21,7 @@ interface InputFieldProps<T extends FieldValues> {
   placeholder?: string;
   disabled?: boolean;
   defaultValue?: string;
+  autoComplete?: React.HTMLInputAutoCompleteAttribute;
 }
 
 export default function InputField<T extends FieldValues>({
@@ -33,11 +34,12 @@ export default function InputField<T extends FieldValues>({
   placeholder,
   disabled,
   defaultValue,
+  autoComplete,
 }: InputFieldProps<T>) {
   const error = errors[id];
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="w-full flex flex-col gap-2" data-invalid={!!error}>
       <Label htmlFor={id} className="text-left text-sm font-medium text-muted-foreground">
         {label}
       </Label>
@@ -47,6 +49,8 @@ export default function InputField<T extends FieldValues>({
         placeholder={placeholder}
         disabled={disabled}
         defaultValue={defaultValue}
+        autoComplete={autoComplete}
+        aria-invalid={!!error}
         className={cn(
           "w-full",
           error && "border-destructive focus-visible:ring-destructive"

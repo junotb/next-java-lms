@@ -17,6 +17,11 @@ interface SignInFormProps {
   onSubmit: (data: SignInEmailRequest) => void;
 }
 
+/**
+ * 로그인 폼 컴포넌트
+ * @param error - 서버/클라이언트 인증 오류 (표시용)
+ * @param onSubmit - 유효한 폼 데이터로 제출 시 호출
+ */
 export default function SignInForm({ error, onSubmit }: SignInFormProps) {
   const {
     register,
@@ -34,7 +39,6 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
   return (
     <form
       onSubmit={handleSubmit((values) => {
-        // 공백 제거
         const payload: SignInEmailRequest = {
           email: values.email.trim(),
           password: values.password.trim(),
@@ -52,6 +56,7 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
         type="email"
         register={register}
         errors={errors}
+        autoComplete="email"
       />
 
       <InputField
@@ -60,6 +65,7 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
         type="password"
         register={register}
         errors={errors}
+        autoComplete="current-password"
       />
 
       <Button
@@ -69,6 +75,12 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
         )}
         disabled={isSubmitting}
       >
+        {isSubmitting && (
+          <span
+            className="mr-2 inline-block size-4 shrink-0 animate-spin rounded-full border-2 border-current border-t-transparent"
+            aria-hidden
+          />
+        )}
         로그인
       </Button>
       {error && <p className="text-destructive text-sm">{error.message}</p>}
