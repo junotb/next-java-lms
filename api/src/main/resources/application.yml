@@ -61,12 +61,9 @@ app:
     enabled: ${VIDEO_PROCESSOR_ENABLED:true}
   video:
     ffmpeg-path: ${FFMPEG_PATH:ffmpeg}
-  gcp:
-    credentials-path: ${GOOGLE_APPLICATION_CREDENTIALS_PATH:config/credentials}
   gemini:
     api-key: ${GOOGLE_GEMINI_API_KEY:}
-    model: ${GEMINI_MODEL:gemini-1.5-flash}
-    prompt-path: ${PROMPT_FEEDBACK_PATH:config/prompts/feedback.txt}
+    model: ${GEMINI_MODEL:gemini-2.5-flash}
   session:
     expires-in-days: ${SESSION_EXPIRES_IN_DAYS:7}
     cache-ttl-seconds: ${SESSION_CACHE_TTL_SECONDS:300}

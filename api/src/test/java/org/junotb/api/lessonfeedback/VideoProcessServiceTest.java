@@ -25,7 +25,7 @@ class VideoProcessServiceTest {
     @DisplayName("generateFeedback_whenApiKeyMissing_thenThrowException")
     void generateFeedback_whenApiKeyMissing_thenThrowException() {
         ReflectionTestUtils.setField(videoProcessService, "geminiApiKey", "");
-        ReflectionTestUtils.setField(videoProcessService, "geminiModel", "gemini-1.5-flash");
+        ReflectionTestUtils.setField(videoProcessService, "geminiModel", "gemini-2.5-flash");
 
         assertThatThrownBy(() -> videoProcessService.generateFeedback("WEBVTT\n\n00:00:00.000 --> 00:00:01.000\n테스트"))
             .isInstanceOf(IllegalStateException.class)
