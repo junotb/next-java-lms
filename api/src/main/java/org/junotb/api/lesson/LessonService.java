@@ -2,6 +2,7 @@ package org.junotb.api.lesson;
 
 import lombok.RequiredArgsConstructor;
 import org.junotb.api.common.exception.ResourceNotFoundException;
+import org.junotb.api.lesson.dto.CourseInLesson;
 import org.junotb.api.lesson.dto.LessonAccessResponse;
 import org.junotb.api.registration.RegistrationRepository;
 import org.junotb.api.registration.RegistrationStatus;
@@ -31,7 +32,7 @@ public class LessonService {
      */
     @Transactional(readOnly = true)
     public LessonAccessResponse validateAccess(Long scheduleId, String userId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId)
+        Schedule schedule = scheduleRepository.findByIdWithCourseAndUser(scheduleId)
             .orElseThrow(() -> new ResourceNotFoundException("Schedule", scheduleId.toString()));
 
         String role = resolveRole(schedule, userId);
@@ -87,6 +88,11 @@ public class LessonService {
     private LessonAccessResponse buildAccessResponse(boolean allowed, String role, Schedule schedule) {
         ScheduleResponse scheduleResponse = ScheduleResponse.from(schedule);
         String meetLink = schedule.getMeetLink() != null ? schedule.getMeetLink() : null;
-        return new LessonAccessResponse(allowed, role != null ? role : "", scheduleResponse, meetLink);
+        var c = schedule.getCourse();
+        if (c == null) {
+            throw new IllegalStateException("수업은 반드시 강의(Course)와 연결되어 있어야 합니다.");
+        }
+        CourseInLesson course = new CourseInLesson(c.getTitle(), c.getDescription());
+        return new LessonAccessResponse(allowed, role != null ? role : "", scheduleResponse, meetLink, course);
     }
 }

@@ -19,6 +19,14 @@ export function useLessonAccess(scheduleId: number | null, options?: { enabled?:
   });
 
   useEffect(() => {
+    if (query.isError && query.error) {
+      const err = query.error as { message?: string };
+      const msg = err?.message ?? "수업 정보를 불러올 수 없습니다.";
+      showToast(msg, "error");
+    }
+  }, [query.isError, query.error, showToast]);
+
+  useEffect(() => {
     if (!query.data || query.isLoading) return;
     if (!query.data.allowed) {
       showToast("입장할 수 없는 수업이거나 시간이 아닙니다.", "error");
