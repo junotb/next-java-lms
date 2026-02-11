@@ -17,6 +17,11 @@ interface SignUpFormProps {
   onSubmit: (data: SignUpEmailRequest) => void;
 }
 
+/**
+ * 회원가입 폼 컴포넌트
+ * @param error - 서버/클라이언트 가입 오류 (표시용)
+ * @param onSubmit - 유효한 폼 데이터로 제출 시 호출
+ */
 export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
   const {
     register,
@@ -37,7 +42,6 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
   return (
     <form
       onSubmit={handleSubmit((values) => {
-        // 공백 제거
         const payload: SignUpEmailRequest = {
           email: values.email.trim(),
           password: values.password.trim(),
@@ -58,6 +62,7 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
         type="email"
         register={register}
         errors={errors}
+        autoComplete="email"
       />
 
       <InputField
@@ -66,6 +71,7 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
         type="password"
         register={register}
         errors={errors}
+        autoComplete="new-password"
       />
 
       <InputField
@@ -74,6 +80,7 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
         type="text"
         register={register}
         errors={errors}
+        autoComplete="name"
       />
 
       <Button
@@ -83,6 +90,12 @@ export default function SignUpForm({ error, onSubmit }: SignUpFormProps) {
         )}
         disabled={isSubmitting}
       >
+        {isSubmitting && (
+          <span
+            className="mr-2 inline-block size-4 shrink-0 animate-spin rounded-full border-2 border-current border-t-transparent"
+            aria-hidden
+          />
+        )}
         회원가입
       </Button>
       {error && (
