@@ -83,7 +83,6 @@ export default function AuthModalContainer() {
   return (
     <Dialog open={!!modalType} onOpenChange={(isOpen) => !isOpen && closeModal()}>
       <DialogContent
-        onClose={closeModal}
         className={cn(
           "relative w-full max-w-md overflow-hidden rounded-2xl bg-card shadow-2xl transition-all animate-scale-in p-8 sm:p-10"
         )}

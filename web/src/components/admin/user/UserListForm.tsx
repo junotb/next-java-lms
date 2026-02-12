@@ -34,8 +34,12 @@ export default function UserListForm({ onSubmit }: UserListFormProps) {
     });
 
   const handleFormSubmit = (data: UserListFormValues) => {
-    // 스키마에서 빈 문자열을 undefined로 변환하므로 그대로 전달
-    onSubmit(data);
+    onSubmit({
+      name: data.name,
+      email: data.email,
+      role: data.role === "" ? undefined : data.role,
+      status: data.status === "" ? undefined : data.status,
+    });
   };
 
   return (

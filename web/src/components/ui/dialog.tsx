@@ -7,9 +7,7 @@ interface DialogProps {
   children: React.ReactNode;
 }
 
-interface DialogContentProps extends React.HTMLAttributes<HTMLDivElement> {
-  onClose?: () => void;
-}
+type DialogContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
   if (!open) return null;
@@ -25,7 +23,7 @@ const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
 };
 
 const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ className, onClose, children, ...props }, ref) => {
+  ({ className, children, ...props }, ref) => {
     return (
       <div
         ref={ref}

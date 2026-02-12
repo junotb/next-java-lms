@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-  ScheduleStatus,
-  ScheduleStatusSchema,
-} from "@/schemas/schedule/schedule-status";
+import { ScheduleStatusSchema } from "@/schemas/schedule/schedule-status";
 
 // Meet 링크 수정 요청 스키마
 export const ScheduleMeetLinkRequestSchema = z.object({
@@ -106,7 +103,9 @@ export type ScheduleUpdateRequest = z.infer<typeof ScheduleUpdateRequestSchema>;
 // 스케줄 목록 요청 스키마
 export const ScheduleListRequestSchema = z.object({
   userId: z.string().optional(),
-  status: ScheduleStatusSchema.optional().or(z.literal("")).transform((val) => val === "" ? undefined : val),
+  status: ScheduleStatusSchema.optional()
+    .or(z.literal(""))
+    .transform((val) => (val === "" ? undefined : val)),
 });
 
 export type ScheduleListRequest = z.infer<typeof ScheduleListRequestSchema>;
@@ -117,5 +116,5 @@ export type ScheduleCreateFormValues = ScheduleCreateRequest;
 // 스케줄 수정 폼 타입
 export type ScheduleUpdateFormValues = ScheduleUpdateRequest;
 
-// 스케줄 목록 폼 타입
-export type ScheduleListFormValues = ScheduleListRequest;
+// 스케줄 목록 폼 타입 (폼 입력은 "" 허용)
+export type ScheduleListFormValues = z.input<typeof ScheduleListRequestSchema>;

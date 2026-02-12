@@ -41,8 +41,10 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
     });
 
   const handleFormSubmit = (data: ScheduleListFormValues) => {
-    // 스키마에서 빈 문자열을 undefined로 변환하므로 그대로 전달
-    onSubmit(data);
+    onSubmit({
+      userId: data.userId,
+      status: data.status === "" ? undefined : data.status,
+    });
   };
 
   return (

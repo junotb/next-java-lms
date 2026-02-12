@@ -24,7 +24,7 @@ interface LessonControllerProps {
 export default function LessonController({
   scheduleId,
   role,
-  startsAt,
+  startsAt: _startsAt,
   endsAt,
   onExit,
 }: LessonControllerProps) {
@@ -105,7 +105,7 @@ export default function LessonController({
       </div>
 
       <Dialog open={finishDialogOpen} onOpenChange={setFinishDialogOpen}>
-        <DialogContent onClose={() => setFinishDialogOpen(false)} className="bg-zinc-900 border-zinc-700">
+        <DialogContent className="bg-zinc-900 border-zinc-700">
           <DialogHeader>
             <DialogTitle className="text-white">수업 종료</DialogTitle>
             <DialogDescription className="text-zinc-400">

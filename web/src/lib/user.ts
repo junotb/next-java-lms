@@ -6,61 +6,42 @@ import { UserStatus } from "@/schemas/user/user-status";
 
 // 사용자 목록 조회
 export async function userList(params: UserListRequest): Promise<User[]> {
-  try {
-    const response = await api.get<User[]>("/api/v1/user", { params });
-    return PageResponseSchema(UserSchema).parse(response.data).items;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.get<User[]>("/api/v1/user", { params });
+  return PageResponseSchema(UserSchema).parse(response.data).items;
 }
 
 // 사용자 정보 조회
 export async function userProfile(userId: string): Promise<User> {
-  try {
-    const response = await api.get<User>(`/api/v1/user/${userId}`);
-    return UserSchema.parse(response.data);
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.get<User>(`/api/v1/user/${userId}`);
+  return UserSchema.parse(response.data);
 }
 
 // 사용자 등록
 export async function userCreate(payload: UserCreateRequest): Promise<User> {
-  try {
-    const response = await api.post<User>("/api/v1/user", payload);
-    return UserSchema.parse(response.data);
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.post<User>("/api/v1/user", payload);
+  return UserSchema.parse(response.data);
 }
 
 // 사용자 정보 수정
-export async function userProfileUpdate(userId: string, payload: UserProfileUpdateRequest): Promise<User> {
-  try {
-    const response = await api.patch<User>(`/api/v1/user/${userId}`, payload);
-    return UserSchema.parse(response.data);
-  } catch (error) {
-    throw error;
-  }
+export async function userProfileUpdate(
+  userId: string,
+  payload: UserProfileUpdateRequest
+): Promise<User> {
+  const response = await api.patch<User>(`/api/v1/user/${userId}`, payload);
+  return UserSchema.parse(response.data);
 }
 
 // 사용자 삭제
 export async function userDelete(userId: string): Promise<void> {
-  try {
-    await api.delete<void>(`/api/v1/user/${userId}`);
-  } catch (error) {
-    throw error;
-  }
+  await api.delete<void>(`/api/v1/user/${userId}`);
 }
 
 // 사용자 역할별 통계
 export async function userRoleStats(): Promise<Record<UserRole, number>> {
-  try {
-    const response = await api.get<Record<UserRole, number>>("/api/v1/user/stats/role");
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.get<Record<UserRole, number>>(
+    "/api/v1/user/stats/role"
+  );
+  return response.data;
 }
 
 // 사용자 역할명 변환

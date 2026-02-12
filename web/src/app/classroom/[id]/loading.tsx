@@ -1,11 +1,5 @@
-"use client";
-
-import Loader from "@/components/common/Loader";
+import LoadingFallback from "@/components/common/LoadingFallback";
 
 export default function ClassroomLoading() {
-  return (
-    <div className="flex-1 flex items-center justify-center bg-zinc-950 min-h-[60vh]">
-      <Loader />
-    </div>
-  );
+  return <LoadingFallback variant="classroom" />;
 }

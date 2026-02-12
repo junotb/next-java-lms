@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { UserRole, UserRoleSchema } from "@/schemas/user/user-role";
-import { UserStatus, UserStatusSchema } from "@/schemas/user/user-status";
+import { UserRoleSchema } from "@/schemas/user/user-role";
+import { UserStatusSchema } from "@/schemas/user/user-status";
 
 // 이메일 로그인 요청 스키마
 export const SignInEmailRequestSchema = z.object({

@@ -33,7 +33,9 @@ export type CourseUpdateRequest = z.infer<typeof CourseUpdateRequestSchema>;
 // 강의 목록 요청 스키마
 export const CourseListRequestSchema = z.object({
   title: z.string().optional(),
-  status: CourseStatusSchema.optional().or(z.literal("")).transform((val) => val === "" ? undefined : val),
+  status: CourseStatusSchema.optional()
+    .or(z.literal(""))
+    .transform((val) => (val === "" ? undefined : val)),
 });
 
 export type CourseListRequest = z.infer<typeof CourseListRequestSchema>;
@@ -44,5 +46,5 @@ export type CourseCreateFormValues = CourseCreateRequest;
 // 강의 수정 폼 타입
 export type CourseUpdateFormValues = CourseUpdateRequest;
 
-// 강의 목록 폼 타입
-export type CourseListFormValues = CourseListRequest;
+// 강의 목록 폼 타입 (폼 입력은 "" 허용, onSubmit 시 transform으로 undefined 변환)
+export type CourseListFormValues = z.input<typeof CourseListRequestSchema>;
