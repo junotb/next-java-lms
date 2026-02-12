@@ -60,19 +60,47 @@ jobs:
           docker push ${IMAGE}:latest
 
       - name: Deploy API to Cloud Run
+        env:
+          CLOUD_RUN_ENV_API: ${{ secrets.CLOUD_RUN_ENV_API }}
         run: |
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          gcloud run deploy lms-api \
-            --image ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-api:${SHORT_SHA} \
-            --region ${{ env.GCP_REGION }} \
-            --platform managed \
-            --allow-unauthenticated
+          if [ -n "$CLOUD_RUN_ENV_API" ]; then
+            echo "$CLOUD_RUN_ENV_API" > /tmp/api-env.yaml
+            gcloud run deploy lms-api \
+              --image ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-api:${SHORT_SHA} \
+              --region ${{ env.GCP_REGION }} \
+              --platform managed \
+              --memory 512Mi \
+              --timeout 300 \
+              --allow-unauthenticated \
+              --env-vars-file /tmp/api-env.yaml
+          else
+            gcloud run deploy lms-api \
+              --image ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-api:${SHORT_SHA} \
+              --region ${{ env.GCP_REGION }} \
+              --platform managed \
+              --memory 512Mi \
+              --timeout 300 \
+              --allow-unauthenticated
+          fi
 
       - name: Deploy Web to Cloud Run
+        env:
+          CLOUD_RUN_ENV_WEB: ${{ secrets.CLOUD_RUN_ENV_WEB }}
         run: |
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          gcloud run deploy lms-web \
-            --image ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-web:${SHORT_SHA} \
-            --region ${{ env.GCP_REGION }} \
-            --platform managed \
-            --allow-unauthenticated
+          if [ -n "$CLOUD_RUN_ENV_WEB" ]; then
+            echo "$CLOUD_RUN_ENV_WEB" > /tmp/web-env.yaml
+            gcloud run deploy lms-web \
+              --image ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-web:${SHORT_SHA} \
+              --region ${{ env.GCP_REGION }} \
+              --platform managed \
+              --allow-unauthenticated \
+              --env-vars-file /tmp/web-env.yaml
+          else
+            gcloud run deploy lms-web \
+              --image ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-web:${SHORT_SHA} \
+              --region ${{ env.GCP_REGION }} \
+              --platform managed \
+              --allow-unauthenticated
+          fi
