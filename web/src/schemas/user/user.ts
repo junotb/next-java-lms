@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { UserRole, UserRoleSchema } from "@/schemas/user/user-role";
-import { UserStatus, UserStatusSchema } from "@/schemas/user/user-status";
+import { UserRoleSchema } from "@/schemas/user/user-role";
+import { UserStatusSchema } from "@/schemas/user/user-status";
 
 // 사용자 스키마
 export const UserSchema = z.object({
@@ -48,8 +48,12 @@ export type UserProfileRequest = {
 export const UserListRequestSchema = z.object({
   name: z.string().optional(),
   email: z.string().optional(),
-  role: UserRoleSchema.optional().or(z.literal("")).transform((val) => val === "" ? undefined : val),
-  status: UserStatusSchema.optional().or(z.literal("")).transform((val) => val === "" ? undefined : val),
+  role: UserRoleSchema.optional()
+    .or(z.literal(""))
+    .transform((val) => (val === "" ? undefined : val)),
+  status: UserStatusSchema.optional()
+    .or(z.literal(""))
+    .transform((val) => (val === "" ? undefined : val)),
 });
 
 export type UserListRequest = z.infer<typeof UserListRequestSchema>;
@@ -63,5 +67,5 @@ export type UserProfileUpdateFormValues = UserProfileUpdateRequest;
 // 사용자 조회 폼 타입
 export type UserProfileFormValues = UserProfileRequest;
 
-// 사용자 목록 폼 타입
-export type UserListFormValues = UserListRequest;
+// 사용자 목록 폼 타입 (폼 입력은 "" 허용)
+export type UserListFormValues = z.input<typeof UserListRequestSchema>;

@@ -53,7 +53,7 @@ export default function MeetLinkModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent onClose={() => onOpenChange(false)} className="max-w-md">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Meet 링크 입력</DialogTitle>
           <DialogDescription>

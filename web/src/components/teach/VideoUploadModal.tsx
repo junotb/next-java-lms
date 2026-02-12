@@ -50,7 +50,7 @@ export default function VideoUploadModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent onClose={() => onOpenChange(false)} className="max-w-md">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>수업 영상 업로드</DialogTitle>
           <DialogDescription>

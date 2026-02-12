@@ -5,7 +5,7 @@ import type {
   CourseListFormValues,
 } from "@/schemas/course/course";
 import { CourseListRequestSchema } from "@/schemas/course/course";
-import { CourseStatus, CourseStatusSchema } from "@/schemas/course/course-status";
+import { CourseStatus } from "@/schemas/course/course-status";
 import { COURSE_STATUS_LABELS } from "@/constants/course";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,8 +34,10 @@ export default function CourseListForm({ onSubmit }: CourseListFormProps) {
     });
 
   const handleFormSubmit = (data: CourseListFormValues) => {
-    // 스키마에서 빈 문자열을 undefined로 변환하므로 그대로 전달
-    onSubmit(data);
+    onSubmit({
+      title: data.title,
+      status: data.status === "" ? undefined : data.status,
+    });
   };
 
   return (

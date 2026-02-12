@@ -5,7 +5,7 @@ import {
   ScheduleStatusSchema,
 } from "@/schemas/schedule/schedule-status";
 import { UserRole, UserRoleSchema } from "@/schemas/user/user-role";
-import { Users, UserCheck, GraduationCap, Calendar, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { Users, UserCheck, GraduationCap, Calendar, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface StatCardProps {
@@ -32,10 +32,10 @@ function getIcon(title: UserRole | ScheduleStatus): LucideIcon {
     switch (status) {
       case "SCHEDULED":
         return Calendar;
-      case "ONGOING":
-        return Clock;
-      case "COMPLETED":
+      case "ATTENDED":
         return CheckCircle2;
+      case "ABSENT":
+        return AlertCircle;
       case "CANCELLED":
         return XCircle;
       default:

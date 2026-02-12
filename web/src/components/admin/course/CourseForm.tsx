@@ -13,7 +13,7 @@ import {
   CourseCreateRequestSchema,
   CourseUpdateRequestSchema,
 } from "@/schemas/course/course";
-import { CourseStatus, CourseStatusSchema } from "@/schemas/course/course-status";
+import { CourseStatus } from "@/schemas/course/course-status";
 import { COURSE_STATUS_LABELS } from "@/constants/course";
 import InputField from "@/components/common/InputField";
 import TextareaField from "@/components/common/TextareaField";
@@ -62,9 +62,9 @@ export default function CourseForm({
       onSubmit={handleSubmit((values) => {
         if (isCreate) {
           const payload: CourseCreateRequest = {
-            title: values.title,
+            title: values.title ?? "",
             description: values.description || null,
-            status: values.status,
+            status: values.status ?? CourseStatus.ACTIVE,
           };
           onSubmit(payload);
         } else {

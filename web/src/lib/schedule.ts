@@ -11,33 +11,25 @@ import {
 import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 
 // 스케줄 목록 조회
-export async function scheduleList(params: ScheduleListRequest): Promise<Schedule[]> {
-  try {
-    const response = await api.get<Schedule[]>("/api/v1/schedule", { params });
-    return PageResponseSchema(ScheduleSchema).parse(response.data).items;
-  } catch (error) {
-    throw error;
-  }
+export async function scheduleList(
+  params: ScheduleListRequest
+): Promise<Schedule[]> {
+  const response = await api.get<Schedule[]>("/api/v1/schedule", { params });
+  return PageResponseSchema(ScheduleSchema).parse(response.data).items;
 }
 
-// 사용자 정보 조회
+// 스케줄 정보 조회
 export async function scheduleInfo(scheduleId: number): Promise<Schedule> {
-  try {
-    const response = await api.get<Schedule>(`/api/v1/schedule/${scheduleId}`);
-    return ScheduleSchema.parse(response.data);
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.get<Schedule>(`/api/v1/schedule/${scheduleId}`);
+  return ScheduleSchema.parse(response.data);
 }
 
 // 스케줄 등록
-export async function scheduleCreate(payload: ScheduleCreateRequest): Promise<Schedule> {
-  try {
-    const response = await api.post<Schedule>("/api/v1/schedule", payload);
-    return ScheduleSchema.parse(response.data);
-  } catch (error) {
-    throw error;
-  }
+export async function scheduleCreate(
+  payload: ScheduleCreateRequest
+): Promise<Schedule> {
+  const response = await api.post<Schedule>("/api/v1/schedule", payload);
+  return ScheduleSchema.parse(response.data);
 }
 
 // Meet 링크 수정 (강사 전용)
@@ -50,22 +42,20 @@ export async function scheduleMeetLinkUpdate(
 }
 
 // 스케줄 수정
-export async function scheduleUpdate(scheduleId: number, payload: ScheduleUpdateRequest): Promise<Schedule> {
-  try {
-    const response = await api.patch<Schedule>(`/api/v1/schedule/${scheduleId}`, payload);
-    return ScheduleSchema.parse(response.data);
-  } catch (error) {
-    throw error;
-  }
+export async function scheduleUpdate(
+  scheduleId: number,
+  payload: ScheduleUpdateRequest
+): Promise<Schedule> {
+  const response = await api.patch<Schedule>(
+    `/api/v1/schedule/${scheduleId}`,
+    payload
+  );
+  return ScheduleSchema.parse(response.data);
 }
 
 // 스케줄 삭제
 export async function scheduleDelete(scheduleId: number): Promise<void> {
-  try {
-    await api.delete<void>(`/api/v1/schedule/${scheduleId}`);
-  } catch (error) {
-    throw error;
-  }
+  await api.delete<void>(`/api/v1/schedule/${scheduleId}`);
 }
 
 // 스케줄 상태별 통계
