@@ -39,3 +39,6 @@ bin/
 .AppleDouble
 Thumbs.db
 ehthumbs.db
+
+### Cloud Run ###
+cloud-run-env-api.yaml

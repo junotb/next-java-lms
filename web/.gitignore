@@ -49,3 +49,6 @@ credentials/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Cloud Run
+cloud-run-env-web.yaml
