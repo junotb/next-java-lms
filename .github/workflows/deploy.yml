@@ -1,4 +1,4 @@
-# main 브랜치 push 시 api, web 이미지 빌드 → ghcr.io 푸시 → Cloud Run 배포
+# main 브랜치 push 시 api, web 이미지 빌드 → Artifact Registry 푸시 → Cloud Run 배포
 name: Deploy to Cloud Run
 
 on:
@@ -8,7 +8,7 @@ on:
 env:
   GCP_REGION: ${{ secrets.GCP_REGION }}
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GHCR_IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}
+  AR_REPO: lms
 
 jobs:
   deploy:
@@ -16,32 +16,10 @@ jobs:
     permissions:
       contents: read
       id-token: write
-      packages: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push API image
-        run: |
-          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          docker build -f api/Dockerfile -t ${{ env.GHCR_IMAGE_PREFIX }}/lms-api:$SHORT_SHA -t ${{ env.GHCR_IMAGE_PREFIX }}/lms-api:latest ./api
-          docker push ${{ env.GHCR_IMAGE_PREFIX }}/lms-api:$SHORT_SHA
-          docker push ${{ env.GHCR_IMAGE_PREFIX }}/lms-api:latest
-
-      - name: Build and push Web image
-        run: |
-          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          docker build -f web/Dockerfile -t ${{ env.GHCR_IMAGE_PREFIX }}/lms-web:$SHORT_SHA -t ${{ env.GHCR_IMAGE_PREFIX }}/lms-web:latest ./web
-          docker push ${{ env.GHCR_IMAGE_PREFIX }}/lms-web:$SHORT_SHA
-          docker push ${{ env.GHCR_IMAGE_PREFIX }}/lms-web:latest
 
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
@@ -53,11 +31,42 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Enable Artifact Registry API
+        run: gcloud services enable artifactregistry.googleapis.com --quiet
+
+      - name: Create Artifact Registry repository (if not exists)
+        run: |
+          if ! gcloud artifacts repositories describe ${{ env.AR_REPO }} --location=${{ env.GCP_REGION }} 2>/dev/null; then
+            gcloud artifacts repositories create ${{ env.AR_REPO }} \
+              --repository-format=docker \
+              --location=${{ env.GCP_REGION }} \
+              --description="LMS Docker images"
+          fi
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push API image
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          IMAGE="${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-api"
+          docker build -f api/Dockerfile -t ${IMAGE}:${SHORT_SHA} -t ${IMAGE}:latest ./api
+          docker push ${IMAGE}:${SHORT_SHA}
+          docker push ${IMAGE}:latest
+
+      - name: Build and push Web image
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          IMAGE="${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-web"
+          docker build -f web/Dockerfile -t ${IMAGE}:${SHORT_SHA} -t ${IMAGE}:latest ./web
+          docker push ${IMAGE}:${SHORT_SHA}
+          docker push ${IMAGE}:latest
+
       - name: Deploy API to Cloud Run
         run: |
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
           gcloud run deploy lms-api \
-            --image ${{ env.GHCR_IMAGE_PREFIX }}/lms-api:${SHORT_SHA} \
+            --image ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-api:${SHORT_SHA} \
             --region ${{ env.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated
@@ -66,7 +75,7 @@ jobs:
         run: |
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
           gcloud run deploy lms-web \
-            --image ${{ env.GHCR_IMAGE_PREFIX }}/lms-web:${SHORT_SHA} \
+            --image ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-web:${SHORT_SHA} \
             --region ${{ env.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated
