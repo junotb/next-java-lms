@@ -31,9 +31,6 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Enable Artifact Registry API
-        run: gcloud services enable artifactregistry.googleapis.com --quiet
-
       - name: Create Artifact Registry repository (if not exists)
         run: |
           if ! gcloud artifacts repositories describe ${{ env.AR_REPO }} --location=${{ env.GCP_REGION }} 2>/dev/null; then
