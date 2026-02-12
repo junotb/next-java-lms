@@ -1,0 +1,21 @@
+# Gradle
+.gradle
+build
+
+# IDE
+.idea
+*.iml
+.vscode
+
+# 환경 파일 (보안)
+.env
+.env.*
+*.pem
+
+# Git
+.git
+.gitignore
+
+# 문서
+*.md
+docs

@@ -1,0 +1,40 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build
+.next
+out
+dist
+build
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# 테스트 및 개발
+coverage
+.nyc_output
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+jest.config.ts
+jest.setup.ts
+.eslintrc*
+
+# 환경 파일 (빌드 시 주입)
+.env
+.env.*
+
+# Git
+.git
+.gitignore
+
+# 문서
+*.md
+README.md
