@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import type { ApiError, ApiErrorResponse } from "@/types/api";
 import { API_URL } from "@/constants/api";
+import { authClient } from "@/lib/auth-client";
 
 // 하위 호환성을 위해 타입 re-export
 export type { ApiError, ApiErrorResponse } from "@/types/api";
@@ -10,11 +11,19 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // 쿠키 자동 전송 (Better-Auth 세션 쿠키 포함)
+  withCredentials: true,
 });
 
-// Bearer Token 추출 로직 제거
-// 쿠키가 자동으로 전송되므로 추가 작업 불필요
+// 프로덕션: Web/API 도메인이 달라 쿠키 미전송 → Bearer 토큰으로 인증
+api.interceptors.request.use(async (config) => {
+  if (typeof window === "undefined") return config;
+
+  const { data: session } = await authClient.getSession();
+  if (session?.session?.token) {
+    config.headers.Authorization = `Bearer ${session.session.token}`;
+  }
+  return config;
+});
 
 api.interceptors.response.use(
   (response) => response,
