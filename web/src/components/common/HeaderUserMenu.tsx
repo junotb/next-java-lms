@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LogOut, User } from "lucide-react";
+import Link from "next/link";
+import { LogOut, User, Settings } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { ROLE_REDIRECT_MAP } from "@/constants/auth";
@@ -44,6 +45,11 @@ export default function HeaderUserMenu({
             <a href={dashboardPath}>내 대시보드</a>
           </Button>
         )}
+        <Button variant="ghost" size="sm" asChild>
+          <Link href="/settings/profile" aria-label="설정">
+            <Settings className="h-4 w-4" />
+          </Link>
+        </Button>
         <Button
           variant="ghost"
           size="icon"
@@ -64,6 +70,12 @@ export default function HeaderUserMenu({
           <a href={dashboardPath}>내 대시보드</a>
         </Button>
       )}
+      <Button variant="ghost" size="sm" asChild>
+        <Link href="/settings/profile" className="flex items-center gap-1">
+          <Settings className="h-4 w-4" />
+          설정
+        </Link>
+      </Button>
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <User className="h-4 w-4" />
         <span className="max-w-32 truncate" title={displayName}>

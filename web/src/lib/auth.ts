@@ -9,6 +9,7 @@ import {
 } from "@/constants/auth";
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
   database: new Pool({
     connectionString: process.env.DATABASE_URL,
     max: DATABASE_POOL_MAX,
@@ -25,16 +26,37 @@ export const auth = betterAuth({
         defaultValue: DEFAULT_USER_STATUS,
       },
     },
+    updateUser: {
+      allowUserUpdate: async () => true,
+    },
   },
   session: {
     expiresIn: SESSION_EXPIRES_IN,
     cookieCache: {
       enabled: true,
       maxAge: COOKIE_CACHE_MAX_AGE,
-      include: ["user.role"], // 캐시에 유저의 권한 정보 포함
+      include: ["user.role"],
     },
   },
   emailAndPassword: {
     enabled: true,
+  },
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID ?? "",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
+    },
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+    },
+    naver: {
+      clientId: process.env.NAVER_CLIENT_ID ?? "",
+      clientSecret: process.env.NAVER_CLIENT_SECRET ?? "",
+    },
+    kakao: {
+      clientId: process.env.KAKAO_CLIENT_ID ?? "",
+      clientSecret: process.env.KAKAO_CLIENT_SECRET ?? "",
+    },
   },
 });
