@@ -6,28 +6,38 @@ import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 import HeaderUserMenu from "@/components/common/HeaderUserMenu";
+import HeaderNavSheet from "@/components/common/HeaderNavSheet";
+
+const NAV_ITEMS = [
+  { href: "/admin", label: "대시보드" },
+  { href: "/admin/user", label: "사용자" },
+  { href: "/admin/course", label: "강의" },
+  { href: "/admin/schedule", label: "스케줄" },
+] as const;
 
 export default function AdminHeader() {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
 
-  const navItems = [
-    { href: "/admin", label: "대시보드" },
-    { href: "/admin/user", label: "사용자" },
-    { href: "/admin/course", label: "강의" },
-    { href: "/admin/schedule", label: "스케줄" },
-  ];
+  const getIsActive = (item: { href: string; label: string }) =>
+    pathname === item.href;
 
   return (
-    <header className="sticky flex justify-center top-0 z-40 border-b w-full bg-background">
-      <div className="flex items-center justify-between px-4 h-16 w-full max-w-7xl">
-        <Link href="/" className="flex items-center space-x-2">
-          <BookOpen className="h-6 w-6" />
-          <h1 className="font-bold">NexLang</h1>
-        </Link>
-        <nav className="flex items-center space-x-6">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
+    <header className="sticky top-0 z-40 flex w-full justify-center border-b bg-background pt-[env(safe-area-inset-top)]">
+      <div className="flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2">
+          <HeaderNavSheet
+            navItems={[...NAV_ITEMS]}
+            getIsActive={getIsActive}
+          />
+          <Link href="/" className="flex items-center space-x-2">
+            <BookOpen className="h-6 w-6" />
+            <h1 className="font-bold">NexLang</h1>
+          </Link>
+        </div>
+        <nav className="hidden md:flex items-center space-x-6">
+          {NAV_ITEMS.map((item) => {
+            const isActive = getIsActive(item);
             return (
               <Link
                 key={item.href}
