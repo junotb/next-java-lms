@@ -21,6 +21,13 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // /settings: 로그인 필수
+  if (pathname.startsWith("/settings")) {
+    if (!session) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
   // /feedback: 강사 또는 학생만 접근 (세션 필수)
   if (pathname.startsWith("/feedback")) {
     if (!session) {
@@ -49,5 +56,7 @@ export const config = {
     "/study/:path*",
     "/teach/:path*",
     "/feedback/:path*",
+    "/settings/:path*",
+    "/auth/:path*",
   ],
 };

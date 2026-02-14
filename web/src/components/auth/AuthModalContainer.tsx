@@ -11,6 +11,7 @@ import { useAuthModalStore } from "@/stores/useAuthModalStore";
 import { useToastStore } from "@/stores/useToastStore";
 import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
+import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
 import Loader from "@/components/common/Loader";
 import { authClient } from "@/lib/auth-client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -103,6 +104,12 @@ export default function AuthModalContainer() {
         )}
         {!isLoading && modalType === MODAL_TYPES.SIGN_UP && (
           <SignUpForm error={error} onSubmit={handleSignUp} />
+        )}
+
+        {!isLoading && (
+          <div className="mt-4 pt-4 border-t border-border">
+            <SocialLoginButtons />
+          </div>
         )}
 
         <Button
