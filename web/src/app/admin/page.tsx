@@ -6,6 +6,7 @@ import { useScheduleStatusStats } from "@/hooks/admin/useSchedule";
 import { useUserRoleStats } from "@/hooks/admin/useUser";
 import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 import { UserRole } from "@/schemas/user/user-role";
+import { Button } from "@/components/ui/button";
 
 export default function AdminPage() {
   const {
@@ -26,8 +27,8 @@ export default function AdminPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8 px-4 max-w-4xl">
-        <h1 className="text-2xl font-bold text-foreground mb-6">관리자 대시보드</h1>
+      <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="mb-6 text-2xl font-bold text-foreground sm:text-3xl">관리자 대시보드</h1>
         <div className="flex flex-col gap-6">
           <StatsListSkeleton />
           <StatsListSkeleton />
@@ -38,33 +39,35 @@ export default function AdminPage() {
 
   if (isError) {
     return (
-      <div className="container mx-auto py-8 px-4 max-w-4xl">
-        <h1 className="text-2xl font-bold text-foreground mb-6">관리자 대시보드</h1>
-        <div className="rounded-lg border border-muted-foreground/30 bg-muted/30 p-6">
-          <p className="text-foreground font-medium mb-2">
+      <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="mb-6 text-2xl font-bold text-foreground sm:text-3xl">관리자 대시보드</h1>
+        <div className="rounded-lg border border-muted-foreground/30 bg-muted/30 p-4 sm:p-6">
+          <p className="mb-2 font-medium text-foreground">
             데이터를 불러오는 중 오류가 발생했습니다.
           </p>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="mb-4 text-sm text-muted-foreground">
             잠시 후 다시 시도해주세요.
           </p>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {isScheduleStatusError && (
-              <button
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => refetchScheduleStatus()}
-                className="rounded-md bg-foreground px-4 py-2 text-background hover:bg-foreground/90 text-sm"
               >
                 스케줄 통계 다시 시도
-              </button>
+              </Button>
             )}
             {isUserRoleError && (
-              <button
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => refetchUserRole()}
-                className="rounded-md bg-foreground px-4 py-2 text-background hover:bg-foreground/90 text-sm"
               >
                 사용자 통계 다시 시도
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -73,32 +76,32 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-4xl">
-      <h1 className="text-2xl font-bold text-foreground mb-6">관리자 대시보드</h1>
+    <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <h1 className="mb-6 text-2xl font-bold text-foreground sm:text-3xl">관리자 대시보드</h1>
 
       <div className="flex flex-col gap-6">
         {/* 사용자 통계 */}
         {userRoleStats ? (
-          <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">사용자 통계</h2>
+          <section className="min-w-0">
+            <h2 className="mb-3 text-base font-semibold text-foreground">사용자 통계</h2>
             <StatsList<UserRole> stats={userRoleStats} unit="명" />
           </section>
         ) : (
-          <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">사용자 통계</h2>
+          <section className="min-w-0">
+            <h2 className="mb-3 text-base font-semibold text-foreground">사용자 통계</h2>
             <p className="text-muted-foreground">데이터를 불러올 수 없습니다.</p>
           </section>
         )}
 
         {/* 스케줄 통계 */}
         {scheduleStatusStats ? (
-          <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">스케줄 통계</h2>
+          <section className="min-w-0">
+            <h2 className="mb-3 text-base font-semibold text-foreground">스케줄 통계</h2>
             <StatsList<ScheduleStatus> stats={scheduleStatusStats} unit="건" />
           </section>
         ) : (
-          <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">스케줄 통계</h2>
+          <section className="min-w-0">
+            <h2 className="mb-3 text-base font-semibold text-foreground">스케줄 통계</h2>
             <p className="text-muted-foreground">데이터를 불러올 수 없습니다.</p>
           </section>
         )}

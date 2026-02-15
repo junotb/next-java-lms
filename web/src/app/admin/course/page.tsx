@@ -49,23 +49,23 @@ export default function AdminCoursesPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 py-12 lg:px-8 lg:py-16">
+    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
       <div className="flex flex-col gap-8">
-        <header className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
               강의 관리
             </h1>
-            <p className="mt-2 text-lg text-muted-foreground">
+            <p className="mt-1.5 text-sm text-muted-foreground sm:text-base lg:text-lg">
               교육 콘텐츠를 검색하고 관리합니다.
             </p>
           </div>
           <Button
-            className="flex items-center gap-2"
+            className="flex shrink-0 items-center justify-center gap-2 self-start sm:self-auto"
             onClick={openCreateModal}
           >
-            <Plus className="mr-2 h-4 w-4" />
-            <span>강의 추가</span>
+            <Plus className="h-4 w-4 shrink-0" />
+            <span className="truncate">강의 추가</span>
           </Button>
         </header>
 
@@ -77,7 +77,7 @@ export default function AdminCoursesPage() {
           <CourseListForm onSubmit={updateRequest} />
         </div>
 
-        <div className="flex-1 flex flex-col gap-4">
+        <div className="flex flex-col gap-4 flex-1 min-w-0">
           {isLoading ? (
             <ListTableSkeleton columnCount={4} rowCount={8} />
           ) : error ? (
@@ -85,11 +85,13 @@ export default function AdminCoursesPage() {
               강의 목록을 불러오는 중 오류가 발생했습니다.
             </p>
           ) : courses?.length ? (
-            <CourseListTable
-              courses={courses ?? []}
-              onUpdate={openUpdateModal}
-              onDelete={handleDelete}
-            />
+            <div className="min-w-0 overflow-x-auto rounded-lg border border-border">
+              <CourseListTable
+                courses={courses ?? []}
+                onUpdate={openUpdateModal}
+                onDelete={handleDelete}
+              />
+            </div>
           ) : (
             <p className="text-center text-muted-foreground">강의가 없습니다.</p>
           )}

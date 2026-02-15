@@ -52,7 +52,7 @@ export default function HeaderUserMenu({
       <div className="flex items-center gap-1 sm:gap-2">
         {showDashboardLink && dashboardPath && (
           <Button variant="ghost" size="sm" asChild className={TOUCH_TARGET_CLASS}>
-            <a href={dashboardPath}>내 대시보드</a>
+            <Link href={dashboardPath}>내 대시보드</Link>
           </Button>
         )}
         <Button
@@ -82,7 +82,7 @@ export default function HeaderUserMenu({
     <div className="flex items-center gap-2 sm:gap-4">
       {showDashboardLink && dashboardPath && (
         <Button variant="ghost" size="sm" asChild className={TOUCH_TARGET_CLASS}>
-          <a href={dashboardPath}>내 대시보드</a>
+          <Link href={dashboardPath}>내 대시보드</Link>
         </Button>
       )}
       <Button variant="ghost" size="sm" asChild className={TOUCH_TARGET_CLASS}>
