@@ -73,17 +73,12 @@ export function FeedbackReport({ feedbackContent }: FeedbackReportProps) {
   if (!feedbackData) {
     return (
       <div className="rounded-lg border border-muted-foreground/30 bg-muted/30 p-6">
-        <p className="text-foreground text-sm font-medium mb-2">
-          피드백 데이터를 파싱할 수 없습니다.
+        <p className="text-foreground text-sm font-medium">
+          피드백 형식을 읽을 수 없습니다.
         </p>
-        <p className="text-xs text-muted-foreground">
-          데이터 형식을 확인해주세요. (타입: {typeof feedbackContent})
+        <p className="mt-1 text-xs text-muted-foreground">
+          잠시 후 다시 시도해 주세요.
         </p>
-        {typeof feedbackContent === "string" && (
-          <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-auto max-h-32">
-            {feedbackContent.substring(0, 500)}
-          </pre>
-        )}
       </div>
     );
   }

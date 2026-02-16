@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export default function FeedbackSkeleton() {
   return (
-    <div className="container max-w-4xl py-8">
+    <div className="container mx-auto max-w-4xl px-4 py-8">
       <Skeleton className="h-8 w-20 mb-6" />
       <header className="mb-8">
         <Skeleton className="h-8 w-48 mb-2" />

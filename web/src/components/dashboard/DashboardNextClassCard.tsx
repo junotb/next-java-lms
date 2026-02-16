@@ -8,6 +8,7 @@ import MeetLinkModal from "@/components/teach/MeetLinkModal";
 import type { DashboardNextClass } from "@/schemas/dashboard/dashboard";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
+import { getClassroomPath } from "@/lib/routes";
 
 type Role = "STUDENT" | "TEACHER";
 
@@ -128,7 +129,9 @@ export default function DashboardNextClassCard({
           )}
           <Button
             className={cn("w-fit", buttonClass)}
-            onClick={() => router.push(`/classroom/${schedule.scheduleId}`)}
+            onClick={() =>
+              router.push(getClassroomPath(role, schedule.scheduleId))
+            }
             disabled={!canEnter}
           >
             수업 입장

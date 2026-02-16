@@ -2,11 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LogOut, User, Settings } from "lucide-react";
+import { LayoutDashboard, LogOut, User, Settings } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ROLE_REDIRECT_MAP } from "@/constants/auth";
+import { getSettingsPath } from "@/lib/routes";
 import type { UserRole } from "@/schemas/user/user-role";
 
 interface HeaderUserMenuProps {
@@ -38,6 +39,9 @@ export default function HeaderUserMenu({
   const dashboardPath = user.role
     ? ROLE_REDIRECT_MAP[user.role as UserRole]
     : undefined;
+  const settingsPath = user.role
+    ? `${getSettingsPath(user.role as UserRole)}/profile`
+    : "/";
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -51,8 +55,11 @@ export default function HeaderUserMenu({
     return (
       <div className="flex items-center gap-1 sm:gap-2">
         {showDashboardLink && dashboardPath && (
-          <Button variant="ghost" size="sm" asChild className={TOUCH_TARGET_CLASS}>
-            <Link href={dashboardPath}>내 대시보드</Link>
+          <Button variant="ghost" size="sm" asChild className={`gap-1.5 ${TOUCH_TARGET_CLASS}`}>
+            <Link href={dashboardPath} className="flex items-center gap-1.5">
+              <LayoutDashboard className="h-4 w-4 shrink-0" />
+              내 대시보드
+            </Link>
           </Button>
         )}
         <Button
@@ -61,7 +68,7 @@ export default function HeaderUserMenu({
           asChild
           className={`text-muted-foreground hover:text-foreground ${TOUCH_TARGET_CLASS}`}
         >
-          <Link href="/settings/profile" aria-label="설정">
+          <Link href={settingsPath} aria-label="설정">
             <Settings className="h-4 w-4" />
           </Link>
         </Button>
@@ -81,22 +88,23 @@ export default function HeaderUserMenu({
   return (
     <div className="flex items-center gap-2 sm:gap-4">
       {showDashboardLink && dashboardPath && (
-        <Button variant="ghost" size="sm" asChild className={TOUCH_TARGET_CLASS}>
-          <Link href={dashboardPath}>내 대시보드</Link>
+        <Button variant="ghost" size="sm" asChild className={`gap-1.5 ${TOUCH_TARGET_CLASS}`}>
+          <Link href={dashboardPath} className="flex items-center gap-1.5">
+            <LayoutDashboard className="h-4 w-4 shrink-0" />
+            내 대시보드
+          </Link>
         </Button>
       )}
-      <Button variant="ghost" size="sm" asChild className={TOUCH_TARGET_CLASS}>
-        <Link href="/settings/profile" className="flex items-center gap-1">
-          <Settings className="h-4 w-4" />
-          설정
-        </Link>
-      </Button>
-      <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
-        <User className="h-4 w-4" />
+      <Link
+        href={settingsPath}
+        className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-11 touch-manipulation"
+        aria-label="프로필 및 설정"
+      >
+        <User className="h-4 w-4 shrink-0" />
         <span className="max-w-32 truncate" title={displayName}>
           {displayName}
         </span>
-      </div>
+      </Link>
       <Button
         variant="ghost"
         size="sm"

@@ -30,12 +30,14 @@ export function AudioTranscriptPlayer({
 
   return (
     <Card className="w-full max-w-2xl">
-      <CardHeader className="pb-2">
-        <h3 className="text-lg font-semibold">{title}</h3>
-      </CardHeader>
-      <CardContent>
+      {title ? (
+        <CardHeader className="p-4 pb-2">
+          <h3 className="text-lg font-semibold">{title}</h3>
+        </CardHeader>
+      ) : null}
+      <CardContent className="p-4 pt-0">
         {/* 자막 영역 (Chat-style) */}
-        <ScrollArea className="h-[400px] rounded-md border p-4">
+        <ScrollArea className="min-h-[200px] max-h-[50vh] md:h-[400px] rounded-md p-3">
           <div className="space-y-3 pr-4">
             {cues.map((cue, index) => {
               const isMe = isSpeaker2(cue);

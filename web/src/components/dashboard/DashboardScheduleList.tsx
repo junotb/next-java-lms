@@ -10,6 +10,7 @@ import type { DashboardScheduleItem } from "@/schemas/dashboard/dashboard";
 import type { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
+import { getClassroomPath, getFeedbackPath } from "@/lib/routes";
 
 type Role = "STUDENT" | "TEACHER";
 
@@ -76,7 +77,7 @@ export default function DashboardScheduleList({
   const isTeacher = role === "TEACHER";
 
   const handleEnter = (scheduleId: number) => {
-    router.push(`/classroom/${scheduleId}`);
+    router.push(getClassroomPath(role, scheduleId));
   };
 
   return (
@@ -147,7 +148,9 @@ export default function DashboardScheduleList({
                                 size="sm"
                                 variant="outline"
                                 className="text-xs"
-                                onClick={() => router.push(`/feedback/${row.id}`)}
+                                onClick={() =>
+                                  router.push(getFeedbackPath(role, row.id))
+                                }
                               >
                                 피드백
                               </Button>

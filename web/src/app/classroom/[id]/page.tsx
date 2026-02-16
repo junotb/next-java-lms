@@ -1,74 +1,38 @@
-"use client";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { getClassroomPath } from "@/lib/routes";
+import type { UserRole } from "@/schemas/user/user-role";
 
-import { useParams, useRouter } from "next/navigation";
-import ClassroomSkeleton from "@/components/classroom/ClassroomSkeleton";
-import MeetLinkArea from "@/components/classroom/MeetLinkArea";
-import LessonController from "@/components/classroom/LessonController";
-import { useLessonAccess } from "@/hooks/useLesson";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+interface LegacyClassroomPageProps {
+  params: Promise<{ id: string }>;
+}
 
-export default function ClassroomPage() {
-  const params = useParams();
-  const router = useRouter();
-  const id = typeof params.id === "string" ? parseInt(params.id, 10) : null;
+/**
+ * 기존 /classroom/[id] URL 호환. TEACHER|STUDENT만 역할별 경로로 리다이렉트.
+ */
+export default async function LegacyClassroomPage({
+  params,
+}: LegacyClassroomPageProps) {
+  const { id } = await params;
+  const scheduleId = parseInt(id, 10);
 
-  const { data, isLoading, isError } = useLessonAccess(id, { enabled: id != null && !Number.isNaN(id) });
-
-  if (id == null || Number.isNaN(id)) {
-    return (
-      <div className="flex-1 flex items-center justify-center text-zinc-500">
-        잘못된 수업 번호입니다.
-      </div>
-    );
+  if (Number.isNaN(scheduleId)) {
+    redirect("/");
   }
 
-  if (isLoading) {
-    return <ClassroomSkeleton />;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/");
   }
 
-  if (isError || !data) {
-    return (
-      <div className="flex-1 flex items-center justify-center text-zinc-500">
-        수업 정보를 불러올 수 없습니다.
-      </div>
-    );
+  const role = session.user.role as UserRole;
+  if (role !== "TEACHER" && role !== "STUDENT") {
+    redirect("/");
   }
 
-  if (!data.allowed) {
-    return null;
-  }
-
-  const { course } = data;
-
-  return (
-    <div className="flex-1 flex flex-col min-h-0">
-      <div className="flex-1 flex min-h-0 flex-col gap-2 p-2">
-        <Accordion type="single" collapsible defaultValue="course" className="shrink-0 rounded-lg border border-zinc-800 bg-zinc-900/50">
-          <AccordionItem value="course" className="border-zinc-800">
-            <AccordionTrigger className="px-4 py-3 text-sm font-semibold text-zinc-200 hover:text-white hover:no-underline">
-              {course.title}
-            </AccordionTrigger>
-            <AccordionContent className="px-4 text-zinc-400">
-              {course.description ?? "설명이 없습니다."}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-        <div className="flex-1 flex min-h-0">
-          <MeetLinkArea meetLink={data.meetLink} />
-        </div>
-      </div>
-      <LessonController
-        scheduleId={id}
-        role={data.role}
-        startsAt={data.schedule.startsAt}
-        endsAt={data.schedule.endsAt}
-        onExit={() => router.back()}
-      />
-    </div>
-  );
+  redirect(getClassroomPath(role, scheduleId));
 }
