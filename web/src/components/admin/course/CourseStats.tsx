@@ -24,13 +24,13 @@ export default function CourseStats() {
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {/* 전체 강의 */}
+      {/* 전체 강좌 */}
       <Card className="w-full rounded-xl">
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                전체 강의
+                전체 강좌
               </p>
               <p className="mt-1 text-3xl font-semibold tracking-tight text-foreground">
                 {total}

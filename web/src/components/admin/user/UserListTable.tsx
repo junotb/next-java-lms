@@ -2,6 +2,14 @@ import { User } from "@/schemas/user/user";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Pencil } from "lucide-react";
 import {
   USER_ROLE_NAMES,
@@ -17,48 +25,29 @@ interface UserListTableProps {
 
 export default function UserListTable({ users, onUpdate }: UserListTableProps) {
   return (
-    <table className="w-full min-w-[36rem] divide-y divide-border table-auto">
-      <thead className="bg-muted">
-        <tr>
-          <th
-            scope="col"
-            className="px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider sm:px-6 sm:py-4 sm:text-sm"
-          >
-            이름
-          </th>
-          <th
-            scope="col"
-            className="px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider sm:px-6 sm:py-4 sm:text-sm"
-          >
-            이메일
-          </th>
-          <th
-            scope="col"
-            className="px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider sm:px-6 sm:py-4 sm:text-sm"
-          >
-            역할
-          </th>
-          <th
-            scope="col"
-            className="px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider sm:px-6 sm:py-4 sm:text-sm"
-          >
-            상태
-          </th>
-          <th scope="col" className="relative px-3 py-3 sm:px-6 sm:py-4">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>이름</TableHead>
+          <TableHead>이메일</TableHead>
+          <TableHead>역할</TableHead>
+          <TableHead>상태</TableHead>
+          <TableHead className="relative">
             <span className="sr-only">수정</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-card divide-y divide-border">
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {users.map((user) => (
-          <tr key={user.id}>
-            <td className="px-3 py-3 whitespace-nowrap text-sm font-medium text-foreground text-left sm:px-6 sm:py-4">
-              {user.name}
-            </td>
-            <td className="max-w-24 truncate px-3 py-3 text-sm text-muted-foreground text-left sm:max-w-none sm:px-6 sm:py-4" title={user.email}>
+          <TableRow key={user.id}>
+            <TableCell className="font-medium">{user.name}</TableCell>
+            <TableCell
+              className="max-w-24 truncate text-muted-foreground sm:max-w-none"
+              title={user.email}
+            >
               {user.email}
-            </td>
-            <td className="px-3 py-3 whitespace-nowrap text-sm text-muted-foreground text-left sm:px-6 sm:py-4">
+            </TableCell>
+            <TableCell>
               <Badge
                 className={cn(
                   "inline-flex rounded-full px-2 py-0.5 text-xs font-semibold leading-5 sm:px-3 sm:py-1 sm:text-sm",
@@ -67,8 +56,8 @@ export default function UserListTable({ users, onUpdate }: UserListTableProps) {
               >
                 {USER_ROLE_NAMES[user.role]}
               </Badge>
-            </td>
-            <td className="px-3 py-3 whitespace-nowrap text-sm text-muted-foreground text-left sm:px-6 sm:py-4">
+            </TableCell>
+            <TableCell>
               <Badge
                 className={cn(
                   "inline-flex rounded-full px-2 py-0.5 text-xs font-semibold leading-5 sm:px-3 sm:py-1 sm:text-sm",
@@ -77,8 +66,8 @@ export default function UserListTable({ users, onUpdate }: UserListTableProps) {
               >
                 {USER_STATUS_NAMES[user.status]}
               </Badge>
-            </td>
-            <td className="px-3 py-3 whitespace-nowrap text-right sm:px-6 sm:py-4">
+            </TableCell>
+            <TableCell className="text-right">
               <Button
                 onClick={() => onUpdate(user.id)}
                 size="sm"
@@ -89,10 +78,10 @@ export default function UserListTable({ users, onUpdate }: UserListTableProps) {
                 <Pencil className="h-4 w-4" />
                 <span className="hidden sm:inline">수정</span>
               </Button>
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }

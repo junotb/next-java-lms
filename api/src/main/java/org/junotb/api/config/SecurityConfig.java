@@ -35,7 +35,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/refresh").authenticated() // 세션 갱신은 인증 필요
                 .requestMatchers(
                     "/api/auth/**", // 기타 인증 관련 엔드포인트는 허용
-                    "/api/dev/**",
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/swagger-ui.html",

@@ -5,7 +5,7 @@ import { userList, userProfile, userCreate, userProfileUpdate, userDelete, userR
 import { User, UserListRequest, UserCreateRequest, UserProfileUpdateRequest } from "@/schemas/user/user";
 import { UserRole } from "@/schemas/user/user-role";
 import { STALE_TIME_LIST, STALE_TIME_STATS } from "@/constants/config";
-import { useToastStore } from "@/stores/useToastStore";
+import { toast } from "sonner";
 
 /**
  * 사용자 목록 조회.
@@ -39,13 +39,12 @@ export function useUserProfile(userId: string, options?: { enabled?: boolean }) 
  */
 export function useUserCreate() {
   const qc = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: (payload: UserCreateRequest) => userCreate(payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["user"] }),
     onError: (err) => {
-      showToast(err?.message ?? "사용자 등록에 실패했습니다.", "error");
+      toast.error(err?.message ?? "사용자 등록에 실패했습니다.");
     },
   });
 }
@@ -56,13 +55,12 @@ export function useUserCreate() {
  */
 export function useUserProfileUpdate() {
   const qc = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: async ({ userId, payload }: { userId: string; payload: UserProfileUpdateRequest }) => userProfileUpdate(userId, payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["user"] }),
     onError: (err) => {
-      showToast(err?.message ?? "사용자 수정에 실패했습니다.", "error");
+      toast.error(err?.message ?? "사용자 수정에 실패했습니다.");
     },
   });
 }
@@ -73,13 +71,12 @@ export function useUserProfileUpdate() {
  */
 export function useUserDelete() {
   const qc = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: async (userId: string) => userDelete(userId),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["user"] }),
     onError: (err) => {
-      showToast(err?.message ?? "사용자 삭제에 실패했습니다.", "error");
+      toast.error(err?.message ?? "사용자 삭제에 실패했습니다.");
     },
   });
 }

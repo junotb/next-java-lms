@@ -8,7 +8,7 @@ import {
   deleteTeacherTimeOff,
 } from "@/lib/teacher";
 import type { TeacherTimeOffResponse, TeacherTimeOffRequest } from "@/schemas/teacher/time-off";
-import { useToastStore } from "@/stores/useToastStore";
+import { toast } from "sonner";
 
 const QUERY_KEY = ["teacher", "time-off"];
 
@@ -22,32 +22,30 @@ export function useTeacherTimeOffList() {
 
 export function useCreateTeacherTimeOff() {
   const queryClient = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: (data: TeacherTimeOffRequest) => createTeacherTimeOff(data),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: QUERY_KEY });
-      showToast("휴무가 등록되었습니다.", "success");
+      toast.success("휴무가 등록되었습니다.");
     },
     onError: (error: ApiError) => {
-      showToast(error.message || "휴무 등록에 실패했습니다.", "error");
+      toast.error(error.message || "휴무 등록에 실패했습니다.");
     },
   });
 }
 
 export function useDeleteTeacherTimeOff() {
   const queryClient = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: (id: number) => deleteTeacherTimeOff(id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: QUERY_KEY });
-      showToast("휴무가 삭제되었습니다.", "success");
+      toast.success("휴무가 삭제되었습니다.");
     },
     onError: (error: ApiError) => {
-      showToast(error.message || "휴무 삭제에 실패했습니다.", "error");
+      toast.error(error.message || "휴무 삭제에 실패했습니다.");
     },
   });
 }

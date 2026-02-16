@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useVideoUpload } from "@/hooks/useLessonFeedback";
+import { useVideoUpload } from "@/hooks/useScheduleFeedback";
 
 interface VideoUploadModalProps {
   open: boolean;

@@ -58,7 +58,7 @@ export default function CourseInfoCard({
     onSuccess();
   };
 
-  const title = isCreate ? "강의 등록" : "강의 수정";
+  const title = isCreate ? "강좌 등록" : "강좌 수정";
   const isMutating = registerMutation.isPending || modifyMutation.isPending;
 
   return (

@@ -137,8 +137,8 @@ public class ScheduleService {
         );
 
         // 이미 취소된 스케줄인 경우 처리하지 않음
-        if (schedule.getStatus() == ScheduleStatus.CANCELLED) return;
-        schedule.setStatus(ScheduleStatus.CANCELLED);
+        if (schedule.getStatus() == ScheduleStatus.CANCELED) return;
+        schedule.setStatus(ScheduleStatus.CANCELED);
     }
 
     // 상태별 스케줄 개수 조회

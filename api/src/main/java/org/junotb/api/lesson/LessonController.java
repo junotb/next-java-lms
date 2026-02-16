@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.junotb.api.lesson.dto.LessonAccessResponse;
-import org.junotb.api.lessonfeedback.LessonFeedbackService;
-import org.junotb.api.lessonfeedback.dto.LessonFeedbackResponse;
-import org.junotb.api.lessonfeedback.dto.VideoUploadResponse;
+import org.junotb.api.schedulefeedback.ScheduleFeedbackService;
+import org.junotb.api.schedulefeedback.dto.ScheduleFeedbackResponse;
+import org.junotb.api.schedulefeedback.dto.VideoUploadResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +22,7 @@ import java.io.IOException;
 public class LessonController {
 
     private final LessonService lessonService;
-    private final LessonFeedbackService lessonFeedbackService;
+    private final ScheduleFeedbackService scheduleFeedbackService;
 
     @GetMapping("/{scheduleId}/access")
     @Operation(summary = "입장 권한 확인", description = "해당 스케줄(수업)에 대한 입장 가능 여부와 역할을 반환합니다.")
@@ -51,17 +51,17 @@ public class LessonController {
         @AuthenticationPrincipal String teacherId,
         @RequestParam("file") MultipartFile file
     ) throws IOException {
-        VideoUploadResponse response = lessonFeedbackService.uploadVideo(scheduleId, teacherId, file);
+        VideoUploadResponse response = scheduleFeedbackService.uploadVideo(scheduleId, teacherId, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{scheduleId}/feedback")
     @Operation(summary = "수업 피드백 조회", description = "해당 수업의 강사 또는 수강생이 vttContent, feedbackContent 조회.")
-    public ResponseEntity<LessonFeedbackResponse> getFeedback(
+    public ResponseEntity<ScheduleFeedbackResponse> getFeedback(
         @PathVariable Long scheduleId,
         @AuthenticationPrincipal String userId
     ) {
-        LessonFeedbackResponse response = lessonFeedbackService.getFeedback(scheduleId, userId);
+        ScheduleFeedbackResponse response = scheduleFeedbackService.getFeedback(scheduleId, userId);
         return ResponseEntity.ok(response);
     }
 }

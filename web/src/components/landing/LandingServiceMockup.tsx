@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 /**
  * 랜딩 페이지용 서비스 화면 예시.
- * 2개의 별도 페이지를 소개: study/classroom (수업실), study/feedback (AI 피드백).
+ * 2개의 별도 페이지를 소개: study/lesson (수업실), study/feedback (AI 피드백).
  */
 export default function LandingServiceMockup() {
   return (

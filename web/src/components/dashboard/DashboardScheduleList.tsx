@@ -11,7 +11,7 @@ import type { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
 import { USER_ROLE } from "@/constants/auth";
-import { getClassroomPath, getFeedbackPath } from "@/lib/routes";
+import { getLessonPath, getFeedbackPath } from "@/lib/routes";
 
 type Role = (typeof USER_ROLE)[keyof Pick<typeof USER_ROLE, "STUDENT" | "TEACHER">];
 
@@ -29,7 +29,7 @@ const statusVariant: Record<ScheduleStatus, "default" | "secondary" | "destructi
   SCHEDULED: "secondary",
   ATTENDED: "default",
   ABSENT: "destructive",
-  CANCELLED: "outline",
+  CANCELED: "outline",
 };
 
 function formatDatetime(iso: string): string {
@@ -78,7 +78,7 @@ export default function DashboardScheduleList({
   const isTeacher = role === USER_ROLE.TEACHER;
 
   const handleEnter = (scheduleId: number) => {
-    router.push(getClassroomPath(role, scheduleId));
+    router.push(getLessonPath(role, scheduleId));
   };
 
   return (

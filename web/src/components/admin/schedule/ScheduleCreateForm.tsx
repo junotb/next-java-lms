@@ -17,7 +17,7 @@ const SCHEDULE_STATUS_NAMES: Record<string, string> = {
   SCHEDULED: "예정",
   ATTENDED: "출석",
   ABSENT: "결석",
-  CANCELLED: "취소",
+  CANCELED: "취소",
 };
 interface ScheduleCreateFormProps {
   onSubmit: (data: ScheduleCreateRequest) => void;
@@ -28,6 +28,7 @@ export default function ScheduleCreateForm({
 }: ScheduleCreateFormProps) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<ScheduleCreateFormValues>({
@@ -48,7 +49,7 @@ export default function ScheduleCreateForm({
     >
       <InputField
         id="userId"
-        label="사용자 ID"
+        label="강사 ID"
         register={register}
         errors={errors}
       />
@@ -56,15 +57,13 @@ export default function ScheduleCreateForm({
       <SelectField
         id="status"
         label="상태"
-        register={register}
+        control={control}
         errors={errors}
-      >
-        {ScheduleStatusSchema.options.map((status) => (
-          <option key={status} value={status}>
-            {SCHEDULE_STATUS_NAMES[status]}
-          </option>
-        ))}
-      </SelectField>
+        options={ScheduleStatusSchema.options.map((status) => ({
+          value: status,
+          label: SCHEDULE_STATUS_NAMES[status],
+        }))}
+      />
 
       <InputField
         id="startsAt"

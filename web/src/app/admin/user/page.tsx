@@ -81,7 +81,7 @@ export default function AdminUsersPage() {
       </div>
 
       {isModalOpen && (
-        <Modal onClose={closeModal}>
+        <Modal onClose={closeModal} title="회원 상세 정보">
           <UserInfoCard userId={userId} onSuccess={closeModal} />
         </Modal>
       )}

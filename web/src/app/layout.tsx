@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "@/app/globals.css";
 import Providers from "@/app/providers";
-import Toast from "@/components/common/Toast";
+import { Toaster } from "@/components/ui/sonner";
 
 const notoSans = Noto_Sans_KR({
   variable: "--font-noto-sans",
@@ -44,7 +44,7 @@ export default function RootLayout({
       >
         <Providers>
           {children}
-          <Toast />
+          <Toaster />
         </Providers>
       </body>
     </html>

@@ -54,7 +54,7 @@ export default function AdminCoursesPage() {
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-              강의 관리
+              강좌 관리
             </h1>
             <p className="mt-1.5 text-sm text-muted-foreground sm:text-base lg:text-lg">
               교육 콘텐츠를 검색하고 관리합니다.
@@ -65,7 +65,7 @@ export default function AdminCoursesPage() {
             onClick={openCreateModal}
           >
             <Plus className="h-4 w-4 shrink-0" />
-            <span className="truncate">강의 추가</span>
+            <span className="truncate">강좌 추가</span>
           </Button>
         </header>
 
@@ -82,7 +82,7 @@ export default function AdminCoursesPage() {
             <ListTableSkeleton columnCount={4} rowCount={8} />
           ) : error ? (
             <p className="text-center text-destructive">
-              강의 목록을 불러오는 중 오류가 발생했습니다.
+              강좌 목록을 불러오는 중 오류가 발생했습니다.
             </p>
           ) : courses?.length ? (
             <div className="min-w-0 overflow-x-auto rounded-lg border border-border">
@@ -93,13 +93,13 @@ export default function AdminCoursesPage() {
               />
             </div>
           ) : (
-            <p className="text-center text-muted-foreground">강의가 없습니다.</p>
+            <p className="text-center text-muted-foreground">강좌가 없습니다.</p>
           )}
         </div>
       </div>
 
       {isModalOpen && (
-        <Modal onClose={closeModal}>
+        <Modal onClose={closeModal} title="강좌 상세 정보">
           <CourseInfoCard courseId={courseId} onSuccess={closeModal} />
         </Modal>
       )}

@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
- * 강좌 통계 카드 스켈레톤. 레이아웃 시프트를 줄입니다.
+ * 강좌 통계 카드 스켈레톤. 레이아웃 시프트를 줄입니다. 레이아웃 시프트를 줄입니다.
  */
 export default function CourseStatsSkeleton() {
   return (

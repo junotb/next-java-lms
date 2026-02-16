@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Web (Frontend)
 
-## Getting Started
+Next.js App Router 기반 프론트엔드. 관리자·강사·학생 대시보드 및 수강 신청, 수업방 등 UI를 제공합니다.
 
-First, run the development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+| 항목 | 기술 |
+|------|------|
+| Framework | Next.js 15.5 (App Router) |
+| Library | React 19 |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| State | Zustand (Client), TanStack Query v5 (Server) |
+| Forms | React Hook Form + Zod |
+| Auth | Better-Auth |
+| HTTP | Axios |
+| Testing | Jest, React Testing Library |
+
+## 프로젝트 구조
+
+```
+web/src/
+├── app/                    # App Router 페이지
+│   ├── (landing)/          # 랜딩 페이지
+│   ├── admin/              # 관리자 (강좌·사용자·일정)
+│   ├── study/              # 학생 (수강 신청·수업방)
+│   └── teach/              # 강사 (대시보드·수업방)
+├── components/             # 공통·도메인 컴포넌트
+├── hooks/                  # 커스텀 훅
+├── lib/                    # API 클라이언트, 유틸
+├── schemas/                # Zod 스키마
+├── stores/                 # Zustand 스토어
+└── types/                  # TypeScript 타입
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 실행 방법
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# 의존성 설치
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# 개발 서버
+npm run dev
 
-## Learn More
+# 프로덕션 빌드
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# 프로덕션 서버
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+개발 서버 기본 주소: `http://localhost:3000`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 환경 변수
 
-## Deploy on Vercel
+`.env.local`에 다음 예시를 참고하여 설정합니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+# Better-Auth, API base URL 등
+# (실제 항목은 프로젝트 설정 참조)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 테스트
+
+```bash
+# 단일 실행
+npm test
+
+# Watch 모드
+npm run test:watch
+```
+
+## 코딩 규칙
+
+- **Server Components 우선**: `'use client'`는 상태/훅 필요 시에만 사용
+- **TanStack Query**: API 호출은 `useQuery`, `useMutation` 사용
+- **Tailwind v4**: Utility 클래스 위주, `tailwind.config` 없음
+- **Zod**: 폼·API 검증

@@ -8,13 +8,13 @@ import type {
   SignUpEmailRequest,
 } from "@/schemas/auth/auth";
 import { useAuthModalStore } from "@/stores/useAuthModalStore";
-import { useToastStore } from "@/stores/useToastStore";
+import { toast } from "sonner";
 import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
 import Loader from "@/components/common/Loader";
 import { authClient } from "@/lib/auth-client";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ROLE_REDIRECT_MAP, MODAL_TYPES } from "@/constants/auth";
@@ -28,7 +28,6 @@ export default function AuthModalContainer() {
   const [error, setError] = useState<BetterError | null>(null);
 
   const router = useRouter();
-  const { showToast } = useToastStore();
   const { modalType, openModal, closeModal } = useAuthModalStore();
 
   useEffect(() => {
@@ -61,7 +60,7 @@ export default function AuthModalContainer() {
     }
 
     if (!data) {
-      showToast("로그인에 실패했습니다.", "error");
+      toast.error("로그인에 실패했습니다.");
       return;
     }
 
@@ -87,7 +86,7 @@ export default function AuthModalContainer() {
 
     if (data) {
       openModal(MODAL_TYPES.SIGN_IN);
-      showToast("회원가입이 완료되었습니다. 로그인해주세요.", "success");
+      toast.success("회원가입이 완료되었습니다. 로그인해주세요.");
     }
   };
 
@@ -95,9 +94,13 @@ export default function AuthModalContainer() {
     <Dialog open={!!modalType} onOpenChange={(isOpen) => !isOpen && closeModal()}>
       <DialogContent
         className={cn(
-          "relative w-full max-w-md overflow-hidden rounded-2xl bg-card shadow-2xl transition-all animate-scale-in p-8 sm:p-10"
+          "w-full max-w-md overflow-hidden rounded-2xl bg-card shadow-2xl transition-all animate-scale-in p-8 sm:p-10"
         )}
+        aria-describedby={undefined}
       >
+        <DialogTitle className="sr-only">
+          {modalType === MODAL_TYPES.SIGN_IN ? "로그인" : "회원가입"}
+        </DialogTitle>
         <Button
           variant="ghost"
           size="icon"

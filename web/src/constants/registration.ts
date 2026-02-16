@@ -6,7 +6,7 @@ import { DayOfWeek } from "@/schemas/common/day-of-week";
 export const MONTH_OPTIONS = [1, 3, 6, 12] as const;
 
 /**
- * 수업 시간 옵션 (분)
+ * 수강 시간 옵션 (분)
  */
 export const DURATION_OPTIONS = [30, 45, 60, 90] as const;
 

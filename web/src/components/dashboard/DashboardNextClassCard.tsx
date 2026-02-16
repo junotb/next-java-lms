@@ -9,7 +9,7 @@ import type { DashboardNextClass } from "@/schemas/dashboard/dashboard";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
 import { USER_ROLE } from "@/constants/auth";
-import { getClassroomPath } from "@/lib/routes";
+import { getLessonPath } from "@/lib/routes";
 
 type Role = (typeof USER_ROLE)[keyof Pick<typeof USER_ROLE, "STUDENT" | "TEACHER">];
 
@@ -131,7 +131,7 @@ export default function DashboardNextClassCard({
           <Button
             className={cn("w-fit", buttonClass)}
             onClick={() =>
-              router.push(getClassroomPath(role, schedule.scheduleId))
+              router.push(getLessonPath(role, schedule.scheduleId))
             }
             disabled={!canEnter}
           >

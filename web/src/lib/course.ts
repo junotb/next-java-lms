@@ -9,13 +9,13 @@ import {
 } from "@/schemas/course/course";
 import { CourseStatus } from "@/schemas/course/course-status";
 
-/** 강의 목록 API 파라미터 (pagination 포함) */
+/** 강좌 목록 API 파라미터 (pagination 포함) */
 export type CourseListParams = Partial<CourseListRequest> & {
   page?: number;
   size?: number;
 };
 
-/** 강의 목록 조회 */
+/** 강좌 목록 조회 */
 export async function courseList(
   params: CourseListParams = {}
 ): Promise<Course[]> {
@@ -30,13 +30,13 @@ export async function courseList(
   return PageResponseSchema(CourseSchema).parse(response.data).items;
 }
 
-// 강의 정보 조회
+// 강좌 정보 조회
 export async function courseInfo(courseId: number): Promise<Course> {
   const response = await api.get<Course>(`/api/courses/${courseId}`);
   return CourseSchema.parse(response.data);
 }
 
-// 강의 등록
+// 강좌 등록
 export async function courseCreate(
   payload: CourseCreateRequest
 ): Promise<Course> {
@@ -44,7 +44,7 @@ export async function courseCreate(
   return CourseSchema.parse(response.data);
 }
 
-// 강의 수정
+// 강좌 수정
 export async function courseUpdate(
   courseId: number,
   payload: CourseUpdateRequest
@@ -56,12 +56,12 @@ export async function courseUpdate(
   return CourseSchema.parse(response.data);
 }
 
-// 강의 삭제
+// 강좌 삭제
 export async function courseDelete(courseId: number): Promise<void> {
   await api.delete<void>(`/api/courses/${courseId}`);
 }
 
-// 강의 상태별 통계
+// 강좌 상태별 통계
 export async function courseStatusStats(): Promise<
   Record<CourseStatus, number>
 > {

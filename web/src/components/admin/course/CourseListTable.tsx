@@ -3,11 +3,19 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Pencil, Trash2 } from "lucide-react";
 import { COURSE_STATUS_LABELS, COURSE_STATUS_COLORS } from "@/constants/course";
 
 /**
- * 강의 목록 테이블.
+ * 강좌 목록 테이블.
  * 제목, 상태, 생성일, 수정/삭제 액션.
  */
 interface CourseListTableProps {
@@ -22,39 +30,27 @@ export default function CourseListTable({
   onDelete,
 }: CourseListTableProps) {
   return (
-    <table className="w-full min-w-[28rem] divide-y divide-border table-auto">
-      <thead className="bg-muted">
-        <tr>
-          <th
-            scope="col"
-            className="px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider sm:px-6 sm:py-4 sm:text-sm"
-          >
-            제목
-          </th>
-          <th
-            scope="col"
-            className="px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider sm:px-6 sm:py-4 sm:text-sm"
-          >
-            상태
-          </th>
-          <th
-            scope="col"
-            className="px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider sm:px-6 sm:py-4 sm:text-sm"
-          >
-            생성일
-          </th>
-          <th scope="col" className="relative px-3 py-3 sm:px-6 sm:py-4">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>제목</TableHead>
+          <TableHead>상태</TableHead>
+          <TableHead>생성일</TableHead>
+          <TableHead className="relative">
             <span className="sr-only">관리</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-card divide-y divide-border">
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {courses.map((course) => (
-          <tr key={course.id}>
-            <td className="max-w-24 truncate px-3 py-3 text-sm font-medium text-foreground text-left sm:max-w-none sm:px-6 sm:py-4" title={course.title}>
+          <TableRow key={course.id}>
+            <TableCell
+              className="max-w-24 truncate font-medium sm:max-w-none"
+              title={course.title}
+            >
               {course.title}
-            </td>
-            <td className="px-3 py-3 whitespace-nowrap text-sm text-muted-foreground text-left sm:px-6 sm:py-4">
+            </TableCell>
+            <TableCell>
               <Badge
                 className={cn(
                   "inline-flex rounded-full px-2 py-0.5 text-xs font-semibold leading-5 sm:px-3 sm:py-1 sm:text-sm",
@@ -63,11 +59,11 @@ export default function CourseListTable({
               >
                 {COURSE_STATUS_LABELS[course.status]}
               </Badge>
-            </td>
-            <td className="whitespace-nowrap px-3 py-3 text-xs text-muted-foreground sm:px-6 sm:py-4 sm:text-sm">
+            </TableCell>
+            <TableCell className="text-muted-foreground text-xs sm:text-sm">
               {format(new Date(course.createdAt), "yyyy-MM-dd HH:mm")}
-            </td>
-            <td className="whitespace-nowrap px-3 py-3 text-right sm:px-6 sm:py-4">
+            </TableCell>
+            <TableCell className="text-right">
               <div className="flex justify-end gap-1 sm:gap-2">
                 <Button
                   onClick={() => onUpdate(course.id)}
@@ -90,10 +86,10 @@ export default function CourseListTable({
                   <span className="hidden sm:inline">삭제</span>
                 </Button>
               </div>
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }

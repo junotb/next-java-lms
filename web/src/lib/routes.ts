@@ -27,8 +27,8 @@ export function getFeedbackPath(role: UserRole, scheduleId: number): string {
 
 /**
  * 역할에 따른 수업실 경로 반환
- * @example getClassroomPath("STUDENT", 456) → "/study/classroom/456"
+ * @example getLessonPath("STUDENT", 456) → "/study/lesson/456"
  */
-export function getClassroomPath(role: UserRole, id: number): string {
-  return `${ROLE_REDIRECT_MAP[role]}/classroom/${id}`;
+export function getLessonPath(role: UserRole, id: number): string {
+  return `${ROLE_REDIRECT_MAP[role]}/lesson/${id}`;
 }
