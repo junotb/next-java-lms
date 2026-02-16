@@ -4,5 +4,5 @@ public enum ScheduleStatus {
     SCHEDULED,
     ATTENDED,
     ABSENT,
-    CANCELLED
+    CANCELED
 }

@@ -10,7 +10,7 @@ import {
 } from "@/schemas/schedule/schedule";
 import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 
-// 스케줄 목록 조회
+// 수업 목록 조회
 export async function scheduleList(
   params: ScheduleListRequest
 ): Promise<Schedule[]> {
@@ -18,13 +18,13 @@ export async function scheduleList(
   return PageResponseSchema(ScheduleSchema).parse(response.data).items;
 }
 
-// 스케줄 정보 조회
+// 수업 정보 조회
 export async function scheduleInfo(scheduleId: number): Promise<Schedule> {
   const response = await api.get<Schedule>(`/api/v1/schedule/${scheduleId}`);
   return ScheduleSchema.parse(response.data);
 }
 
-// 스케줄 등록
+// 수업 등록
 export async function scheduleCreate(
   payload: ScheduleCreateRequest
 ): Promise<Schedule> {
@@ -41,7 +41,7 @@ export async function scheduleMeetLinkUpdate(
   return ScheduleSchema.parse(response.data);
 }
 
-// 스케줄 수정
+// 수업 수정
 export async function scheduleUpdate(
   scheduleId: number,
   payload: ScheduleUpdateRequest
@@ -53,18 +53,18 @@ export async function scheduleUpdate(
   return ScheduleSchema.parse(response.data);
 }
 
-// 스케줄 삭제
+// 수업 삭제
 export async function scheduleDelete(scheduleId: number): Promise<void> {
   await api.delete<void>(`/api/v1/schedule/${scheduleId}`);
 }
 
-// 스케줄 상태별 통계
+// 수업 상태별 통계
 export async function scheduleStatusStats(): Promise<Record<ScheduleStatus, number>> {
   const response = await api.get<Record<ScheduleStatus, number>>("/api/v1/schedule/stats/status");
   return response.data;
 }
 
-// 스케줄 상태명 변환
+// 수업 상태명 변환
 export function getScheduleStatusName(status: ScheduleStatus): string {
   switch (status) {
     case "SCHEDULED":
@@ -73,7 +73,7 @@ export function getScheduleStatusName(status: ScheduleStatus): string {
       return "출석";
     case "ABSENT":
       return "결석";
-    case "CANCELLED":
+    case "CANCELED":
       return "취소됨";
     default:
       return "알 수 없음";

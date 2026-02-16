@@ -59,7 +59,7 @@ export default function ScheduleInfoCard({
     onSuccess();
   };
 
-  const title = isCreate ? "스케줄 등록" : "스케줄 수정";
+  const title = isCreate ? "수업 등록" : "수업 수정";
   const isMutating = registerMutation.isPending || modifyMutation.isPending;
 
   return (

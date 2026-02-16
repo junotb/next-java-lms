@@ -5,10 +5,10 @@ import { scheduleList, scheduleInfo, scheduleCreate, scheduleUpdate, scheduleDel
 import { Schedule, ScheduleListRequest, ScheduleCreateRequest, ScheduleUpdateRequest } from "@/schemas/schedule/schedule";
 import { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 import { STALE_TIME_LIST, STALE_TIME_STATS } from "@/constants/config";
-import { useToastStore } from "@/stores/useToastStore";
+import { toast } from "sonner";
 
 /**
- * 스케줄 목록 조회.
+ * 수업 목록 조회.
  * @param request - 목록 필터/페이지 조건
  */
 export function useScheduleList(request: ScheduleListRequest) {
@@ -21,8 +21,8 @@ export function useScheduleList(request: ScheduleListRequest) {
 }
 
 /**
- * 스케줄 상세 조회.
- * @param scheduleId - 스케줄 ID
+ * 수업 상세 조회.
+ * @param scheduleId - 수업 ID
  * @param options.enabled - 쿼리 실행 여부
  */
 export function useScheduleInfo(scheduleId: number, options?: { enabled?: boolean }) {
@@ -34,58 +34,55 @@ export function useScheduleInfo(scheduleId: number, options?: { enabled?: boolea
 }
 
 /**
- * 스케줄 등록.
+ * 수업 등록.
  * 성공 시 목록 캐시 무효화. 에러 시 Toast 표시.
  */
 export function useScheduleCreate() {
   const qc = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: (payload: ScheduleCreateRequest) => scheduleCreate(payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["schedule"] }),
     onError: (err) => {
-      showToast(err?.message ?? "스케줄 등록에 실패했습니다.", "error");
+      toast.error(err?.message ?? "수업 등록에 실패했습니다.");
     },
   });
 }
 
 /**
- * 스케줄 수정.
+ * 수업 수정.
  * 성공 시 목록 캐시 무효화. 에러 시 Toast 표시.
  */
 export function useScheduleUpdate() {
   const qc = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: async ({ scheduleId, payload }: { scheduleId: number; payload: ScheduleUpdateRequest }) => scheduleUpdate(scheduleId, payload),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["schedule"] }),
     onError: (err) => {
-      showToast(err?.message ?? "스케줄 수정에 실패했습니다.", "error");
+      toast.error(err?.message ?? "수업 수정에 실패했습니다.");
     },
   });
 }
 
 /**
- * 스케줄 삭제.
+ * 수업 삭제.
  * 성공 시 목록 캐시 무효화. 에러 시 Toast 표시.
  */
 export function useScheduleDelete() {
   const qc = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: async (scheduleId: number) => scheduleDelete(scheduleId),
     onSuccess: async () => await qc.invalidateQueries({ queryKey: ["schedule"] }),
     onError: (err) => {
-      showToast(err?.message ?? "스케줄 삭제에 실패했습니다.", "error");
+      toast.error(err?.message ?? "수업 삭제에 실패했습니다.");
     },
   });
 }
 
 /**
- * 스케줄 상태별 통계.
+ * 수업 상태별 통계.
  * 대시보드 등에서 사용.
  */
 export function useScheduleStatusStats() {

@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authClient } from "@/lib/auth-client";
-import { useToastStore } from "@/stores/useToastStore";
+import { toast } from "sonner";
 import {
   ChangePasswordRequestSchema,
   type ChangePasswordRequest,
@@ -16,7 +16,6 @@ import { cn } from "@/lib/utils";
  * 비밀번호 변경 폼. 역할별 settings 페이지에서 재사용.
  */
 export default function PasswordForm() {
-  const { showToast } = useToastStore();
 
   const {
     register,
@@ -40,12 +39,12 @@ export default function PasswordForm() {
     });
 
     if (error) {
-      showToast(error.message || "비밀번호 변경에 실패했습니다.", "error");
+      toast.error(error.message || "비밀번호 변경에 실패했습니다.");
       return;
     }
 
     if (data) {
-      showToast("비밀번호가 변경되었습니다.", "success");
+      toast.success("비밀번호가 변경되었습니다.");
       reset();
     }
   };

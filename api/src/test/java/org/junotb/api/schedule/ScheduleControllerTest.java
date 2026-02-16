@@ -254,7 +254,7 @@ class ScheduleControllerTest {
         Map<ScheduleStatus, Long> stats = Map.of(
             ScheduleStatus.SCHEDULED, 10L,
             ScheduleStatus.ATTENDED, 5L,
-            ScheduleStatus.CANCELLED, 2L
+            ScheduleStatus.CANCELED, 2L
         );
         given(scheduleService.countByStatus(anyString())).willReturn(stats);
 
@@ -269,7 +269,7 @@ class ScheduleControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.SCHEDULED").value(10))
             .andExpect(jsonPath("$.ATTENDED").value(5))
-            .andExpect(jsonPath("$.CANCELLED").value(2));
+            .andExpect(jsonPath("$.CANCELED").value(2));
         
         SecurityContextHolder.clearContext();
     }

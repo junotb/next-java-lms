@@ -47,7 +47,7 @@ export default function StudyDashboardPage() {
         <Button asChild className="bg-foreground hover:bg-foreground/90 text-background">
           <Link href="/study/registration" className="flex items-center gap-2">
             <PlusCircle className="size-4" />
-            수업 신청하기
+            수강 신청하기
           </Link>
         </Button>
       </div>

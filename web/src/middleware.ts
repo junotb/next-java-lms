@@ -4,7 +4,6 @@ import { ROLE_MAP } from "@/constants/auth";
 
 /**
  * 역할별 라우트 보호. ROLE_MAP prefix 기반 검증만 수행.
- * settings·feedback·classroom은 역할 prefix 하위에 있으므로 예외 분기 없음.
  */
 export async function middleware(request: NextRequest) {
   const session = await getCookieCache(request);
@@ -22,17 +21,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 기존 URL 호환: /settings, /feedback, /classroom — 로그인 필수
-  if (
-    pathname.startsWith("/settings") ||
-    pathname.startsWith("/feedback") ||
-    pathname.startsWith("/classroom")
-  ) {
-    if (!session) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-  }
-
   return NextResponse.next();
 }
 
@@ -42,9 +30,5 @@ export const config = {
     "/admin/:path*",
     "/study/:path*",
     "/teach/:path*",
-    "/settings/:path*",
-    "/feedback/:path*",
-    "/classroom/:path*",
-    "/auth/:path*",
   ],
 };

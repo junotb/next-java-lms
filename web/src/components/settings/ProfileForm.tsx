@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authClient } from "@/lib/auth-client";
-import { useToastStore } from "@/stores/useToastStore";
+import { toast } from "sonner";
 import {
   ProfileUpdateRequestSchema,
   type ProfileUpdateRequest,
@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils";
  */
 export default function ProfileForm() {
   const [isLoading, setIsLoading] = useState(true);
-  const { showToast } = useToastStore();
 
   const {
     register,
@@ -54,12 +53,12 @@ export default function ProfileForm() {
     });
 
     if (error) {
-      showToast(error.message || "수정에 실패했습니다.", "error");
+      toast.error(error.message || "수정에 실패했습니다.");
       return;
     }
 
     if (data) {
-      showToast("프로필이 수정되었습니다.", "success");
+      toast.success("프로필이 수정되었습니다.");
     }
   };
 

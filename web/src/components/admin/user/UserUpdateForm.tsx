@@ -30,6 +30,7 @@ export default function UserUpdateForm({
 }: UserUpdateFormProps) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<UserProfileUpdateFormValues>({
@@ -68,28 +69,24 @@ export default function UserUpdateForm({
       <SelectField
         id="role"
         label="역할"
-        register={register}
+        control={control}
         errors={errors}
-      >
-        {UserRoleSchema.options.map((role) => (
-          <option key={role} value={role}>
-            {USER_ROLE_NAMES[role]}
-          </option>
-        ))}
-      </SelectField>
+        options={UserRoleSchema.options.map((role) => ({
+          value: role,
+          label: USER_ROLE_NAMES[role],
+        }))}
+      />
 
       <SelectField
         id="status"
         label="상태"
-        register={register}
+        control={control}
         errors={errors}
-      >
-        {UserStatusSchema.options.map((status) => (
-          <option key={status} value={status}>
-            {USER_STATUS_NAMES[status]}
-          </option>
-        ))}
-      </SelectField>
+        options={UserStatusSchema.options.map((status) => ({
+          value: status,
+          label: USER_STATUS_NAMES[status],
+        }))}
+      />
 
       <div className="flex justify-center gap-4 w-full">
         <Button

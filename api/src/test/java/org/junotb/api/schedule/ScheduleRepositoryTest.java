@@ -265,13 +265,13 @@ class ScheduleRepositoryTest {
     @Test
     @DisplayName("existsByUserIdAndScheduleOverlap - Case 8: 다른 상태의 수업은 무시됨")
     void existsByUserIdAndScheduleOverlap_Case8_DifferentStatusIgnored() {
-        // given: 기존 수업 (10:00 ~ 12:00) - CANCELLED 상태
+        // given: 기존 수업 (10:00 ~ 12:00) - CANCELED 상태
         Schedule existingSchedule = Schedule.builder()
                 .user(teacher)
                 .course(course)
                 .startsAt(baseTime)
                 .endsAt(baseTime.plusHours(2))
-                .status(ScheduleStatus.CANCELLED)
+                .status(ScheduleStatus.CANCELED)
                 .build();
         entityManager.persistAndFlush(existingSchedule);
 
@@ -286,7 +286,7 @@ class ScheduleRepositoryTest {
                 ScheduleStatus.SCHEDULED
         );
 
-        // then: CANCELLED 상태는 무시되므로 false
+        // then: CANCELED 상태는 무시되므로 false
         assertThat(result).isFalse();
     }
 

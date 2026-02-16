@@ -44,10 +44,10 @@ export default function AdminSchedulesPage() {
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-              스케줄 관리
+              수업 관리
             </h1>
             <p className="mt-1.5 text-sm text-muted-foreground sm:text-base lg:text-lg">
-              사용자 스케줄을 검색하고 관리합니다.
+              일정을 검색하고 관리합니다.
             </p>
           </div>
           <Button
@@ -55,7 +55,7 @@ export default function AdminSchedulesPage() {
             onClick={openCreateModal}
           >
             <Plus className="h-4 w-4 shrink-0" />
-            <span className="truncate">스케줄 추가</span>
+            <span className="truncate">수업 추가</span>
           </Button>
         </header>
 
@@ -68,7 +68,7 @@ export default function AdminSchedulesPage() {
             <ListTableSkeleton columnCount={5} rowCount={8} />
           ) : error ? (
             <p className="text-center text-destructive">
-              스케줄 목록을 불러오는 중 오류가 발생했습니다.
+              수업 목록을 불러오는 중 오류가 발생했습니다.
             </p>
           ) : schedules?.length ? (
             <div className="min-w-0 overflow-x-auto rounded-lg border border-border">
@@ -78,13 +78,13 @@ export default function AdminSchedulesPage() {
               />
             </div>
           ) : (
-            <p className="text-center text-muted-foreground">스케줄이 없습니다.</p>
+            <p className="text-center text-muted-foreground">수업이 없습니다.</p>
           )}
         </div>
       </div>
 
       {isModalOpen && (
-        <Modal onClose={closeModal}>
+        <Modal onClose={closeModal} title="수업 상세 정보">
           <ScheduleInfoCard scheduleId={scheduleId} onSuccess={closeModal} />
         </Modal>
       )}

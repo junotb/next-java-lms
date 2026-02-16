@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  BookOpen,
+  GraduationCap,
   LayoutDashboard,
   CalendarRange,
   CalendarX,
@@ -47,7 +47,7 @@ export default function TeachHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background pt-[env(safe-area-inset-top)]">
       <div className="flex h-16 w-full max-w-7xl mx-auto items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center space-x-2">
-          <BookOpen className="h-6 w-6" />
+          <GraduationCap className="h-6 w-6" />
           <h1 className="font-bold">NexLang</h1>
         </Link>
         <nav className="hidden md:flex items-center space-x-6">

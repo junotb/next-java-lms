@@ -37,7 +37,7 @@ function getIcon(title: UserRole | ScheduleStatus): LucideIcon {
         return CheckCircle2;
       case "ABSENT":
         return AlertCircle;
-      case "CANCELLED":
+      case "CANCELED":
         return XCircle;
       default:
         return AlertCircle;

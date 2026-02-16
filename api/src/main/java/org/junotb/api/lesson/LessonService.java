@@ -90,7 +90,7 @@ public class LessonService {
         String meetLink = schedule.getMeetLink() != null ? schedule.getMeetLink() : null;
         var c = schedule.getCourse();
         if (c == null) {
-            throw new IllegalStateException("수업은 반드시 강의(Course)와 연결되어 있어야 합니다.");
+            throw new IllegalStateException("수업은 반드시 강좌(Course)와 연결되어 있어야 합니다.");
         }
         CourseInLesson course = new CourseInLesson(c.getTitle(), c.getDescription());
         return new LessonAccessResponse(allowed, role != null ? role : "", scheduleResponse, meetLink, course);

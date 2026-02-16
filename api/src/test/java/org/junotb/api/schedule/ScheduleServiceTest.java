@@ -86,6 +86,6 @@ class ScheduleServiceTest {
 
         scheduleService.delete(id);
 
-        assertThat(schedule.getStatus()).isEqualTo(CANCELLED);
+        assertThat(schedule.getStatus()).isEqualTo(CANCELED);
     }
 }

@@ -22,13 +22,12 @@ import {
   type DayOfWeek,
 } from "@/schemas/registration";
 import { useRegistrationStore } from "@/stores/useRegistrationStore";
-import { useToastStore } from "@/stores/useToastStore";
+import { toast } from "sonner";
 import { MONTH_OPTIONS, DURATION_OPTIONS, DAY_LABELS } from "@/constants/registration";
 
 export default function StudyRegistrationPage() {
   const { step, formData, setStep, updateFormData, reset } =
     useRegistrationStore();
-  const { showToast } = useToastStore();
 
   const candidateParams = useMemo(() => {
     const { days, startTime, durationMinutes } = formData;
@@ -51,17 +50,16 @@ export default function StudyRegistrationPage() {
   const mutation = useMutation({
     mutationFn: (payload: CourseRegistrationRequest) => registerCourse(payload),
     onSuccess: () => {
-      showToast("수강 신청이 완료되었습니다.", "success");
+      toast.success("수강 신청이 완료되었습니다.");
       reset();
     },
     onError: (err: ApiError) => {
       if (err.status === 429) {
-        showToast(
-          "현재 대기자가 많습니다. 잠시 후 재시도합니다.",
-          "error"
+        toast.error(
+          "현재 대기자가 많습니다. 잠시 후 재시도합니다."
         );
       } else {
-        showToast(err.message || "수강 신청에 실패했습니다.", "error");
+        toast.error(err.message || "수강 신청에 실패했습니다.");
       }
     },
   });
@@ -78,11 +76,11 @@ export default function StudyRegistrationPage() {
     const parsed = CourseRegistrationSchema.safeParse(formData);
     if (!parsed.success) {
       const msg = parsed.error.issues[0]?.message ?? "입력값을 확인해주세요.";
-      showToast(msg, "error");
+      toast.error(msg);
       return;
     }
     mutation.mutate(parsed.data);
-  }, [formData, mutation, showToast]);
+  }, [formData, mutation]);
 
   const canProceedStep1 =
     typeof formData.courseId === "number" && typeof formData.months === "number";
@@ -293,7 +291,7 @@ function Step3({
       </div>
       <div className="flex flex-col gap-2">
         <Label className="text-sm font-medium">
-          수업 시간 (분)
+          수강 시간 (분)
         </Label>
         <select
           value={formData.durationMinutes ?? ""}
@@ -374,7 +372,7 @@ function Step4({
             <dd className="text-foreground">{dayStr || "-"}</dd>
           </div>
           <div>
-            <dt className="font-medium text-muted-foreground">시작 시간 / 수업 시간</dt>
+            <dt className="font-medium text-muted-foreground">시작 시간 / 수강 시간</dt>
             <dd className="text-foreground">
               {formData.startTime} / {formData.durationMinutes}분
             </dd>

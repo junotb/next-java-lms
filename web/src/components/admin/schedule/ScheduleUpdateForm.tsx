@@ -20,7 +20,7 @@ const SCHEDULE_STATUS_NAMES: Record<string, string> = {
   SCHEDULED: "예정",
   ATTENDED: "출석",
   ABSENT: "결석",
-  CANCELLED: "취소",
+  CANCELED: "취소",
 };
 interface ScheduleUpdateFormProps {
   schedule: Schedule;
@@ -35,6 +35,7 @@ export default function ScheduleUpdateForm({
 }: ScheduleUpdateFormProps) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<ScheduleUpdateFormValues>({
@@ -64,7 +65,7 @@ export default function ScheduleUpdateForm({
     >
       <InputField
         id="userId"
-        label="사용자 번호"
+        label="강사 ID"
         type="text"
         disabled={true}
         defaultValue={schedule.userId}
@@ -75,15 +76,13 @@ export default function ScheduleUpdateForm({
       <SelectField
         id="status"
         label="상태"
-        register={register}
+        control={control}
         errors={errors}
-      >
-        {ScheduleStatusSchema.options.map((status) => (
-          <option key={status} value={status}>
-            {SCHEDULE_STATUS_NAMES[status]}
-          </option>
-        ))}
-      </SelectField>
+        options={ScheduleStatusSchema.options.map((status) => ({
+          value: status,
+          label: SCHEDULE_STATUS_NAMES[status],
+        }))}
+      />
 
       <InputField
         id="startsAt"

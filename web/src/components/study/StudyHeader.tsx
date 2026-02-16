@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { BookOpen, LayoutDashboard, ClipboardList } from "lucide-react";
+import { GraduationCap, LayoutDashboard, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 import { getSettingsPath } from "@/lib/routes";
@@ -12,12 +12,12 @@ import HeaderNavSheet from "@/components/common/HeaderNavSheet";
 
 const NAV_ITEMS = [
   { href: "/study", label: "대시보드", icon: LayoutDashboard },
-  { href: "/study/registration", label: "수업 신청", icon: ClipboardList },
+  { href: "/study/registration", label: "수강 신청", icon: ClipboardList },
 ] as const;
 
 /**
  * 학생 영역 상단 헤더.
- * 대시보드, 수업 신청 네비게이션 및 사용자 메뉴.
+ * 대시보드, 수강 신청 네비게이션 및 사용자 메뉴.
  */
 export default function StudyHeader() {
   const pathname = usePathname();
@@ -41,7 +41,7 @@ export default function StudyHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background pt-[env(safe-area-inset-top)]">
       <div className="flex h-16 w-full max-w-7xl mx-auto items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center space-x-2">
-          <BookOpen className="h-6 w-6" />
+          <GraduationCap className="h-6 w-6" />
           <h1 className="font-bold">NexLang</h1>
         </Link>
         <nav className="hidden md:flex items-center space-x-6">

@@ -56,7 +56,7 @@ export default function AdminPage() {
                 size="sm"
                 onClick={() => refetchScheduleStatus()}
               >
-                스케줄 통계 다시 시도
+                수업 통계 다시 시도
               </Button>
             )}
             {isUserRoleError && (
@@ -93,15 +93,15 @@ export default function AdminPage() {
           </section>
         )}
 
-        {/* 스케줄 통계 */}
+        {/* 수업 통계 */}
         {scheduleStatusStats ? (
           <section className="min-w-0">
-            <h2 className="mb-3 text-base font-semibold text-foreground">스케줄 통계</h2>
+            <h2 className="mb-3 text-base font-semibold text-foreground">수업 통계</h2>
             <StatsList<ScheduleStatus> stats={scheduleStatusStats} unit="건" />
           </section>
         ) : (
           <section className="min-w-0">
-            <h2 className="mb-3 text-base font-semibold text-foreground">스케줄 통계</h2>
+            <h2 className="mb-3 text-base font-semibold text-foreground">수업 통계</h2>
             <p className="text-muted-foreground">데이터를 불러올 수 없습니다.</p>
           </section>
         )}

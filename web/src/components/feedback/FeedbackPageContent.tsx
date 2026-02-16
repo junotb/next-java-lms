@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useEffect } from "react";
 import Loader from "@/components/common/Loader";
 import FeedbackSkeleton from "@/components/feedback/FeedbackSkeleton";
-import { useLessonFeedback } from "@/hooks/useLessonFeedback";
+import { useScheduleFeedback } from "@/hooks/useScheduleFeedback";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, RotateCcw } from "lucide-react";
-import { AudioTranscriptPlayer } from "@/components/AudioTranscriptPlayer";
+import { AudioTranscriptPlayer } from "@/components/feedback/AudioTranscriptPlayer";
 import { FeedbackReport } from "@/components/feedback/FeedbackReport";
 
 export interface FeedbackPageContentProps {
@@ -28,7 +28,7 @@ export function FeedbackPageContent({ dashboardPath }: FeedbackPageContentProps)
       ? parseInt(params.scheduleId, 10)
       : null;
 
-  const { data, isLoading, isError, refetch } = useLessonFeedback(scheduleId, {
+  const { data, isLoading, isError, refetch } = useScheduleFeedback(scheduleId, {
     enabled: scheduleId != null && !Number.isNaN(scheduleId),
   });
 

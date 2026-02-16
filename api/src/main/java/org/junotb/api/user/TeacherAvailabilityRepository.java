@@ -57,7 +57,7 @@ public interface TeacherAvailabilityRepository extends JpaRepository<TeacherAvai
               SELECT 1
               FROM "schedule" s
               WHERE s."userId" = ta."teacherId"
-                AND s."status" <> 'CANCELLED'
+                AND s."status" <> 'CANCELED'
                 AND s."startsAt" >= :scheduleStartDateTime
                 AND s."endsAt" <= :scheduleEndDateTime
                 AND s."startsAt"::time < :endTime

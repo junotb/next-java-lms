@@ -20,7 +20,7 @@ public class TeachController {
     private final TeachDashboardService teachDashboardService;
 
     @GetMapping("/dashboard")
-    @Operation(summary = "강사 대시보드", description = "다음 수업, 오늘 현황, 오늘 일정을 반환합니다.")
+    @Operation(summary = "강사 대시보드", description = "다음 수업, 오늘 현황, 오늘 수업을 반환합니다.")
     public ResponseEntity<TeachDashboardResponse> getDashboard(@AuthenticationPrincipal String teacherId) {
         TeachDashboardResponse response = teachDashboardService.getDashboard(teacherId);
         return ResponseEntity.ok(response);

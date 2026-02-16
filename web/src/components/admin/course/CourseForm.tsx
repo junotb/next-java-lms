@@ -37,6 +37,7 @@ export default function CourseForm({
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<CourseCreateFormValues | CourseUpdateFormValues>({
@@ -90,7 +91,7 @@ export default function CourseForm({
       <TextareaField
         id="description"
         label="설명"
-        placeholder="강의 설명을 입력하세요."
+        placeholder="강좌 설명을 입력하세요."
         register={register}
         errors={errors}
       />
@@ -98,15 +99,13 @@ export default function CourseForm({
       <SelectField
         id="status"
         label="상태"
-        register={register}
+        control={control}
         errors={errors}
-      >
-        {Object.values(CourseStatus).map((status) => (
-          <option key={status} value={status}>
-            {COURSE_STATUS_LABELS[status]}
-          </option>
-        ))}
-      </SelectField>
+        options={Object.values(CourseStatus).map((status) => ({
+          value: status,
+          label: COURSE_STATUS_LABELS[status],
+        }))}
+      />
 
       <div className="flex justify-center gap-4 w-full">
         <Button

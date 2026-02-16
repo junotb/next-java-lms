@@ -4,17 +4,6 @@
 
 import type { CourseRegistrationRequest } from "@/schemas/registration";
 
-// Toast Store
-export type ToastType = "success" | "error" | "info";
-
-export interface ToastState {
-  isVisible: boolean;
-  message: string;
-  type: ToastType;
-  showToast: (message: string, type?: ToastType) => void;
-  hideToast: () => void;
-}
-
 // Auth Modal Store
 export type AuthModalType = "signin" | "signup" | null;
 

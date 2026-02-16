@@ -4,11 +4,11 @@ import {
   LessonAccessResponseSchema,
 } from "@/schemas/lesson/lesson";
 import {
-  LessonFeedbackResponse,
-  LessonFeedbackResponseSchema,
+  ScheduleFeedbackResponse,
+  ScheduleFeedbackResponseSchema,
   VideoUploadResponse,
   VideoUploadResponseSchema,
-} from "@/schemas/lesson/lesson-feedback";
+} from "@/schemas/lesson/schedule-feedback";
 
 export async function checkLessonAccess(
   scheduleId: number
@@ -41,11 +41,11 @@ export async function uploadLessonVideo(
   return VideoUploadResponseSchema.parse(response.data);
 }
 
-export async function getLessonFeedback(
+export async function getScheduleFeedback(
   scheduleId: number
-): Promise<LessonFeedbackResponse> {
-  const response = await api.get<LessonFeedbackResponse>(
+): Promise<ScheduleFeedbackResponse> {
+  const response = await api.get<ScheduleFeedbackResponse>(
     `/api/v1/lessons/${scheduleId}/feedback`
   );
-  return LessonFeedbackResponseSchema.parse(response.data);
+  return ScheduleFeedbackResponseSchema.parse(response.data);
 }

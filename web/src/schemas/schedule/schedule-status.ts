@@ -4,7 +4,7 @@ export const ScheduleStatusSchema = z.enum([
   "SCHEDULED",
   "ATTENDED",
   "ABSENT",
-  "CANCELLED",
+  "CANCELED",
 ]);
 
 export type ScheduleStatus = z.infer<typeof ScheduleStatusSchema>;

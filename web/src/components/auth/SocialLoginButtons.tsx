@@ -13,7 +13,7 @@ const SOCIAL_PROVIDERS = [
 /**
  * 소셜 로그인 버튼 그룹.
  * 로그인/회원가입 모달에서 공통 사용.
- * OAuth 리다이렉트 후 /auth/complete에서 역할 기반 리다이렉트 처리.
+ * OAuth 리다이렉트 후 /api/auth/complete에서 역할 기반 리다이렉트 처리.
  */
 export default function SocialLoginButtons() {
   const handleSocialSignIn = (
@@ -21,7 +21,7 @@ export default function SocialLoginButtons() {
   ) => {
     authClient.signIn.social({
       provider,
-      callbackURL: "/auth/complete",
+      callbackURL: "/api/auth/complete",
     });
   };
 

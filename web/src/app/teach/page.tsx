@@ -47,7 +47,7 @@ export default function TeachDashboardPage() {
   const statItems: DashboardStatItem[] = [
     { label: "오늘 수업", value: data.stats.todayClassCount, icon: CalendarDays },
     { label: "예정된 수업", value: data.stats.upcomingClassCount, icon: CalendarRange },
-    { label: "오늘 일정", value: data.todaySchedules.length, icon: ListTodo },
+    { label: "오늘 수업", value: data.todaySchedules.length, icon: ListTodo },
   ];
 
   return (
@@ -65,7 +65,7 @@ export default function TeachDashboardPage() {
           variant="teach"
         />
         <DashboardScheduleList
-          title="오늘 전체 일정"
+          title="오늘 전체 수업"
           schedules={data.todaySchedules}
           role={USER_ROLE.TEACHER}
           variant="teach"

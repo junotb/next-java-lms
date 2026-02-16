@@ -23,8 +23,8 @@ public record CourseRegistrationRequest(
     @NotNull(message = "희망 시작 시간은 필수입니다.")
     LocalTime startTime,
     
-    @NotNull(message = "수업 시간은 필수입니다.")
-    @Positive(message = "수업 시간은 양수여야 합니다.")
+    @NotNull(message = "수강 시간은 필수입니다.")
+    @Positive(message = "수강 시간은 양수여야 합니다.")
     Integer durationMinutes
 ) {
 }

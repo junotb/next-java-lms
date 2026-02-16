@@ -8,7 +8,7 @@ import {
   DayAvailability,
 } from "@/schemas/teacher/teacher-availability";
 import { ALL_DAYS_OF_WEEK, DayOfWeek } from "@/schemas/common/day-of-week";
-import { useToastStore } from "@/stores/useToastStore";
+import { toast } from "sonner";
 
 /**
  * 강사 가용 시간 설정 조회
@@ -58,7 +58,6 @@ export function useTeacherAvailability() {
  */
 export function useUpdateAvailability() {
   const queryClient = useQueryClient();
-  const { showToast } = useToastStore();
 
   return useMutation({
     mutationFn: async (data: TeacherAvailabilityFormValues) => {
@@ -77,10 +76,10 @@ export function useUpdateAvailability() {
     onSuccess: async () => {
       // 쿼리 무효화로 최신 데이터 갱신
       await queryClient.invalidateQueries({ queryKey: ["teacher", "availability"] });
-      showToast("저장되었습니다.", "success");
+      toast.success("저장되었습니다.");
     },
     onError: () => {
-      showToast("저장에 실패했습니다.", "error");
+      toast.error("저장에 실패했습니다.");
     },
   });
 }

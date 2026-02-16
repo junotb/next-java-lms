@@ -17,7 +17,7 @@ const SCHEDULE_STATUS_NAMES: Record<string, string> = {
   SCHEDULED: "예정",
   ATTENDED: "출석",
   ABSENT: "결석",
-  CANCELLED: "취소",
+  CANCELED: "취소",
 };
 
 interface ScheduleListFormProps {
@@ -54,7 +54,7 @@ export default function ScheduleListForm({ onSubmit }: ScheduleListFormProps) {
     >
       <div className="flex min-w-0 flex-col gap-1.5 sm:gap-2">
         <Label htmlFor="userId" className="shrink-0 text-sm font-medium text-foreground">
-          사용자 ID
+          강사 ID
         </Label>
         <Input
           id="userId"
