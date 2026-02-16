@@ -7,16 +7,11 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ROLE_REDIRECT_MAP } from "@/constants/auth";
-import { getSettingsPath } from "@/lib/routes";
-import type { UserRole } from "@/schemas/user/user-role";
+import { getProfilePath } from "@/lib/routes";
+import type { SessionUser } from "@/types/auth";
 
 interface HeaderUserMenuProps {
-  user: {
-    name?: string | null;
-    email?: string | null;
-    role?: string;
-    [key: string]: unknown;
-  };
+  user: SessionUser;
   showDashboardLink?: boolean;
   variant?: "default" | "compact";
 }
@@ -37,10 +32,10 @@ export default function HeaderUserMenu({
   const effectiveVariant = isMobile ? "compact" : variant;
 
   const dashboardPath = user.role
-    ? ROLE_REDIRECT_MAP[user.role as UserRole]
+    ? ROLE_REDIRECT_MAP[user.role]
     : undefined;
   const settingsPath = user.role
-    ? `${getSettingsPath(user.role as UserRole)}/profile`
+    ? getProfilePath(user.role)
     : "/";
 
   const handleSignOut = async () => {

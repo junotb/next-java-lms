@@ -9,8 +9,10 @@ import {
   ProfileUpdateRequestSchema,
   type ProfileUpdateRequest,
 } from "@/schemas/auth/profile";
+import type { SessionUser } from "@/types/auth";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/common/InputField";
+import Spinner from "@/components/common/Spinner";
 import { cn } from "@/lib/utils";
 
 /**
@@ -34,10 +36,10 @@ export default function ProfileForm() {
     const load = async () => {
       const { data } = await authClient.getSession();
       if (data?.user) {
-        const u = data.user as { name?: string; image?: string | null };
+        const user = data.user as SessionUser;
         reset({
-          name: u.name || "",
-          image: u.image || "",
+          name: user.name || "",
+          image: user.image || "",
         });
       }
       setIsLoading(false);
@@ -64,7 +66,7 @@ export default function ProfileForm() {
   if (isLoading) {
     return (
       <div className="flex min-h-[200px] items-center justify-center">
-        <span className="inline-block size-6 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        <Spinner size="md" />
       </div>
     );
   }
@@ -96,12 +98,7 @@ export default function ProfileForm() {
           "disabled:opacity-50"
         )}
       >
-        {isSubmitting && (
-          <span
-            className="mr-2 inline-block size-4 shrink-0 animate-spin rounded-full border-2 border-current border-t-transparent"
-            aria-hidden
-          />
-        )}
+        {isSubmitting && <Spinner size="sm" className="mr-2" />}
         저장
       </Button>
     </form>

@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 import { getSettingsPath } from "@/lib/routes";
-import type { UserRole } from "@/schemas/user/user-role";
+import type { SessionUser } from "@/types/auth";
 import HeaderUserMenu from "@/components/common/HeaderUserMenu";
 import HeaderNavSheet from "@/components/common/HeaderNavSheet";
 
@@ -21,6 +21,10 @@ const NAV_ITEMS = [
   { href: "/teach/time-off", label: "휴무일", icon: CalendarX },
 ] as const;
 
+/**
+ * 강사 영역 상단 헤더.
+ * 대시보드, 가용 시간, 휴무일 네비게이션 및 사용자 메뉴.
+ */
 export default function TeachHeader() {
   const pathname = usePathname();
   const router = useRouter();
@@ -36,8 +40,8 @@ export default function TeachHeader() {
     router.refresh();
   };
 
-  const userRole = (session?.user as { role?: string } | undefined)?.role;
-  const settingsPath = userRole ? getSettingsPath(userRole as UserRole) : undefined;
+  const user = session?.user as SessionUser | undefined;
+  const settingsPath = user?.role ? getSettingsPath(user.role) : undefined;
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background pt-[env(safe-area-inset-top)]">
@@ -70,13 +74,13 @@ export default function TeachHeader() {
           <HeaderNavSheet
             navItems={NAV_ITEMS}
             getIsActive={getIsActive}
-            user={session?.user}
+            user={user}
             settingsPath={settingsPath}
             onSignOut={handleSignOut}
           />
-          {session?.user && (
+          {user && (
             <div className="hidden md:block">
-              <HeaderUserMenu user={session.user} showDashboardLink={false} />
+              <HeaderUserMenu user={user} showDashboardLink={false} />
             </div>
           )}
         </div>

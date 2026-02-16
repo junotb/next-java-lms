@@ -72,7 +72,6 @@ export default function TeachClassroomPage() {
       <LessonController
         scheduleId={id}
         role={data.role}
-        startsAt={data.schedule.startsAt}
         endsAt={data.schedule.endsAt}
         onExit={() => router.back()}
       />

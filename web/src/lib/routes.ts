@@ -10,6 +10,14 @@ export function getSettingsPath(role: UserRole): string {
 }
 
 /**
+ * 역할에 따른 프로필 설정 경로 반환
+ * @example getProfilePath("ADMIN") → "/admin/settings/profile"
+ */
+export function getProfilePath(role: UserRole): string {
+  return `${getSettingsPath(role)}/profile`;
+}
+
+/**
  * 역할에 따른 피드백 경로 반환
  * @example getFeedbackPath("TEACHER", 123) → "/teach/feedback/123"
  */

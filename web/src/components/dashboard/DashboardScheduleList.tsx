@@ -10,9 +10,10 @@ import type { DashboardScheduleItem } from "@/schemas/dashboard/dashboard";
 import type { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
+import { USER_ROLE } from "@/constants/auth";
 import { getClassroomPath, getFeedbackPath } from "@/lib/routes";
 
-type Role = "STUDENT" | "TEACHER";
+type Role = (typeof USER_ROLE)[keyof Pick<typeof USER_ROLE, "STUDENT" | "TEACHER">];
 
 interface DashboardScheduleListProps {
   title: string;
@@ -70,11 +71,11 @@ export default function DashboardScheduleList({
   role,
   emptyMessage = "내역이 없습니다.",
   className,
-  variant = role === "TEACHER" ? "teach" : "study",
+  variant = role === USER_ROLE.TEACHER ? "teach" : "study",
 }: DashboardScheduleListProps) {
   const router = useRouter();
   const [videoUploadScheduleId, setVideoUploadScheduleId] = useState<number | null>(null);
-  const isTeacher = role === "TEACHER";
+  const isTeacher = role === USER_ROLE.TEACHER;
 
   const handleEnter = (scheduleId: number) => {
     router.push(getClassroomPath(role, scheduleId));

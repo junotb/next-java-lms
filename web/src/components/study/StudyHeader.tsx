@@ -6,7 +6,7 @@ import { BookOpen, LayoutDashboard, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 import { getSettingsPath } from "@/lib/routes";
-import type { UserRole } from "@/schemas/user/user-role";
+import type { SessionUser } from "@/types/auth";
 import HeaderUserMenu from "@/components/common/HeaderUserMenu";
 import HeaderNavSheet from "@/components/common/HeaderNavSheet";
 
@@ -15,6 +15,10 @@ const NAV_ITEMS = [
   { href: "/study/registration", label: "수업 신청", icon: ClipboardList },
 ] as const;
 
+/**
+ * 학생 영역 상단 헤더.
+ * 대시보드, 수업 신청 네비게이션 및 사용자 메뉴.
+ */
 export default function StudyHeader() {
   const pathname = usePathname();
   const router = useRouter();
@@ -30,8 +34,8 @@ export default function StudyHeader() {
     router.refresh();
   };
 
-  const userRole = (session?.user as { role?: string } | undefined)?.role;
-  const settingsPath = userRole ? getSettingsPath(userRole as UserRole) : undefined;
+  const user = session?.user as SessionUser | undefined;
+  const settingsPath = user?.role ? getSettingsPath(user.role) : undefined;
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background pt-[env(safe-area-inset-top)]">
@@ -64,13 +68,13 @@ export default function StudyHeader() {
           <HeaderNavSheet
             navItems={NAV_ITEMS}
             getIsActive={getIsActive}
-            user={session?.user}
+            user={user}
             settingsPath={settingsPath}
             onSignOut={handleSignOut}
           />
-          {session?.user && (
+          {user && (
             <div className="hidden md:block">
-              <HeaderUserMenu user={session.user} showDashboardLink={false} />
+              <HeaderUserMenu user={user} showDashboardLink={false} />
             </div>
           )}
         </div>

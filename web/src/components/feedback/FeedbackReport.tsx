@@ -1,8 +1,9 @@
 "use client";
 
-import * as React from "react";
+import { useMemo } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CorrectionCard } from "./CorrectionCard";
+import { parseFeedbackContent } from "@/lib/feedback";
 import type { FeedbackData } from "@/types/feedback";
 
 export interface FeedbackReportProps {
@@ -15,60 +16,10 @@ export interface FeedbackReportProps {
  * opening_message, corrections, closing_message를 구조화하여 표시.
  */
 export function FeedbackReport({ feedbackContent }: FeedbackReportProps) {
-  const feedbackData = React.useMemo<FeedbackData | null>(() => {
-    // null이나 undefined 체크
-    if (!feedbackContent) {
-      return null;
-    }
-
-    // 이미 객체인 경우
-    if (typeof feedbackContent === "object" && !Array.isArray(feedbackContent)) {
-      return feedbackContent as FeedbackData;
-    }
-
-    // 문자열인 경우 파싱 시도
-    if (typeof feedbackContent === "string") {
-      let trimmed = feedbackContent.trim();
-      if (!trimmed) {
-        return null;
-      }
-
-      // 마크다운 코드 블록 제거 (```json ... ```)
-      trimmed = trimmed.replace(/^```json\s*/i, "").replace(/\s*```$/i, "").trim();
-
-      // 이스케이프된 JSON 문자열 처리 (예: "\"{\\\"feedback_summary\\\":...}\"")
-      if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
-        try {
-          trimmed = JSON.parse(trimmed) as string;
-        } catch {
-          // 이스케이프가 아니면 그대로 진행
-        }
-      }
-
-      try {
-        const parsed = JSON.parse(trimmed) as FeedbackData;
-        // 파싱된 객체가 올바른 구조인지 검증
-        if (
-          parsed &&
-          typeof parsed === "object" &&
-          parsed.feedback_summary &&
-          Array.isArray(parsed.corrections)
-        ) {
-          return parsed;
-        }
-        console.warn("Parsed data does not match expected structure:", parsed);
-        return null;
-      } catch (e) {
-        console.error("Failed to parse feedback content:", e);
-        console.error("Content type:", typeof trimmed);
-        console.error("Content length:", trimmed.length);
-        console.error("Content preview:", trimmed.substring(0, 200));
-        return null;
-      }
-    }
-
-    return null;
-  }, [feedbackContent]);
+  const feedbackData = useMemo(
+    () => parseFeedbackContent(feedbackContent),
+    [feedbackContent]
+  );
 
   if (!feedbackData) {
     return (

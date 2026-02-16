@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 import { getSettingsPath } from "@/lib/routes";
-import type { UserRole } from "@/schemas/user/user-role";
+import type { SessionUser } from "@/types/auth";
 import HeaderUserMenu from "@/components/common/HeaderUserMenu";
 import HeaderNavSheet from "@/components/common/HeaderNavSheet";
 
@@ -23,6 +23,10 @@ const NAV_ITEMS = [
   { href: "/admin/schedule", label: "스케줄", icon: Calendar },
 ] as const;
 
+/**
+ * 관리자 영역 상단 헤더.
+ * 대시보드, 사용자, 강의, 스케줄 네비게이션 및 사용자 메뉴.
+ */
 export default function AdminHeader() {
   const pathname = usePathname();
   const router = useRouter();
@@ -37,8 +41,8 @@ export default function AdminHeader() {
     router.refresh();
   };
 
-  const userRole = (session?.user as { role?: string } | undefined)?.role;
-  const settingsPath = userRole ? getSettingsPath(userRole as UserRole) : undefined;
+  const user = session?.user as SessionUser | undefined;
+  const settingsPath = user?.role ? getSettingsPath(user.role) : undefined;
 
   return (
     <header className="sticky top-0 z-40 flex w-full justify-center border-b bg-background pt-[env(safe-area-inset-top)]">
@@ -71,13 +75,13 @@ export default function AdminHeader() {
           <HeaderNavSheet
             navItems={NAV_ITEMS}
             getIsActive={getIsActive}
-            user={session?.user}
+            user={user}
             settingsPath={settingsPath}
             onSignOut={handleSignOut}
           />
-          {session?.user && (
+          {user && (
             <div className="hidden md:block">
-              <HeaderUserMenu user={session.user} showDashboardLink={false} />
+              <HeaderUserMenu user={user} showDashboardLink={false} />
             </div>
           )}
         </div>

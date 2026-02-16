@@ -9,11 +9,24 @@ import {
 } from "@/schemas/course/course";
 import { CourseStatus } from "@/schemas/course/course-status";
 
-// 강의 목록 조회
+/** 강의 목록 API 파라미터 (pagination 포함) */
+export type CourseListParams = Partial<CourseListRequest> & {
+  page?: number;
+  size?: number;
+};
+
+/** 강의 목록 조회 */
 export async function courseList(
-  params: CourseListRequest
+  params: CourseListParams = {}
 ): Promise<Course[]> {
-  const response = await api.get<Course[]>("/api/courses", { params });
+  const { page, size, ...rest } = params;
+  const response = await api.get<Course[]>("/api/courses", {
+    params: {
+      ...rest,
+      page: page ?? 0,
+      size: size ?? 100,
+    },
+  });
   return PageResponseSchema(CourseSchema).parse(response.data).items;
 }
 

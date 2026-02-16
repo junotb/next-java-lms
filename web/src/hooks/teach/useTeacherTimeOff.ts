@@ -6,7 +6,7 @@ import {
   getTeacherTimeOffList,
   createTeacherTimeOff,
   deleteTeacherTimeOff,
-} from "@/lib/teacher-time-off";
+} from "@/lib/teacher";
 import type { TeacherTimeOffResponse, TeacherTimeOffRequest } from "@/schemas/teacher/time-off";
 import { useToastStore } from "@/stores/useToastStore";
 

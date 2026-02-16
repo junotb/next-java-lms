@@ -1,4 +1,5 @@
 import api from "@/lib/api";
+import { USER_ROLE_NAMES, USER_STATUS_NAMES } from "@/constants/auth";
 import { PageResponseSchema } from "@/schemas/common/page-response";
 import { User, UserSchema, UserCreateRequest, UserProfileUpdateRequest, UserListRequest } from "@/schemas/user/user";
 import { UserRole } from "@/schemas/user/user-role";
@@ -44,29 +45,19 @@ export async function userRoleStats(): Promise<Record<UserRole, number>> {
   return response.data;
 }
 
-// 사용자 역할명 변환
+/**
+ * 사용자 역할 한글 명칭.
+ * constants/auth USER_ROLE_NAMES 기반, fallback 처리.
+ */
 export function getUserRoleName(role: UserRole): string {
-  switch (role) {
-    case "ADMIN":
-      return "관리자";
-    case "TEACHER":
-      return "강사";
-    case "STUDENT":
-      return "학생";
-    default:
-      return "알 수 없음";
-  }
+  return USER_ROLE_NAMES[role] ?? "알 수 없음";
 }
 
-// 사용자 상태명 변환
+/**
+ * 사용자 상태 한글 명칭.
+ * constants/auth USER_STATUS_NAMES 기반, fallback 처리.
+ */
 export function getUserStatusName(status: UserStatus): string {
-  switch (status) {
-    case "ACTIVE":
-      return "활성";
-    case "INACTIVE":
-      return "비활성";
-    default:
-      return "알 수 없음";
-  }
+  return USER_STATUS_NAMES[status] ?? "알 수 없음";
 }
 

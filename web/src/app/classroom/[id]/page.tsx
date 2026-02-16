@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getClassroomPath } from "@/lib/routes";
+import { USER_ROLE } from "@/constants/auth";
 import type { UserRole } from "@/schemas/user/user-role";
 
 interface LegacyClassroomPageProps {
@@ -30,7 +31,7 @@ export default async function LegacyClassroomPage({
   }
 
   const role = session.user.role as UserRole;
-  if (role !== "TEACHER" && role !== "STUDENT") {
+  if (role !== USER_ROLE.TEACHER && role !== USER_ROLE.STUDENT) {
     redirect("/");
   }
 

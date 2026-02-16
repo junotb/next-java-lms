@@ -14,6 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { SessionUser } from "@/types/auth";
 
 export interface NavItem {
   href: string;
@@ -21,10 +22,7 @@ export interface NavItem {
   icon?: LucideIcon;
 }
 
-interface HeaderNavSheetUser {
-  name?: string | null;
-  email?: string | null;
-}
+type HeaderNavSheetUser = Pick<SessionUser, "name" | "email">;
 
 interface HeaderNavSheetProps {
   navItems: readonly NavItem[];
@@ -53,9 +51,10 @@ export default function HeaderNavSheet({
   const pathname = usePathname();
   const displayName = user?.name || user?.email || "사용자";
   const hasUserSection = user && settingsPath && onSignOut;
+  const profilePath = settingsPath ? `${settingsPath}/profile` : "";
   const isSettingsActive =
-    !!settingsPath &&
-    (pathname === `${settingsPath}/profile` || pathname === `${settingsPath}/password`);
+    !!profilePath &&
+    (pathname === profilePath || (!!settingsPath && pathname === `${settingsPath}/password`));
 
   const closeSheet = () => setOpen(false);
 
@@ -84,7 +83,7 @@ export default function HeaderNavSheet({
           {hasUserSection && (
             <>
               <Link
-                href={`${settingsPath}/profile`}
+                href={profilePath}
                 onClick={closeSheet}
                 className="px-4 py-3 rounded-md text-base font-medium text-foreground truncate touch-manipulation hover:bg-accent hover:text-accent-foreground transition-colors"
                 title={displayName}
@@ -120,7 +119,7 @@ export default function HeaderNavSheet({
               <div className={DIVIDER_CLASS} />
               <div className="flex flex-col gap-1">
                 <Link
-                  href={`${settingsPath}/profile`}
+                  href={profilePath}
                   onClick={closeSheet}
                   className={cn(
                     "flex items-center gap-3 min-h-11 px-4 rounded-md text-base font-medium transition-colors touch-manipulation",

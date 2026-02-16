@@ -5,8 +5,8 @@ import {
   COOKIE_CACHE_MAX_AGE,
   DEFAULT_USER_ROLE,
   DEFAULT_USER_STATUS,
-  DATABASE_POOL_MAX,
 } from "@/constants/auth";
+import { DATABASE_POOL_MAX } from "@/constants/config";
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
