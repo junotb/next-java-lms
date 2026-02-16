@@ -1,0 +1,106 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { authClient } from "@/lib/auth-client";
+import { useToastStore } from "@/stores/useToastStore";
+import {
+  ProfileUpdateRequestSchema,
+  type ProfileUpdateRequest,
+} from "@/schemas/auth/profile";
+import type { SessionUser } from "@/types/auth";
+import { Button } from "@/components/ui/button";
+import InputField from "@/components/common/InputField";
+import Spinner from "@/components/common/Spinner";
+import { cn } from "@/lib/utils";
+
+/**
+ * 프로필 수정 폼. 역할별 settings 페이지에서 재사용.
+ */
+export default function ProfileForm() {
+  const [isLoading, setIsLoading] = useState(true);
+  const { showToast } = useToastStore();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ProfileUpdateRequest>({
+    resolver: zodResolver(ProfileUpdateRequestSchema),
+    defaultValues: { name: "", image: "" },
+  });
+
+  useEffect(() => {
+    const load = async () => {
+      const { data } = await authClient.getSession();
+      if (data?.user) {
+        const user = data.user as SessionUser;
+        reset({
+          name: user.name || "",
+          image: user.image || "",
+        });
+      }
+      setIsLoading(false);
+    };
+    load();
+  }, [reset]);
+
+  const onSubmit = async (payload: ProfileUpdateRequest) => {
+    const { data, error } = await authClient.updateUser({
+      name: payload.name.trim(),
+      image: payload.image?.trim() || undefined,
+    });
+
+    if (error) {
+      showToast(error.message || "수정에 실패했습니다.", "error");
+      return;
+    }
+
+    if (data) {
+      showToast("프로필이 수정되었습니다.", "success");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[200px] items-center justify-center">
+        <Spinner size="md" />
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-6 max-w-md"
+    >
+      <InputField
+        id="name"
+        label="이름"
+        register={register}
+        errors={errors}
+        autoComplete="name"
+      />
+      <InputField
+        id="image"
+        label="프로필 이미지 URL"
+        register={register}
+        errors={errors}
+        placeholder="https://..."
+      />
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className={cn(
+          "w-fit rounded-xl px-6 py-2 font-bold shadow-lg shadow-primary/20",
+          "disabled:opacity-50"
+        )}
+      >
+        {isSubmitting && <Spinner size="sm" className="mr-2" />}
+        저장
+      </Button>
+    </form>
+  );
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LogOut, CheckCircle } from "lucide-react";
 import Loader from "@/components/common/Loader";
 import { Button } from "@/components/ui/button";
@@ -12,52 +12,31 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useFinishLesson } from "@/hooks/useLesson";
+import { useCountdown } from "@/hooks/useCountdown";
+import { USER_ROLE } from "@/constants/auth";
 
 interface LessonControllerProps {
   scheduleId: number;
   role: string;
-  startsAt: string;
   endsAt: string;
   onExit: () => void;
 }
 
+/**
+ * 수업실 하단 컨트롤러.
+ * 남은 시간 표시, 강사 전용 수업 종료, 나가기 버튼.
+ */
 export default function LessonController({
   scheduleId,
   role,
-  startsAt: _startsAt,
   endsAt,
   onExit,
 }: LessonControllerProps) {
-  const [remaining, setRemaining] = useState("");
+  const remaining = useCountdown(endsAt);
   const finishMutation = useFinishLesson(scheduleId);
   const [finishDialogOpen, setFinishDialogOpen] = useState(false);
 
-  const isTeacher = role === "TEACHER";
-
-  useEffect(() => {
-    const update = () => {
-      const now = Date.now();
-      const end = new Date(endsAt).getTime();
-      if (now >= end) {
-        setRemaining("00:00:00");
-        return;
-      }
-      const diff = Math.max(0, Math.floor((end - now) / 1000));
-      const h = Math.floor(diff / 3600);
-      const m = Math.floor((diff % 3600) / 60);
-      const s = diff % 60;
-      setRemaining(
-        [
-          String(h).padStart(2, "0"),
-          String(m).padStart(2, "0"),
-          String(s).padStart(2, "0"),
-        ].join(":")
-      );
-    };
-    update();
-    const id = setInterval(update, 1000);
-    return () => clearInterval(id);
-  }, [endsAt]);
+  const isTeacher = role === USER_ROLE.TEACHER;
 
   const handleFinishClick = () => setFinishDialogOpen(true);
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { BetterError } from "@/types/auth";
+import type { BetterError, SessionUser } from "@/types/auth";
 import type {
   SignInEmailRequest,
   SignUpEmailRequest,
@@ -19,6 +19,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ROLE_REDIRECT_MAP, MODAL_TYPES } from "@/constants/auth";
 
+/**
+ * 인증 모달 컨테이너.
+ * 로그인/회원가입 폼, 소셜 로그인, 모달 전환 처리.
+ */
 export default function AuthModalContainer() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<BetterError | null>(null);
@@ -33,15 +37,23 @@ export default function AuthModalContainer() {
 
   if (!modalType) return null;
 
+  const runWithLoading = async <T,>(
+    fn: () => Promise<{ data: T | null; error: BetterError | null }>
+  ) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await fn();
+      return result;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSignIn = async (payload: SignInEmailRequest) => {
-    const { data, error } = await authClient.signIn.email(payload, {
-      onRequest: () => {
-        setIsLoading(true);
-        setError(null);
-      },
-      onSuccess: () => setIsLoading(false),
-      onError: () => setIsLoading(false),
-    });
+    const { data, error } = await runWithLoading(() =>
+      authClient.signIn.email(payload)
+    );
 
     if (error) {
       setError(error);
@@ -53,29 +65,27 @@ export default function AuthModalContainer() {
       return;
     }
 
-    const { role } = data.user as unknown as { role: string };
+    const user = data.user as SessionUser;
+    const redirectPath = user.role
+      ? ROLE_REDIRECT_MAP[user.role]
+      : "/";
 
-    const redirectPath = ROLE_REDIRECT_MAP[role] || "/";
-
-    // 로그인 후 뒤로가기 시 모달이 다시 뜨는 것을 방지하기 위해 push 대신 replace를 사용합니다.
-    // 이 방식은 사용자 경험을 향상시킵니다.
+    // 로그인 후 뒤로가기 시 모달이 다시 뜨는 것을 방지하기 위해 replace 사용
     router.replace(redirectPath);
     closeModal();
   };
 
   const handleSignUp = async (payload: SignUpEmailRequest) => {
-    const { data, error } = await authClient.signUp.email(payload, {
-      onRequest: () => {
-        setIsLoading(true);
-        setError(null);
-      },
-      onSuccess: () => setIsLoading(false),
-      onError: () => setIsLoading(false),
-    });
+    const { data, error } = await runWithLoading(() =>
+      authClient.signUp.email(payload)
+    );
 
     if (error) {
       setError(error);
-    } else if (data) {
+      return;
+    }
+
+    if (data) {
       openModal(MODAL_TYPES.SIGN_IN);
       showToast("회원가입이 완료되었습니다. 로그인해주세요.", "success");
     }

@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, CalendarRange, ListTodo } from "lucide-react";
 import { getTeachDashboard } from "@/lib/dashboard";
+import { USER_ROLE } from "@/constants/auth";
 import DashboardNextClassCard from "@/components/dashboard/DashboardNextClassCard";
 import DashboardStats, { type DashboardStatItem } from "@/components/dashboard/DashboardStats";
 import DashboardScheduleList from "@/components/dashboard/DashboardScheduleList";
@@ -60,20 +61,20 @@ export default function TeachDashboardPage() {
         </section>
         <DashboardNextClassCard
           schedule={data.nextClass}
-          role="TEACHER"
+          role={USER_ROLE.TEACHER}
           variant="teach"
         />
         <DashboardScheduleList
           title="오늘 전체 일정"
           schedules={data.todaySchedules}
-          role="TEACHER"
+          role={USER_ROLE.TEACHER}
           variant="teach"
           emptyMessage="오늘 예정된 수업이 없습니다."
         />
         <DashboardScheduleList
           title="최근 완료 수업"
           schedules={data.recentCompletedSchedules ?? []}
-          role="TEACHER"
+          role={USER_ROLE.TEACHER}
           variant="teach"
           emptyMessage="최근 완료한 수업이 없습니다."
         />

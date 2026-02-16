@@ -7,12 +7,13 @@ import {
 } from "@tanstack/react-query";
 import type { ApiError } from "@/types/api";
 import {
-  courseList,
+  getCourseListForRegistration,
   findCandidates,
   registerCourse,
 } from "@/lib/registration-api";
 import type { CandidateSearchRequest } from "@/schemas/registration";
 import type { Course } from "@/schemas/course/course";
+import { CourseStatus } from "@/schemas/course/course-status";
 import type { CourseRegistrationRequest } from "@/schemas/registration";
 import type { Registration } from "@/schemas/registration";
 import type { TeacherCandidate } from "@/schemas/registration";
@@ -20,7 +21,8 @@ import type { TeacherCandidate } from "@/schemas/registration";
 export function useCourseList() {
   return useQuery<Course[], Error>({
     queryKey: ["course", "list"],
-    queryFn: () => courseList({ status: "ACTIVE", size: 100 }),
+    queryFn: () =>
+      getCourseListForRegistration({ status: CourseStatus.ACTIVE, size: 100 }),
     staleTime: 5 * 60 * 1000,
   });
 }

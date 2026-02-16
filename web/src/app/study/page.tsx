@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { BookOpen, Award, ClipboardList, PlusCircle } from "lucide-react";
+import { USER_ROLE } from "@/constants/auth";
 import { getStudyDashboard } from "@/lib/dashboard";
 import DashboardNextClassCard from "@/components/dashboard/DashboardNextClassCard";
 import DashboardStats, { type DashboardStatItem } from "@/components/dashboard/DashboardStats";
@@ -54,7 +55,7 @@ export default function StudyDashboardPage() {
       <div className="flex flex-col gap-6">
         <DashboardNextClassCard
           schedule={data.nextClass}
-          role="STUDENT"
+          role={USER_ROLE.STUDENT}
           variant="study"
         />
         <section>
@@ -64,7 +65,7 @@ export default function StudyDashboardPage() {
         <DashboardScheduleList
           title="최근 학습 이력"
           schedules={data.recentSchedules}
-          role="STUDENT"
+          role={USER_ROLE.STUDENT}
           variant="study"
           emptyMessage="최근 수업 이력이 없습니다."
         />

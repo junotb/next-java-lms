@@ -1,6 +1,8 @@
 import { z } from "zod";
 import api from "@/lib/api";
-import { CourseSchema, type Course } from "@/schemas/course/course";
+import { courseList } from "@/lib/course";
+import type { Course } from "@/schemas/course/course";
+import type { CourseStatus } from "@/schemas/course/course-status";
 import {
   type CandidateSearchRequest,
   type CourseRegistrationRequest,
@@ -45,19 +47,15 @@ export async function findCandidates(
   return z.array(TeacherCandidateSchema).parse(raw);
 }
 
-/** 코스 목록 조회 (수강 신청 마법사 Step 1용) */
-export async function courseList(params?: {
-  status?: "ACTIVE" | "INACTIVE";
+/** 코스 목록 조회 (수강 신청 마법사 Step 1용). lib/course.courseList 재사용. */
+export function getCourseListForRegistration(params?: {
+  status?: CourseStatus;
   page?: number;
   size?: number;
 }): Promise<Course[]> {
-  const response = await api.get<{ items: unknown[] }>("/api/courses", {
-    params: {
-      status: params?.status,
-      page: params?.page ?? 0,
-      size: params?.size ?? 100,
-    },
+  return courseList({
+    status: params?.status,
+    page: params?.page ?? 0,
+    size: params?.size ?? 100,
   });
-  const items = response.data.items ?? [];
-  return z.array(CourseSchema).parse(items);
 }

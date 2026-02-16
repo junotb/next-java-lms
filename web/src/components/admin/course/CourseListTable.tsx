@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { COURSE_STATUS_LABELS, COURSE_STATUS_COLORS } from "@/constants/course";
 
+/**
+ * 강의 목록 테이블.
+ * 제목, 상태, 생성일, 수정/삭제 액션.
+ */
 interface CourseListTableProps {
   courses: Course[];
   onUpdate: (courseId: number) => void;

@@ -8,8 +8,10 @@ import MeetLinkModal from "@/components/teach/MeetLinkModal";
 import type { DashboardNextClass } from "@/schemas/dashboard/dashboard";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
+import { USER_ROLE } from "@/constants/auth";
+import { getClassroomPath } from "@/lib/routes";
 
-type Role = "STUDENT" | "TEACHER";
+type Role = (typeof USER_ROLE)[keyof Pick<typeof USER_ROLE, "STUDENT" | "TEACHER">];
 
 interface DashboardNextClassCardProps {
   schedule: DashboardNextClass | null;
@@ -44,7 +46,7 @@ export default function DashboardNextClassCard({
 }: DashboardNextClassCardProps) {
   const router = useRouter();
   const [meetLinkModalOpen, setMeetLinkModalOpen] = useState(false);
-  const isTeacher = role === "TEACHER";
+  const isTeacher = role === USER_ROLE.TEACHER;
   // 강사: meetLink 등록된 경우에만 입장 가능. 학생: 수업 10분 전부터 입장 가능.
   const canEnter = isTeacher
     ? !!(schedule && hasMeetLink(schedule))
@@ -128,7 +130,9 @@ export default function DashboardNextClassCard({
           )}
           <Button
             className={cn("w-fit", buttonClass)}
-            onClick={() => router.push(`/classroom/${schedule.scheduleId}`)}
+            onClick={() =>
+              router.push(getClassroomPath(role, schedule.scheduleId))
+            }
             disabled={!canEnter}
           >
             수업 입장

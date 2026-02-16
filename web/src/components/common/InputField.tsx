@@ -11,6 +11,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+/**
+ * React Hook Form 연동 입력 필드.
+ * Label, Input, 에러 메시지 표시. data-invalid 속성으로 스타일링 용이.
+ *
+ * @param props.id - 필드명 (Path<T>)
+ * @param props.register - useForm의 register
+ * @param props.errors - formState.errors
+ */
+
 interface InputFieldProps<T extends FieldValues> {
   id: Path<T>;
   label: string;

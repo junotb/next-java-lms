@@ -3,6 +3,13 @@ import type { ApiError, ApiErrorResponse } from "@/types/api";
 import { API_URL } from "@/constants/api";
 import { authClient } from "@/lib/auth-client";
 
+/**
+ * API 클라이언트 (axios 인스턴스).
+ * baseURL, JSON 헤더, withCredentials 설정.
+ * Request 인터셉터: 세션 토큰으로 Bearer 인증.
+ * Response 인터셉터: ApiError 형태로 변환 후 reject.
+ */
+
 // 하위 호환성을 위해 타입 re-export
 export type { ApiError, ApiErrorResponse } from "@/types/api";
 

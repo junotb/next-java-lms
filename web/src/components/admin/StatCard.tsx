@@ -1,5 +1,6 @@
 import { getScheduleStatusName } from "@/lib/schedule";
 import { getUserRoleName } from "@/lib/user";
+import { USER_ROLE } from "@/constants/auth";
 import {
   ScheduleStatus,
   ScheduleStatusSchema,
@@ -18,11 +19,11 @@ function getIcon(title: UserRole | ScheduleStatus): LucideIcon {
   if (UserRoleSchema.safeParse(title).success) {
     const role = title as UserRole;
     switch (role) {
-      case "ADMIN":
+      case USER_ROLE.ADMIN:
         return UserCheck;
-      case "TEACHER":
+      case USER_ROLE.TEACHER:
         return GraduationCap;
-      case "STUDENT":
+      case USER_ROLE.STUDENT:
         return Users;
       default:
         return Users;

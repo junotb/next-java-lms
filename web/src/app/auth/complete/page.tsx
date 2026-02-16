@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { ROLE_REDIRECT_MAP } from "@/constants/auth";
+import type { SessionUser } from "@/types/auth";
 import Loader from "@/components/common/Loader";
 
 /**
@@ -16,8 +17,8 @@ export default function AuthCompletePage() {
   useEffect(() => {
     const redirect = async () => {
       const { data } = await authClient.getSession();
-      const role = data?.user ? (data.user as { role?: string }).role : undefined;
-      const path = role ? ROLE_REDIRECT_MAP[role] || "/" : "/";
+      const user = data?.user as SessionUser | undefined;
+      const path = user?.role ? ROLE_REDIRECT_MAP[user.role] : "/";
       router.replace(path);
     };
 

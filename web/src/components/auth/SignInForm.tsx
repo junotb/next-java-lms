@@ -9,8 +9,9 @@ import type {
 } from "@/schemas/auth/auth";
 import { SignInEmailRequestSchema } from "@/schemas/auth/auth";
 import InputField from "@/components/common/InputField";
+import Spinner from "@/components/common/Spinner";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { AUTH_FORM_SUBMIT_BUTTON_CLASS } from "@/constants/auth";
 
 interface SignInFormProps {
   error: BetterError | null;
@@ -70,17 +71,10 @@ export default function SignInForm({ error, onSubmit }: SignInFormProps) {
 
       <Button
         type="submit"
-        className={cn(
-          "mt-4 w-full rounded-xl px-8 py-3 font-bold shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 disabled:shadow-none disabled:transform-none"
-        )}
+        className={AUTH_FORM_SUBMIT_BUTTON_CLASS}
         disabled={isSubmitting}
       >
-        {isSubmitting && (
-          <span
-            className="mr-2 inline-block size-4 shrink-0 animate-spin rounded-full border-2 border-current border-t-transparent"
-            aria-hidden
-          />
-        )}
+        {isSubmitting && <Spinner size="sm" className="mr-2" />}
         로그인
       </Button>
       {error && <p className="text-destructive text-sm">{error.message}</p>}
