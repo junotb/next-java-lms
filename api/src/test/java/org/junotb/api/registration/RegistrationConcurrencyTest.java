@@ -1,7 +1,6 @@
 package org.junotb.api.registration;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junotb.api.course.Course;
@@ -17,6 +16,13 @@ import org.junotb.api.user.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.EnabledIfDockerAvailable;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -29,11 +35,24 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Testcontainers
+@EnabledIfDockerAvailable
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "concurrency"})
 @DisplayName("RegistrationConcurrencyTest Integration Test")
-@Disabled("Requires Redis connection - enable when Redis is available")
 class RegistrationConcurrencyTest {
+
+    private static final String REDIS_IMAGE = "redis:7-alpine";
+
+    @Container
+    static GenericContainer<?> redis = new GenericContainer<>(DockerImageName.parse(REDIS_IMAGE))
+            .withExposedPorts(6379);
+
+    @DynamicPropertySource
+    static void redisProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.redis.url", () ->
+                "redis://" + redis.getHost() + ":" + redis.getMappedPort(6379));
+    }
 
     @Autowired
     private RegistrationService registrationService;
@@ -133,8 +152,6 @@ class RegistrationConcurrencyTest {
                     // 정원 초과 또는 중복 등록 예외 예상
                     failureCount.incrementAndGet();
                 } catch (Exception e) {
-                    // 기타 예외
-                    System.err.println("Unexpected exception: " + e.getMessage());
                     failureCount.incrementAndGet();
                 } finally {
                     latch.countDown();
@@ -150,15 +167,8 @@ class RegistrationConcurrencyTest {
         executorService.shutdown();
 
         // then
-        // 실제 DB에 저장된 등록 수 확인
         long actualRegistrationCount = registrationRepository.countByScheduleIdAndStatusRegistered(testSchedule.getId());
-        
-        System.out.println("=== Concurrency Test Results ===");
-        System.out.println("Total requests: " + CONCURRENT_REQUESTS);
-        System.out.println("Success count: " + successCount.get());
-        System.out.println("Failure count: " + failureCount.get());
-        System.out.println("Actual DB count: " + actualRegistrationCount);
-        
+
         // 1:1 수업이므로 정확히 1명만 등록되어야 함
         assertThat(actualRegistrationCount).isEqualTo(1);
         assertThat(successCount.get()).isEqualTo(1);
@@ -206,7 +216,7 @@ class RegistrationConcurrencyTest {
                 } catch (IllegalStateException e) {
                     // 정원 초과 예상
                 } catch (Exception e) {
-                    System.err.println("Unexpected exception: " + e.getMessage());
+                    // 예외는 예상된 동작 (정원 초과 등)
                 } finally {
                     latch.countDown();
                 }
@@ -220,10 +230,6 @@ class RegistrationConcurrencyTest {
         // then
         long schedule1Count = registrationRepository.countByScheduleIdAndStatusRegistered(schedule1Id);
         long schedule2Count = registrationRepository.countByScheduleIdAndStatusRegistered(schedule2Id);
-
-        System.out.println("=== Multi-Schedule Concurrency Test Results ===");
-        System.out.println("Schedule 1 registrations: " + schedule1Count);
-        System.out.println("Schedule 2 registrations: " + schedule2Count);
 
         // 각 스케줄에 정확히 1명씩 등록되어야 함
         assertThat(schedule1Count).isEqualTo(1);

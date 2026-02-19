@@ -1,6 +1,5 @@
 package org.junotb.api.schedule;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.junotb.api.common.exception.ResourceNotFoundException;
@@ -20,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+/**
+ * 수업 스케줄 CRUD 및 통계 서비스.
+ */
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -28,31 +30,39 @@ public class ScheduleService {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
 
-    // 스케줄 조회
+    /**
+     * ID로 스케줄 조회.
+     *
+     * @param id 스케줄 ID
+     * @return 스케줄 (없으면 Optional.empty())
+     */
     public Optional<Schedule> findById(Long id) {
         return scheduleRepository.findById(id);
     }
 
-    // 스케줄 목록 조회
+    /**
+     * 스케줄 목록 조회. Specification으로 동적 필터 적용.
+     *
+     * @param request  필터 (userId, courseId, status)
+     * @param pageable 페이징
+     * @return 페이징된 목록
+     */
     public Page<Schedule> findList(ScheduleListRequest request, Pageable pageable) {
         Specification<Schedule> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // 사용자 번호로 필터링
             if (request.userId() != null) {
                 predicates.add(
                     cb.equal(root.get("user").get("id"), request.userId())
                 );
             }
 
-            // 코스 번호로 필터링
             if (request.courseId() != null) {
                 predicates.add(
                     cb.equal(root.get("course").get("id"), request.courseId())
                 );
             }
 
-            // 스케줄 상태로 필터링
             if (request.status() != null) {
                 predicates.add(
                     cb.equal(root.get("status"), request.status())
@@ -65,15 +75,20 @@ public class ScheduleService {
         return scheduleRepository.findAll(spec, pageable);
     }
 
-    // 스케줄 생성
+    /**
+     * 스케줄 생성. 강사·코스 존재 검증 후 저장.
+     *
+     * @param userId  강사(사용자) ID
+     * @param request 생성 요청
+     * @return 저장된 스케줄
+     * @throws ResourceNotFoundException 강사 또는 코스 미존재 시
+     */
     @Transactional
     public Schedule create(String userId, ScheduleCreateRequest request) {
-        // 강사(사용자) 존재 여부 확인
         User user = userRepository.findById(userId).orElseThrow(() ->
             new ResourceNotFoundException("User", userId)
         );
 
-        // 과목(코스) 존재 여부 확인
         Course course = courseRepository.findById(request.courseId()).orElseThrow(() ->
             new ResourceNotFoundException("Course", request.courseId().toString())
         );
@@ -89,15 +104,20 @@ public class ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
-    // 스케줄 수정
+    /**
+     * 스케줄 수정. null이 아닌 필드만 업데이트.
+     *
+     * @param id      스케줄 ID
+     * @param request 수정 요청
+     * @return 수정된 스케줄
+     * @throws ResourceNotFoundException 스케줄 미존재 시
+     */
     @Transactional
     public Schedule update(Long id, ScheduleUpdateRequest request) {
-        // 스케줄 번호에 해당하는 스케줄 존재 여부 확인
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() ->
-            new EntityExistsException("Schedule not found with id: " + id)
+            new ResourceNotFoundException("Schedule", id.toString())
         );
 
-        // 수정할 필드만 업데이트
         if (request.startsAt() != null) schedule.setStartsAt(request.startsAt());
         if (request.endsAt() != null) schedule.setEndsAt(request.endsAt());
         if (request.status() != null) schedule.setStatus(request.status());
@@ -128,25 +148,32 @@ public class ScheduleService {
         return schedule;
     }
 
-    // 스케줄 삭제 (취소 처리)
+    /**
+     * 스케줄 삭제(취소). 이미 CANCELED면 idempotent로 조기 반환.
+     *
+     * @param id 스케줄 ID
+     * @throws ResourceNotFoundException 스케줄 미존재 시
+     */
     @Transactional
     public void delete(Long id) {
-        // 스케줄 번호에 해당하는 스케줄 존재 여부 확인
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
-            () -> new EntityExistsException("Schedule not found with id: " + id)
+            () -> new ResourceNotFoundException("Schedule", id.toString())
         );
 
-        // 이미 취소된 스케줄인 경우 처리하지 않음
         if (schedule.getStatus() == ScheduleStatus.CANCELED) return;
         schedule.setStatus(ScheduleStatus.CANCELED);
     }
 
-    // 상태별 스케줄 개수 조회
+    /**
+     * 강사별 상태별 스케줄 개수. countByStatus()가 반환하지 않는 상태는 0으로 초기화.
+     *
+     * @param userId 강사 ID
+     * @return 상태별 건수
+     */
     @Transactional(readOnly = true)
     public Map<ScheduleStatus, Long> countByStatus(String userId) {
         EnumMap<ScheduleStatus, Long> result = new EnumMap<>(ScheduleStatus.class);
 
-        // 모든 상태를 0으로 초기화
         for (ScheduleStatus status : ScheduleStatus.values()) {
             result.put(status, 0L);
         }

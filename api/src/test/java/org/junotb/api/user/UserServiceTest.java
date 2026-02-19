@@ -1,6 +1,6 @@
 package org.junotb.api.user;
 
-import jakarta.persistence.EntityExistsException;
+import org.junotb.api.common.exception.ResourceNotFoundException;
 import org.junotb.api.common.exception.DuplicateResourceException;
 import org.junotb.api.user.web.UserCreateRequest;
 import org.junotb.api.user.web.UserUpdateRequest;
@@ -33,7 +33,9 @@ class UserServiceTest {
         UserCreateRequest request = new UserCreateRequest("Alice", "alice@example.com", TEACHER, ACTIVE);
         when(userRepository.existsByEmail("alice@example.com")).thenReturn(true);
 
-        assertThatThrownBy(() -> userService.create(request)).isInstanceOf(DuplicateResourceException.class);
+        assertThatThrownBy(() -> userService.create(request))
+                .isInstanceOf(DuplicateResourceException.class)
+                .hasMessageContaining("Email");
     }
 
     @Test
@@ -42,6 +44,8 @@ class UserServiceTest {
         when(userRepository.findById("none")).thenReturn(Optional.empty());
         UserUpdateRequest request = new UserUpdateRequest("Name", "email@test.com", TEACHER, ACTIVE);
 
-        assertThatThrownBy(() -> userService.update("none", request)).isInstanceOf(EntityExistsException.class);
+        assertThatThrownBy(() -> userService.update("none", request))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("User");
     }
 }
