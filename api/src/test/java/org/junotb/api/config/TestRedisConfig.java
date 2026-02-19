@@ -16,10 +16,11 @@ import static org.mockito.Mockito.when;
 
 /**
  * 테스트 환경용 Redis 설정
- * Mock RedissonClient를 제공하여 실제 Redis 연결 없이 테스트 가능
+ * Mock RedissonClient를 제공하여 실제 Redis 연결 없이 테스트 가능.
+ * concurrency 프로필에서는 실제 Redis(Testcontainers)를 사용하므로 로드되지 않음.
  */
 @Configuration
-@Profile("test")
+@Profile("test & !concurrency")
 public class TestRedisConfig {
 
     /**

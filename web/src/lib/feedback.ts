@@ -41,10 +41,8 @@ export function parseFeedbackContent(
     ) {
       return parsed;
     }
-    console.warn("Parsed data does not match expected structure:", parsed);
     return null;
-  } catch (e) {
-    console.error("Failed to parse feedback content:", e);
+  } catch {
     return null;
   }
 }

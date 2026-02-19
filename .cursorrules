@@ -12,12 +12,16 @@
 # Tech Stack & Versions
 ## Backend (Java/Spring Boot)
 - **Framework**: Spring Boot 3.3.3
-- **Language**: Java 17 (Use Records for DTOs if applicable, strictly typed)
+- **Language**: Java 21 (Use Records for DTOs if applicable, strictly typed)
 - **Build Tool**: Gradle (Kotlin DSL)
 - **Database**: PostgreSQL (Production), H2 (Test)
 - **ORM**: JPA / Hibernate
 - **API Docs**: SpringDoc OpenAPI (Swagger)
 - **Utils**: Lombok, Commons Lang3
+- **Config**: spring-dotenv (.env 로드)
+- **Concurrency**: Redisson (Redis 분산 락)
+- **SQL Logging**: p6spy
+- **AI/STT**: Google Cloud Speech, Google GenAI (Gemini)
 
 ## Frontend (Next.js)
 - **Framework**: Next.js 15.5.6 (App Router)
@@ -25,9 +29,12 @@
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4 (No config file, strictly utility classes)
 - **State Management**: Zustand (Client), TanStack Query v5 (Server)
-- **Forms**: React Hook Form + Zod
+- **Forms**: React Hook Form + Zod + @hookform/resolvers
+- **UI**: Radix UI (shadcn/ui 기반), lucide-react (아이콘)
 - **Auth**: Better-Auth (Do NOT suggest NextAuth)
 - **HTTP Client**: Axios
+- **Toast**: Sonner
+- **Date**: date-fns
 - **Testing**: Jest, React Testing Library (RTL)
 
 # Coding Guidelines
@@ -67,7 +74,8 @@
 - **Type Safety**: Share types with Backend or define strictly in `types/`. Use Zod for validation.
 - **Testing**:
   - Use **Jest** and **React Testing Library** for Unit/Integration tests.
-  - Test complex hooks and critical form flows (Login, Registration).
+  - **필수**: Login(SignInForm), Registration(SignUpForm), 수강 신청 플로우(CourseRegistrationSchema, useRegistrationStore).
+  - **권장**: TanStack Query 훅(useCourseList, useFindCandidates, useRegisterCourse), 관리자 폼(UserCreateForm), 유틸(parseVtt, parseFeedbackContent), 훅(useCountdown).
 - **Auth**: Implement authentication flows using `better-auth`.
 
 ## 4. General Workflow
