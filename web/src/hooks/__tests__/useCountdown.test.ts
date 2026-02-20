@@ -1,12 +1,12 @@
 import { act, renderHook } from "@testing-library/react";
+import { formatRemainingTime } from "@/lib/countdown";
 import { useCountdown } from "../useCountdown";
 
 jest.mock("@/lib/countdown", () => ({
   formatRemainingTime: jest.fn(),
 }));
 
-const mockFormatRemainingTime = require("@/lib/countdown")
-  .formatRemainingTime as jest.Mock;
+const mockFormatRemainingTime = formatRemainingTime as jest.Mock;
 
 describe("useCountdown", () => {
   beforeEach(() => {
