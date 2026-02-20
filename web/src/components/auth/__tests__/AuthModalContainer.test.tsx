@@ -2,6 +2,7 @@
 
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import AuthModalContainer from "../AuthModalContainer";
+import { authClient } from "@/lib/auth-client";
 import { useAuthModalStore } from "@/stores/useAuthModalStore";
 
 const mockReplace = jest.fn();
@@ -23,7 +24,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 describe("AuthModalContainer", () => {
-  const getAuthClient = () => require("@/lib/auth-client").authClient;
+  const getAuthClient = () => authClient;
 
   beforeEach(() => {
     jest.clearAllMocks();

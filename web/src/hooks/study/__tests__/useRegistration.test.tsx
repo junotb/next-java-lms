@@ -2,6 +2,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import {
+  findCandidates,
+  getCourseListForRegistration,
+  registerCourse,
+} from "@/lib/registration-api";
+import {
   useCourseList,
   useFindCandidates,
   useRegisterCourse,
@@ -27,12 +32,9 @@ jest.mock("@/lib/registration-api", () => ({
   registerCourse: jest.fn(),
 }));
 
-const mockGetCourseList = require("@/lib/registration-api")
-  .getCourseListForRegistration as jest.Mock;
-const mockFindCandidates = require("@/lib/registration-api")
-  .findCandidates as jest.Mock;
-const mockRegisterCourse = require("@/lib/registration-api")
-  .registerCourse as jest.Mock;
+const mockGetCourseList = getCourseListForRegistration as jest.Mock;
+const mockFindCandidates = findCandidates as jest.Mock;
+const mockRegisterCourse = registerCourse as jest.Mock;
 
 describe("useCourseList", () => {
   beforeEach(() => {
