@@ -91,3 +91,28 @@ export const DEFAULT_USER_ROLE = "STUDENT" as const;
  * 기본 사용자 상태
  */
 export const DEFAULT_USER_STATUS = "ACTIVE" as const;
+
+/**
+ * 데모 계정 (역할별 로그인용).
+ * .env에서 NEXT_PUBLIC_DEMO_* 로 오버라이드 가능.
+ */
+export const DEMO_ROLE_ACCOUNTS = [
+  {
+    role: "ADMIN" as UserRole,
+    email: process.env.NEXT_PUBLIC_DEMO_ADMIN_EMAIL ?? "admin@demo.com",
+    password: process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "demo1234",
+    label: USER_ROLE_NAMES.ADMIN,
+  },
+  {
+    role: "TEACHER" as UserRole,
+    email: process.env.NEXT_PUBLIC_DEMO_TEACHER_EMAIL ?? "teacher@demo.com",
+    password: process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "demo1234",
+    label: USER_ROLE_NAMES.TEACHER,
+  },
+  {
+    role: "STUDENT" as UserRole,
+    email: process.env.NEXT_PUBLIC_DEMO_STUDENT_EMAIL ?? "student@demo.com",
+    password: process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "demo1234",
+    label: USER_ROLE_NAMES.STUDENT,
+  },
+] as const;

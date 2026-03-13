@@ -11,6 +11,7 @@ import org.junotb.api.user.web.UserResponse;
 import org.junotb.api.user.web.UserUpdateRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,6 +26,20 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final WithdrawalService withdrawalService;
+
+    /**
+     * 회원 탈퇴. 본인 인증 후 회원·스케줄·수강 등록 등 모든 연관 데이터를 삭제합니다.
+     *
+     * @param userId 인증된 사용자 ID
+     * @return 204 No Content
+     */
+    @Operation(summary = "회원 탈퇴", description = "본인 계정 및 연관 데이터를 모두 삭제합니다.")
+    @PostMapping("/me/withdraw")
+    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal String userId) {
+        withdrawalService.withdraw(userId);
+        return ResponseEntity.noContent().build();
+    }
 
     /**
      * 사용자 목록을 페이징하여 조회. 이름·역할·상태로 필터링 가능.

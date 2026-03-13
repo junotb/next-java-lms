@@ -4,6 +4,7 @@ import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -133,4 +134,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long>, JpaSp
         @Param("teacherId") String teacherId,
         Pageable pageable
     );
+
+    /** 강사 탈퇴: 해당 강사의 모든 스케줄 삭제 */
+    @Modifying
+    @Query("DELETE FROM Schedule s WHERE s.user.id = :userId")
+    int deleteByUserId(@Param("userId") String userId);
 }
