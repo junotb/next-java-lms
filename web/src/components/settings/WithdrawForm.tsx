@@ -1,10 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { withdraw } from "@/lib/user";
 import { toast } from "sonner";
+import { ANALYTICS_EVENTS } from "@/constants/analytics-events";
+import {
+  getRoleFromPath,
+  toAnalyticsErrorCode,
+  trackEvent,
+} from "@/lib/analytics/client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,16 +28,36 @@ export default function WithdrawForm() {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleWithdraw = async () => {
+    trackEvent(ANALYTICS_EVENTS.WITHDRAW_ATTEMPT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "settings_withdraw_confirm",
+    });
+
     setIsSubmitting(true);
     try {
       await withdraw();
+      trackEvent(ANALYTICS_EVENTS.WITHDRAW_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "settings_withdraw_confirm",
+        result: "success",
+      });
       await authClient.signOut();
       toast.success("회원 탈퇴가 완료되었습니다.");
       router.replace("/");
       router.refresh();
     } catch (e: unknown) {
+      trackEvent(ANALYTICS_EVENTS.WITHDRAW_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "settings_withdraw_confirm",
+        result: "fail",
+        error_code: toAnalyticsErrorCode(e),
+      });
       const message =
         e && typeof e === "object" && "message" in e
           ? String((e as { message: unknown }).message)

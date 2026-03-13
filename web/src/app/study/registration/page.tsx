@@ -3,6 +3,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { useCallback, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import Loader from "@/components/common/Loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,8 +25,15 @@ import {
 import { useRegistrationStore } from "@/stores/useRegistrationStore";
 import { toast } from "sonner";
 import { MONTH_OPTIONS, DURATION_OPTIONS, DAY_LABELS } from "@/constants/registration";
+import { ANALYTICS_EVENTS } from "@/constants/analytics-events";
+import {
+  getRoleFromPath,
+  toAnalyticsErrorCode,
+  trackEvent,
+} from "@/lib/analytics/client";
 
 export default function StudyRegistrationPage() {
+  const pathname = usePathname();
   const { step, formData, setStep, updateFormData, reset } =
     useRegistrationStore();
 
@@ -50,10 +58,23 @@ export default function StudyRegistrationPage() {
   const mutation = useMutation({
     mutationFn: (payload: CourseRegistrationRequest) => registerCourse(payload),
     onSuccess: () => {
+      trackEvent(ANALYTICS_EVENTS.COURSE_REGISTRATION_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "study_registration_step4_submit",
+        result: "success",
+      });
       toast.success("수강 신청이 완료되었습니다.");
       reset();
     },
     onError: (err: ApiError) => {
+      trackEvent(ANALYTICS_EVENTS.COURSE_REGISTRATION_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "study_registration_step4_submit",
+        result: "fail",
+        error_code: toAnalyticsErrorCode(err),
+      });
       if (err.status === 429) {
         toast.error(
           "현재 대기자가 많습니다. 잠시 후 재시도합니다."
@@ -73,14 +94,27 @@ export default function StudyRegistrationPage() {
   }, [step, setStep]);
 
   const handleSubmit = useCallback(() => {
+    trackEvent(ANALYTICS_EVENTS.COURSE_REGISTRATION_ATTEMPT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "study_registration_step4_submit",
+    });
+
     const parsed = CourseRegistrationSchema.safeParse(formData);
     if (!parsed.success) {
+      trackEvent(ANALYTICS_EVENTS.COURSE_REGISTRATION_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "study_registration_step4_submit",
+        result: "fail",
+        error_code: "validation_error",
+      });
       const msg = parsed.error.issues[0]?.message ?? "입력값을 확인해주세요.";
       toast.error(msg);
       return;
     }
     mutation.mutate(parsed.data);
-  }, [formData, mutation]);
+  }, [formData, mutation, pathname]);
 
   const canProceedStep1 =
     typeof formData.courseId === "number" && typeof formData.months === "number";

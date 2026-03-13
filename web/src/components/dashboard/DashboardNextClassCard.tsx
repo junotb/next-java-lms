@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Calendar, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MeetLinkModal from "@/components/teach/MeetLinkModal";
@@ -9,6 +9,8 @@ import type { DashboardNextClass } from "@/schemas/dashboard/dashboard";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
 import { USER_ROLE } from "@/constants/auth";
+import { ANALYTICS_EVENTS } from "@/constants/analytics-events";
+import { getRoleFromPath, trackEvent } from "@/lib/analytics/client";
 import { getLessonPath } from "@/lib/routes";
 
 type Role = (typeof USER_ROLE)[keyof Pick<typeof USER_ROLE, "STUDENT" | "TEACHER">];
@@ -45,6 +47,7 @@ export default function DashboardNextClassCard({
   variant = "study",
 }: DashboardNextClassCardProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [meetLinkModalOpen, setMeetLinkModalOpen] = useState(false);
   const isTeacher = role === USER_ROLE.TEACHER;
   // 강사: meetLink 등록된 경우에만 입장 가능. 학생: 수업 10분 전부터 입장 가능.
@@ -57,6 +60,26 @@ export default function DashboardNextClassCard({
     variant === "teach"
       ? "bg-primary hover:bg-primary/90 text-primary-foreground"
       : "bg-primary hover:bg-primary/90 text-primary-foreground";
+
+  const handleEnterLesson = () => {
+    if (!schedule || !canEnter) {
+      return;
+    }
+
+    trackEvent(ANALYTICS_EVENTS.LESSON_ENTER_ATTEMPT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "dashboard_next_class_card",
+    });
+    trackEvent(ANALYTICS_EVENTS.LESSON_ENTER_RESULT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "dashboard_next_class_card",
+      result: "success",
+    });
+
+    router.push(getLessonPath(role, schedule.scheduleId));
+  };
 
   if (!schedule) {
     return (
@@ -130,9 +153,7 @@ export default function DashboardNextClassCard({
           )}
           <Button
             className={cn("w-fit", buttonClass)}
-            onClick={() =>
-              router.push(getLessonPath(role, schedule.scheduleId))
-            }
+            onClick={handleEnterLesson}
             disabled={!canEnter}
           >
             수업 입장

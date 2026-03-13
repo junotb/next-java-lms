@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { BetterError, SessionUser } from "@/types/auth";
 import type {
   SignInEmailRequest,
@@ -19,6 +19,12 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ROLE_REDIRECT_MAP, MODAL_TYPES } from "@/constants/auth";
+import { ANALYTICS_EVENTS } from "@/constants/analytics-events";
+import {
+  getRoleFromPath,
+  toAnalyticsErrorCode,
+  trackEvent,
+} from "@/lib/analytics/client";
 
 /**
  * 인증 모달 컨테이너.
@@ -29,6 +35,7 @@ export default function AuthModalContainer() {
   const [error, setError] = useState<BetterError | null>(null);
 
   const router = useRouter();
+  const pathname = usePathname();
   const { modalType, openModal, closeModal } = useAuthModalStore();
 
   useEffect(() => {
@@ -51,17 +58,37 @@ export default function AuthModalContainer() {
   };
 
   const handleSignIn = async (payload: SignInEmailRequest) => {
+    trackEvent(ANALYTICS_EVENTS.AUTH_SIGNIN_ATTEMPT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "auth_modal_signin_form",
+    });
+
     const { data, error } = await runWithLoading(() =>
       authClient.signIn.email(payload)
     );
 
     if (error) {
       setError(error);
+      trackEvent(ANALYTICS_EVENTS.AUTH_SIGNIN_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "auth_modal_signin_form",
+        result: "fail",
+        error_code: toAnalyticsErrorCode(error),
+      });
       return;
     }
 
     if (!data) {
       toast.error("로그인에 실패했습니다.");
+      trackEvent(ANALYTICS_EVENTS.AUTH_SIGNIN_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "auth_modal_signin_form",
+        result: "fail",
+        error_code: "unknown_error",
+      });
       return;
     }
 
@@ -70,25 +97,60 @@ export default function AuthModalContainer() {
       ? ROLE_REDIRECT_MAP[user.role]
       : "/";
 
+    trackEvent(ANALYTICS_EVENTS.AUTH_SIGNIN_RESULT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "auth_modal_signin_form",
+      result: "success",
+    });
+
     // 로그인 후 뒤로가기 시 모달이 다시 뜨는 것을 방지하기 위해 replace 사용
     router.replace(redirectPath);
     closeModal();
   };
 
   const handleSignUp = async (payload: SignUpEmailRequest) => {
+    trackEvent(ANALYTICS_EVENTS.AUTH_SIGNUP_ATTEMPT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "auth_modal_signup_form",
+    });
+
     const { data, error } = await runWithLoading(() =>
       authClient.signUp.email(payload)
     );
 
     if (error) {
       setError(error);
+      trackEvent(ANALYTICS_EVENTS.AUTH_SIGNUP_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "auth_modal_signup_form",
+        result: "fail",
+        error_code: toAnalyticsErrorCode(error),
+      });
       return;
     }
 
     if (data) {
+      trackEvent(ANALYTICS_EVENTS.AUTH_SIGNUP_RESULT, {
+        screen: pathname,
+        role: getRoleFromPath(pathname),
+        source: "auth_modal_signup_form",
+        result: "success",
+      });
       openModal(MODAL_TYPES.SIGN_IN);
       toast.success("회원가입이 완료되었습니다. 로그인해주세요.");
+      return;
     }
+
+    trackEvent(ANALYTICS_EVENTS.AUTH_SIGNUP_RESULT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "auth_modal_signup_form",
+      result: "fail",
+      error_code: "unknown_error",
+    });
   };
 
   return (

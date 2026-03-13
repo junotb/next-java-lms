@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
+import Script from "next/script";
+import { Suspense } from "react";
 import "@/app/globals.css";
 import Providers from "@/app/providers";
+import AnalyticsPageviewTracker from "@/components/analytics/AnalyticsPageviewTracker";
 import { Toaster } from "@/components/ui/sonner";
+import {
+  ANALYTICS_PROVIDER,
+  GA4_MEASUREMENT_ID,
+  IS_ANALYTICS_ENABLED,
+} from "@/constants/analytics";
 
 const notoSans = Noto_Sans_KR({
   variable: "--font-noto-sans",
@@ -42,6 +50,29 @@ export default function RootLayout({
       <body
         className={`${notoSans.variable} antialiased min-h-screen bg-background text-foreground`}
       >
+        {IS_ANALYTICS_ENABLED && ANALYTICS_PROVIDER === "ga4" && (
+          <>
+            <Script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
+            />
+            <Script
+              id="ga4-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA4_MEASUREMENT_ID}', { send_page_view: false });
+                `,
+              }}
+            />
+            <Suspense fallback={null}>
+              <AnalyticsPageviewTracker />
+            </Suspense>
+          </>
+        )}
         <Providers>
           {children}
           <Toaster />

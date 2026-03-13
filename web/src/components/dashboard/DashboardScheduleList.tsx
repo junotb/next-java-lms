@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import VideoUploadModal from "@/components/teach/VideoUploadModal";
@@ -11,6 +11,8 @@ import type { ScheduleStatus } from "@/schemas/schedule/schedule-status";
 import { cn } from "@/lib/utils";
 import { ENTRY_MINUTES_BEFORE } from "@/constants/lesson";
 import { USER_ROLE } from "@/constants/auth";
+import { ANALYTICS_EVENTS } from "@/constants/analytics-events";
+import { getRoleFromPath, trackEvent } from "@/lib/analytics/client";
 import { getLessonPath, getFeedbackPath } from "@/lib/routes";
 
 type Role = (typeof USER_ROLE)[keyof Pick<typeof USER_ROLE, "STUDENT" | "TEACHER">];
@@ -74,10 +76,22 @@ export default function DashboardScheduleList({
   variant = role === USER_ROLE.TEACHER ? "teach" : "study",
 }: DashboardScheduleListProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [videoUploadScheduleId, setVideoUploadScheduleId] = useState<number | null>(null);
   const isTeacher = role === USER_ROLE.TEACHER;
 
   const handleEnter = (scheduleId: number) => {
+    trackEvent(ANALYTICS_EVENTS.LESSON_ENTER_ATTEMPT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "dashboard_schedule_list",
+    });
+    trackEvent(ANALYTICS_EVENTS.LESSON_ENTER_RESULT, {
+      screen: pathname,
+      role: getRoleFromPath(pathname),
+      source: "dashboard_schedule_list",
+      result: "success",
+    });
     router.push(getLessonPath(role, scheduleId));
   };
 
