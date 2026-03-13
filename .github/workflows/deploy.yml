@@ -52,10 +52,23 @@ jobs:
           docker push ${IMAGE}:latest
 
       - name: Build and push Web image
+        env:
+          CLOUD_RUN_ENV_WEB: ${{ secrets.CLOUD_RUN_ENV_WEB }}
         run: |
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
           IMAGE="${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/lms-web"
-          docker build -f web/Dockerfile -t ${IMAGE}:${SHORT_SHA} -t ${IMAGE}:latest ./web
+          NEXT_PUBLIC_ANALYTICS_PROVIDER=$(echo "$CLOUD_RUN_ENV_WEB" | awk -F': ' '/^NEXT_PUBLIC_ANALYTICS_PROVIDER:/{gsub(/"/,"",$2);print $2}')
+          NEXT_PUBLIC_GA4_MEASUREMENT_ID=$(echo "$CLOUD_RUN_ENV_WEB" | awk -F': ' '/^NEXT_PUBLIC_GA4_MEASUREMENT_ID:/{gsub(/"/,"",$2);print $2}')
+
+          if [ -z "${NEXT_PUBLIC_ANALYTICS_PROVIDER}" ] || [ -z "${NEXT_PUBLIC_GA4_MEASUREMENT_ID}" ]; then
+            echo "ERROR: NEXT_PUBLIC_ANALYTICS_PROVIDER 또는 NEXT_PUBLIC_GA4_MEASUREMENT_ID 값이 비어 있습니다."
+            exit 1
+          fi
+
+          docker build -f web/Dockerfile \
+            --build-arg NEXT_PUBLIC_ANALYTICS_PROVIDER="${NEXT_PUBLIC_ANALYTICS_PROVIDER}" \
+            --build-arg NEXT_PUBLIC_GA4_MEASUREMENT_ID="${NEXT_PUBLIC_GA4_MEASUREMENT_ID}" \
+            -t ${IMAGE}:${SHORT_SHA} -t ${IMAGE}:latest ./web
           docker push ${IMAGE}:${SHORT_SHA}
           docker push ${IMAGE}:latest
 

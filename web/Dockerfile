@@ -9,6 +9,10 @@ RUN if [ -f package-lock.json ]; then npm ci --no-audit; else npm install --no-a
 
 # 소스 복사 및 빌드
 COPY . .
+ARG NEXT_PUBLIC_ANALYTICS_PROVIDER
+ARG NEXT_PUBLIC_GA4_MEASUREMENT_ID
+ENV NEXT_PUBLIC_ANALYTICS_PROVIDER=${NEXT_PUBLIC_ANALYTICS_PROVIDER}
+ENV NEXT_PUBLIC_GA4_MEASUREMENT_ID=${NEXT_PUBLIC_GA4_MEASUREMENT_ID}
 RUN npm run build
 
 # Runtime stage: standalone 출력 사용
