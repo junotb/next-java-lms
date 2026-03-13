@@ -2,9 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BookOpen, Award, ClipboardList, PlusCircle } from "lucide-react";
 import { USER_ROLE } from "@/constants/auth";
+import { ANALYTICS_EVENTS } from "@/constants/analytics-events";
 import { getStudyDashboard } from "@/lib/dashboard";
+import { getRoleFromPath, trackEvent } from "@/lib/analytics/client";
 import DashboardNextClassCard from "@/components/dashboard/DashboardNextClassCard";
 import DashboardStats, { type DashboardStatItem } from "@/components/dashboard/DashboardStats";
 import DashboardScheduleList from "@/components/dashboard/DashboardScheduleList";
@@ -12,6 +15,7 @@ import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
 import { Button } from "@/components/ui/button";
 
 export default function StudyDashboardPage() {
+  const pathname = usePathname();
   const { data, isLoading } = useQuery({
     queryKey: ["study", "dashboard"],
     queryFn: getStudyDashboard,
@@ -45,7 +49,17 @@ export default function StudyDashboardPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-foreground">내 공부방</h1>
         <Button asChild className="bg-foreground hover:bg-foreground/90 text-background">
-          <Link href="/study/registration" className="flex items-center gap-2">
+          <Link
+            href="/study/registration"
+            className="flex items-center gap-2"
+            onClick={() =>
+              trackEvent(ANALYTICS_EVENTS.COURSE_REGISTRATION_ENTRY_CLICK, {
+                screen: pathname,
+                role: getRoleFromPath(pathname),
+                source: "study_dashboard_registration_header",
+              })
+            }
+          >
             <PlusCircle className="size-4" />
             수강 신청하기
           </Link>
