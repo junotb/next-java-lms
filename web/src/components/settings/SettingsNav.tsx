@@ -12,6 +12,7 @@ interface SettingsNavProps {
 const NAV_ITEMS = [
   { path: "/profile", label: "프로필" },
   { path: "/password", label: "비밀번호" },
+  { path: "/withdraw", label: "회원 탈퇴" },
 ] as const;
 
 /**

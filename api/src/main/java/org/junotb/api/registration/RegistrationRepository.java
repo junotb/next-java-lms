@@ -2,6 +2,7 @@ package org.junotb.api.registration;
 
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -110,4 +111,14 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
             @Param("studentId") String studentId,
             Pageable pageable
     );
+
+    /** 학생 탈퇴: 해당 학생의 모든 수강 등록 삭제 */
+    @Modifying
+    @Query("DELETE FROM Registration r WHERE r.student.id = :userId")
+    int deleteByStudentId(@Param("userId") String userId);
+
+    /** 강사 탈퇴: 해당 강사 스케줄의 모든 수강 등록 삭제 */
+    @Modifying
+    @Query("DELETE FROM Registration r WHERE r.schedule.user.id = :userId")
+    int deleteBySchedule_UserId(@Param("userId") String userId);
 }

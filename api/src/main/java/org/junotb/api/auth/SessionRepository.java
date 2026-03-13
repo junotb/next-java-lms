@@ -20,4 +20,9 @@ public interface SessionRepository extends JpaRepository<Session, String> {
     @Modifying
     @Query("DELETE FROM Session s WHERE s.expiresAt < :now")
     long deleteByExpiresAtBefore(@Param("now") OffsetDateTime now);
+
+    /** 회원 탈퇴: 해당 사용자의 모든 세션 삭제 */
+    @Modifying
+    @Query("DELETE FROM Session s WHERE s.userId = :userId")
+    int deleteByUserId(@Param("userId") String userId);
 }

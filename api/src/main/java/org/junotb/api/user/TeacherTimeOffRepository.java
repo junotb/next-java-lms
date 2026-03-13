@@ -1,6 +1,7 @@
 package org.junotb.api.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -30,4 +31,13 @@ public interface TeacherTimeOffRepository extends JpaRepository<TeacherTimeOff, 
             @Param("rangeStart") OffsetDateTime rangeStart,
             @Param("rangeEnd") OffsetDateTime rangeEnd
     );
+
+    /**
+     * 강사 탈퇴: 해당 강사의 모든 휴무 삭제
+     * @param teacherId 강사 ID
+     * @return 삭제된 휴무 개수
+     */
+    @Modifying
+    @Query("DELETE FROM TeacherTimeOff t WHERE t.teacher.id = :teacherId")
+    int deleteByTeacherId(@Param("teacherId") String teacherId);
 }

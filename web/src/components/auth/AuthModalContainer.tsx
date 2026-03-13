@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons";
+import RoleLoginButtons from "@/components/auth/RoleLoginButtons";
 import Loader from "@/components/common/Loader";
 import { authClient } from "@/lib/auth-client";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -113,13 +114,19 @@ export default function AuthModalContainer() {
 
         {isLoading && <Loader />}
         {!isLoading && modalType === MODAL_TYPES.SIGN_IN && (
-          <SignInForm error={error} onSubmit={handleSignIn} />
+          <>
+            <SignInForm error={error} onSubmit={handleSignIn} />
+            <div className="mt-4 pt-4 space-y-4 border-t border-border">
+              <RoleLoginButtons onSignIn={handleSignIn} />
+              <SocialLoginButtons />
+            </div>
+          </>
         )}
         {!isLoading && modalType === MODAL_TYPES.SIGN_UP && (
           <SignUpForm error={error} onSubmit={handleSignUp} />
         )}
 
-        {!isLoading && (
+        {!isLoading && modalType === MODAL_TYPES.SIGN_UP && (
           <div className="mt-4 pt-4 border-t border-border">
             <SocialLoginButtons />
           </div>

@@ -37,6 +37,11 @@ export async function userDelete(userId: string): Promise<void> {
   await api.delete<void>(`/api/v1/user/${userId}`);
 }
 
+// 사용자 탈퇴
+export async function withdraw(): Promise<void> {
+  await api.post<void>("/api/v1/user/me/withdraw");
+}
+
 // 사용자 역할별 통계
 export async function userRoleStats(): Promise<Record<UserRole, number>> {
   const response = await api.get<Record<UserRole, number>>(
